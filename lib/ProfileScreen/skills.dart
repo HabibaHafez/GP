@@ -6,7 +6,7 @@ import 'profile.dart';
 
 class SkillsScreen extends StatefulWidget {
   @override
-  _SkillsScreenState get createState => _SkillsScreenState();
+  _SkillsScreenState  createState() => _SkillsScreenState();
 }
 
 class _SkillsScreenState extends State<SkillsScreen> {
@@ -161,7 +161,7 @@ class AddSkillDialog extends StatefulWidget {
   AddSkillDialog({this.skill, required this.onSave});
 
   @override
-  _AddSkillDialogState get createState => _AddSkillDialogState();
+  _AddSkillDialogState createState()=> _AddSkillDialogState();
 }
 
 class _AddSkillDialogState extends State<AddSkillDialog> {

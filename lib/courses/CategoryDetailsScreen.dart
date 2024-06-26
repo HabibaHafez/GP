@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:techmate/BottonNavigationBar/Navigationbar.dart';
+import 'package:techmate/BottonNavigationBar/navbar.dart';
 import 'package:techmate/Chats/Track_Chat.dart';
+import 'package:techmate/ProfileScreen/profile.dart';
+import 'package:techmate/HomeScreens/home.dart';
+import 'package:techmate/MentorScreen/mentors.dart';
+import 'MainCourseScreen.dart';
+import 'package:techmate/IntershipsScreen/intershipScreen.dart';
 
 class CourseCategoryScreen extends StatelessWidget {
   static const routeName = 'course details';
@@ -64,18 +69,14 @@ class CourseCategoryScreen extends StatelessWidget {
                 children: [
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.blue[800],
-                      //backgroundColor: Colors.blue[800],
-                      // side: BorderSide(
-                      //     color:
-                      //         Color.fromARGB(255, 103, 40, 117)), // Set the text color
+                      foregroundColor: Colors.white, backgroundColor: Colors.blue[800], // Set the text color
                     ),
                     onPressed: () {},
                     child: Text('View'),
                   ),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.blue[800],
+                      foregroundColor: Colors.white, backgroundColor: Colors.blue[800], // Set the text color
                     ),
                     onPressed: () {},
                     child: Text('Start'),
@@ -99,8 +100,45 @@ class CourseCategoryScreen extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar: CustomBottomNavigationBar(
-        currentIndex: 0,
+      bottomNavigationBar: BottomNavBar(
+        currentIndex: 1, // Set the current index for the active item
+        onTap: (index) {
+          // Handle navigation based on index
+          switch (index) {
+            case 0:
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => MainCourseScreen()),
+              );
+              break;
+            case 1:
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => internshipScreen()),
+              );
+              break;
+            case 2:
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => HomeScreen()),
+              );
+              break;
+            case 3:
+            // Navigate to Mentors screen
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => MentorsScreen()),
+              );
+              break;
+            case 4:
+            // Navigate to Profile screen
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ProfileScreen()),
+              );
+              break;
+          }
+        },
       ),
     );
   }
@@ -164,11 +202,7 @@ class SuggestedCourseCard extends StatelessWidget {
               // Handle enroll button action
             },
             style: ElevatedButton.styleFrom(
-              foregroundColor: const Color.fromRGBO(21, 101, 192, 1),
-              //backgroundColor: Colors.blue[800],
-              side: BorderSide(
-                  color: const Color.fromRGBO(
-                      21, 101, 192, 1)), // Set the text color
+              foregroundColor: Colors.white, backgroundColor: Color.fromRGBO(21, 101, 192, 1), // Set the text color
             ),
             child: Text('Enroll'),
           ),

@@ -213,6 +213,7 @@ class InternshipDetails extends StatelessWidget {
               ],
             ),
           ),
+
         );
       },
     );

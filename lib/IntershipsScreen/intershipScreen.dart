@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:techmate/BottonNavigationBar/Navigationbar.dart';
+import 'package:techmate/BottonNavigationBar/navbar.dart';
 import 'package:techmate/IntershipsScreen/application.dart';
 import 'package:techmate/IntershipsScreen/internship_details.dart';
 import 'package:techmate/Notification/notification.dart';
+import 'package:techmate/HomeScreens/home.dart';
+import 'package:techmate/MentorScreen/mentors.dart';
+import 'package:techmate/courses/MainCourseScreen.dart';
+import 'package:techmate/ProfileScreen/profile.dart';
 
 class InternshipsScreen extends StatelessWidget {
   static const String routeName = 'internship screen';
@@ -187,9 +191,45 @@ class InternshipsScreen extends StatelessWidget {
           ),
         ],
       ),
-      bottomNavigationBar: CustomBottomNavigationBar(
-        currentIndex: 1,
+      bottomNavigationBar: BottomNavBar(
+        currentIndex: 2, // Set the current index for the active item
+        onTap: (index) {
+          // Handle navigation based on index
+          switch (index) {
+            case 0:
+
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => MainCourseScreen()),
+              );
+              break;
+            case 1:
+
+            case 2:
+
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => HomeScreen()),
+              );
+              break;
+            case 3:
+            // Navigate to Mentors screen
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => MentorsScreen()),
+              );
+              break;
+            case 4:
+            // Navigate to Profile screen
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ProfileScreen()),
+              );
+              break;
+          }
+        },
       ),
+
     );
   }
 }

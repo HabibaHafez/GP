@@ -1,6 +1,11 @@
-import 'package:flutter/material.dart';
-import 'package:techmate/BottonNavigationBar/Navigationbar.dart';
 
+import 'package:flutter/material.dart';
+import 'package:techmate/BottonNavigationBar/navbar.dart';
+import 'package:techmate/ProfileScreen/profile.dart';
+import 'package:techmate/HomeScreens/home.dart';
+import 'package:techmate/MentorScreen/mentors.dart';
+import 'MainCourseScreen.dart';
+import 'package:techmate/IntershipsScreen/intershipScreen.dart';
 class CourseDetailsScreen extends StatelessWidget {
   static const String routeName = 'courseDetailsScreen';
   final String courseTitle = 'python';
@@ -99,9 +104,49 @@ class CourseDetailsScreen extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: CustomBottomNavigationBar(
-        currentIndex: 0,
+      bottomNavigationBar: BottomNavBar(
+        currentIndex: 1, // Set the current index for the active item
+        onTap: (index) {
+          // Handle navigation based on index
+          switch (index) {
+            case 0:
+
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => MainCourseScreen()),
+              );
+              break;
+            case 1:
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => internshipScreen()),
+              );
+              break;
+            case 2:
+
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => HomeScreen()),
+              );
+              break;
+            case 3:
+            // Navigate to Mentors screen
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => MentorsScreen()),
+              );
+              break;
+            case 4:
+            // Navigate to Profile screen
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ProfileScreen()),
+              );
+              break;
+          }
+        },
       ),
+
     );
   }
 }
