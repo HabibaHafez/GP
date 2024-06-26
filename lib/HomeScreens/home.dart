@@ -249,35 +249,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       bottomNavigationBar: BottomNavBar(
-        currentIndex: 2, // Set the current index for the active item
-        onTap: (index) {
-          // Handle navigation based on index
-          switch (index) {
-            case 0:
-            // Navigate to Home screen (if necessary)
-              break;
-            case 1:
-            // Navigate to Internships screen (if necessary)
-              break;
-            case 2:
-            // Navigate to Courses screen (if necessary)
-              break;
-            case 3:
-            // Navigate to Mentors screen
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => MentorsScreen()),
-              );
-              break;
-            case 4:
-            // Navigate to Profile screen
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => ProfileScreen()),
-              );
-              break;
-          }
-        },
+        currentIndex: 2,
       ),
     );
   }

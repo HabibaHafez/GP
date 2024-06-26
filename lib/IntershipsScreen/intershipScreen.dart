@@ -192,42 +192,7 @@ class InternshipsScreen extends StatelessWidget {
         ],
       ),
       bottomNavigationBar: BottomNavBar(
-        currentIndex: 2, // Set the current index for the active item
-        onTap: (index) {
-          // Handle navigation based on index
-          switch (index) {
-            case 0:
-
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => CoursesScreen()),
-              );
-              break;
-            case 1:
-
-            case 2:
-
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => HomeScreen()),
-              );
-              break;
-            case 3:
-            // Navigate to Mentors screen
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => MentorsScreen()),
-              );
-              break;
-            case 4:
-            // Navigate to Profile screen
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => ProfileScreen()),
-              );
-              break;
-          }
-        },
+        currentIndex: 2, 
       ),
 
     );

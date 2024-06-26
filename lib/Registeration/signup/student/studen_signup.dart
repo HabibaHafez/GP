@@ -14,7 +14,6 @@ class student_signup extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          //toolbarHeight: 45,
           leading: Padding(
             padding: const EdgeInsets.only(top: 30, left: 15),
             child: IconButton(
@@ -48,7 +47,6 @@ class student_signup extends StatelessWidget {
                   SizedBox(
                     height: 50,
                   ),
-                  //ContinuedSignup(navigate_Screen: choose_skills.routeName),
                   button_component(
                       usage: 'Continue', routename: ContinuedSignup.routeName),
                   SizedBox(

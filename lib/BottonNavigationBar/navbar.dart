@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
-
-
+import 'package:techmate/HomeScreens/home.dart';
+import 'package:techmate/IntershipsScreen/intershipScreen.dart';
+import 'package:techmate/MentorScreen/mentors.dart';
+import 'package:techmate/ProfileScreen/profile.dart';
+import 'package:techmate/courses/MainCourseScreen.dart';
 
 class BottomNavBar extends StatelessWidget {
   final int currentIndex;
-  final Function(int)? onTap;
 
-  BottomNavBar({required this.currentIndex, this.onTap});
+  BottomNavBar({required this.currentIndex});
 
   @override
   Widget build(BuildContext context) {
@@ -14,10 +16,44 @@ class BottomNavBar extends StatelessWidget {
       unselectedItemColor: Colors.blueGrey,
       selectedItemColor: Colors.blue[800],
       currentIndex: currentIndex,
-      onTap: onTap,
+      onTap: (currentIndex) {
+        // Handle navigation based on index
+        switch (currentIndex) {
+          case 0:
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => CoursesScreen()),
+            );
+            break;
+          case 1:
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => InternshipsScreen()),
+            );
+            break;
+          case 2:
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => HomeScreen()),
+            );
+            break;
+          case 3:
+            // Navigate to Mentors screen
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => MentorsScreen()),
+            );
+            break;
+          case 4:
+            // Navigate to Profile screen
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ProfileScreen()),
+            );
+            break;
+        }
+      },
       items: const <BottomNavigationBarItem>[
-
-
         BottomNavigationBarItem(
           icon: Icon(Icons.school_outlined), // Updated icon for Courses
           label: 'Courses',

@@ -6,7 +6,7 @@ import 'profile.dart';
 
 class SkillsScreen extends StatefulWidget {
   @override
-  _SkillsScreenState  get createState => _SkillsScreenState();
+  _SkillsScreenState get createState => _SkillsScreenState();
 }
 
 class _SkillsScreenState extends State<SkillsScreen> {
@@ -18,7 +18,8 @@ class _SkillsScreenState extends State<SkillsScreen> {
     {'skill': 'Machine Learning', 'level': 'Beginner'},
   ];
 
-  void _openAddSkillForm(BuildContext context, {Map<String, String>? skillToEdit, int? index}) {
+  void _openAddSkillForm(BuildContext context,
+      {Map<String, String>? skillToEdit, int? index}) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -100,7 +101,8 @@ class _SkillsScreenState extends State<SkillsScreen> {
               skill: skills[index]['skill']!,
               level: skills[index]['level']!,
               onEdit: () {
-                _openAddSkillForm(context, skillToEdit: skills[index], index: index);
+                _openAddSkillForm(context,
+                    skillToEdit: skills[index], index: index);
               },
               onDelete: () {
                 _confirmDeleteSkill(context, index);
@@ -110,38 +112,7 @@ class _SkillsScreenState extends State<SkillsScreen> {
         },
       ),
       bottomNavigationBar: BottomNavBar(
-        currentIndex: 4, // Set the current index for the active item
-        onTap: (index) {
-          // Handle navigation based on index
-          switch (index) {
-            case 0:
-
-              break;
-            case 1:
-            // Navigate to Internships screen (if necessary)
-              break;
-            case 2:
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => HomeScreen()),
-              );
-              break;
-            case 3:
-            // Navigate to Mentors screen
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => MentorsScreen()),
-              );
-              break;
-            case 4:
-            // Navigate to Profile screen
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => ProfileScreen()),
-              );
-              break;
-          }
-        },
+        currentIndex: 4,
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -161,7 +132,7 @@ class AddSkillDialog extends StatefulWidget {
   AddSkillDialog({this.skill, required this.onSave});
 
   @override
-  _AddSkillDialogState get createState=> _AddSkillDialogState();
+  _AddSkillDialogState get createState => _AddSkillDialogState();
 }
 
 class _AddSkillDialogState extends State<AddSkillDialog> {
@@ -229,13 +200,18 @@ class SkillTile extends StatelessWidget {
   final VoidCallback onEdit;
   final VoidCallback onDelete;
 
-  SkillTile({required this.skill, required this.level, required this.onEdit, required this.onDelete});
+  SkillTile(
+      {required this.skill,
+      required this.level,
+      required this.onEdit,
+      required this.onDelete});
 
   @override
   Widget build(BuildContext context) {
     return Card(
       child: ListTile(
-        title: Text(skill, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+        title: Text(skill,
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
         subtitle: Text(level, style: TextStyle(color: Colors.grey[700])),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,

@@ -38,14 +38,6 @@ class Registeration extends StatelessWidget {
           child: Center(
             child: Column(
               children: [
-                // Text(
-                //   'Register as',
-                //   style: TextStyle(
-                //       fontSize: 30,
-                //       color: Colors.blue[800],
-                //       fontWeight: FontWeight.bold,
-                //       fontFamily: 'Montserrat'),
-                // ),
                 SizedBox(
                   height: 50,
                 ),

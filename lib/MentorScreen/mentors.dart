@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:techmate/BottonNavigationBar/navbar.dart';
 import 'package:techmate/HomeScreens/home.dart';
+import 'package:techmate/IntershipsScreen/intershipScreen.dart';
 import 'package:techmate/ProfileScreen/profile.dart';
+import 'package:techmate/courses/MainCourseScreen.dart';
 import 'mentorprofile.dart';
-
 
 class MentorsScreen extends StatelessWidget {
   static const String routeName = 'mentor screen';
@@ -40,7 +41,9 @@ class MentorsScreen extends StatelessWidget {
               children: [
                 ElevatedButton(
                   onPressed: () {},
-                  child: Text('Filter', style: TextStyle(fontWeight: FontWeight.bold ,color: Colors.white)),
+                  child: Text('Filter',
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, color: Colors.white)),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blue[800],
                     shape: RoundedRectangleBorder(
@@ -50,7 +53,9 @@ class MentorsScreen extends StatelessWidget {
                 ),
                 ElevatedButton(
                   onPressed: () {},
-                  child: Text('Rating', style: TextStyle(fontWeight: FontWeight.bold,color :Colors.white)),
+                  child: Text('Rating',
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, color: Colors.white)),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blue[800],
                     shape: RoundedRectangleBorder(
@@ -60,7 +65,9 @@ class MentorsScreen extends StatelessWidget {
                 ),
                 ElevatedButton(
                   onPressed: () {},
-                  child: Text('Track', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+                  child: Text('Track',
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, color: Colors.white)),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blue[800],
                     shape: RoundedRectangleBorder(
@@ -144,7 +151,6 @@ class MentorsScreen extends StatelessWidget {
                         icon: Icon(Icons.message),
                         onPressed: () {
                           // Navigate to chat screen specific to this mentor
-
                         },
                       ),
                     ],
@@ -157,39 +163,6 @@ class MentorsScreen extends StatelessWidget {
       ),
       bottomNavigationBar: BottomNavBar(
         currentIndex: 3, // Set the current index for the active item
-        onTap: (index) {
-          // Handle navigation based on index
-          switch (index) {
-            case 0:
-
-              break;
-            case 1:
-            // Navigate to Internships screen (if necessary)
-              break;
-            case 2:
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => HomeScreen()),
-              );
-              break;
-
-
-            case 3:
-            // Navigate to Mentors screen
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => MentorsScreen()),
-              );
-              break;
-            case 4:
-            // Navigate to Profile screen
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => ProfileScreen()),
-              );
-              break;
-          }
-        },
       ),
     );
   }

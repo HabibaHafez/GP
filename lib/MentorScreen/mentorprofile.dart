@@ -99,39 +99,7 @@ class MentorProfileScreen extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: BottomNavBar(
-        currentIndex: 3, // Set the current index for the active item
-        onTap: (index) {
-          // Handle navigation based on index
-          switch (index) {
-            case 0:
-
-              break;
-            case 1:
-            // Navigate to Internships screen (if necessary)
-              break;
-            case 2:
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => HomeScreen()),
-              );
-              break;
-              break;
-            case 3:
-            // Navigate to Mentors screen
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => MentorsScreen()),
-              );
-              break;
-            case 4:
-            // Navigate to Profile screen
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => ProfileScreen()),
-              );
-              break;
-          }
-        },
+        currentIndex: 3, 
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
