@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:techmate/HomeScreens/home_screen.dart';
+import 'package:techmate/HomeScreens/home.dart';
 import 'package:techmate/commponent/button.dart';
 
 class ChooseSkills extends StatefulWidget {
@@ -70,7 +70,7 @@ class ChooseSkillsState extends State<ChooseSkills> {
                   height: 45,
                 ),
                 button_component(
-                    usage: 'Done', routename: home_screen.routeName),
+                    usage: 'Done', routename: HomeScreen.routeName),
               ],
             ),
           ),

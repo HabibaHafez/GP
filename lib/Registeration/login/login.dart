@@ -1,10 +1,10 @@
 // ignore_for_file: camel_case_types, use_key_in_widget_constructors
 
 import 'package:flutter/material.dart';
+import 'package:techmate/HomeScreens/home.dart';
 import 'package:techmate/Registeration/signup/Registeration/Registeration.dart';
 import 'package:techmate/commponent/button.dart';
 import 'package:techmate/commponent/textField.dart';
-import 'package:techmate/HomeScreens/home_screen.dart';
 
 class login_screen extends StatelessWidget {
   static const routeName = 'sign in';
@@ -51,7 +51,7 @@ class login_screen extends StatelessWidget {
                   height: 50,
                 ),
                 button_component(
-                    usage: 'Sign in', routename: home_screen.routeName),
+                    usage: 'Sign in', routename: HomeScreen.routeName),
                 TextButton(
                   onPressed: () {
                     Navigator.push(

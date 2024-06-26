@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:techmate/HomeScreens/home_screen.dart';
 import 'package:techmate/Registeration/login/login.dart';
 import 'package:techmate/Registeration/signup/user/ContinuedSignup.dart';
 import 'package:techmate/Registeration/signup/user/user_signup.dart';

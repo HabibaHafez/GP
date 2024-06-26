@@ -4,7 +4,7 @@ import 'package:techmate/Registeration/signup/user/ContinuedSignup.dart';
 import 'package:techmate/Registeration/signup/user/user_signup.dart';
 import 'package:techmate/commponent/button.dart';
 import 'package:techmate/commponent/textField.dart';
-import 'package:techmate/HomeScreens/home_screen.dart';
+
 
 class hr_signup extends StatelessWidget {
   static const routeName = 'hr sign up';

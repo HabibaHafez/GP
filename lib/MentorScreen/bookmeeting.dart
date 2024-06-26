@@ -1,12 +1,13 @@
-import '../Profile/profile.dart';
-import '../Home/home.dart';
+
 import 'package:flutter/material.dart';
-import 'package:home/navbar.dart';
+import 'package:techmate/BottonNavigationBar/navbar.dart';
+import 'package:techmate/HomeScreens/home.dart';
+import 'package:techmate/ProfileScreen/profile.dart';
 import 'mentors.dart';
 
 class SelectDateTimeScreen extends StatefulWidget {
   @override
-  _SelectDateTimeScreenState createState() => _SelectDateTimeScreenState();
+  _SelectDateTimeScreenState get createState => _SelectDateTimeScreenState();
 }
 
 class _SelectDateTimeScreenState extends State<SelectDateTimeScreen> {

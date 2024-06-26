@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:techmate/BottonNavigationBar/navbar.dart';
+import 'package:techmate/HomeScreens/home.dart';
+import 'package:techmate/MentorScreen/mentors.dart';
 import 'profile.dart';
-import '../Home/home.dart';
-import 'package:home/Mentor/mentors.dart';
-import 'package:home/navbar.dart';
 
 class EditProfileScreen extends StatefulWidget {
   @override
-  _EditProfileScreenState createState() => _EditProfileScreenState();
+  _EditProfileScreenState get createState => _EditProfileScreenState();
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {

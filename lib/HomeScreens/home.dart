@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
-import '../Mentor/mentors.dart';
-import '../Profile/profile.dart';
+import 'package:techmate/BottonNavigationBar/navbar.dart';
+import 'package:techmate/MentorScreen/mentors.dart';
+import 'package:techmate/ProfileScreen/Saved.dart';
+import 'package:techmate/ProfileScreen/profile.dart';
 import 'search.dart';
-import '../Profile/saved.dart'; // Ensure the correct import here
-import 'package:home/navbar.dart';
 
 class HomeScreen extends StatefulWidget {
+  static const routeName = 'home screen';
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  _HomeScreenState get createState => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  
   // Sample data for saved items
   final List<Map<String, String>> _savedItems = [
     {'type': 'internship', 'title': 'Web Development Intern', 'image': 'https://example.com/internship1.jpg'},

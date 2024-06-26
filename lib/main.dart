@@ -2,10 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:techmate/Chats/Track_Chat.dart';
-import 'package:techmate/HomeScreens/home_screen.dart';
+import 'package:techmate/HomeScreens/home.dart';
 import 'package:techmate/IntershipsScreen/intershipScreen.dart';
-import 'package:techmate/MentorScreen/mentorScreen.dart';
-import 'package:techmate/ProfileScreen/ProfileScreen.dart';
+import 'package:techmate/MentorScreen/mentors.dart';
+import 'package:techmate/ProfileScreen/profile.dart';
 import 'package:techmate/Registeration/login/login.dart';
 import 'package:techmate/Registeration/signup/HR/hr_signup.dart';
 import 'package:techmate/Registeration/signup/Mentor/mentor_signup.dart';
@@ -30,14 +30,14 @@ class MyApp extends StatelessWidget {
       student_signup.routeName: ((BuildContext context) => student_signup()),
       mentor_signup.routeName: ((BuildContext context) => mentor_signup()),
       hr_signup.routeName: ((BuildContext context) => hr_signup()),
-      home_screen.routeName: ((BuildContext context) => home_screen()),
+      HomeScreen.routeName: ((BuildContext context) => HomeScreen()),
       ContinuedSignup.routeName: ((BuildContext context) => ContinuedSignup()),
       ChooseSkills.routeName: ((BuildContext context) => ChooseSkills()),
       ProfileScreen.routeName: ((BuildContext context) => ProfileScreen()),
       InternshipsScreen.routeName: ((BuildContext context) =>
           InternshipsScreen()),
-      MentorShipScreen.routeName: ((BuildContext context) =>
-          MentorShipScreen()),
+      MentorsScreen.routeName: ((BuildContext context) =>
+          MentorsScreen()),
       CoursesScreen.routeName: ((BuildContext context) => CoursesScreen()),
       CourseCategoryScreen.routeName: ((BuildContext context) =>
           CourseCategoryScreen()),

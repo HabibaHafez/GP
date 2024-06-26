@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:techmate/BottonNavigationBar/navbar.dart';
+import 'package:techmate/HomeScreens/home.dart';
+import 'package:techmate/MentorScreen/mentors.dart';
 import 'profile.dart';
-import '../Home/home.dart';
-import 'package:home/Mentor/mentors.dart';
-import 'package:home/navbar.dart';
 
 class SkillsScreen extends StatefulWidget {
   @override
-  _SkillsScreenState createState() => _SkillsScreenState();
+  _SkillsScreenState get createState => _SkillsScreenState();
 }
 
 class _SkillsScreenState extends State<SkillsScreen> {
@@ -161,7 +161,7 @@ class AddSkillDialog extends StatefulWidget {
   AddSkillDialog({this.skill, required this.onSave});
 
   @override
-  _AddSkillDialogState createState() => _AddSkillDialogState();
+  _AddSkillDialogState get createState => _AddSkillDialogState();
 }
 
 class _AddSkillDialogState extends State<AddSkillDialog> {

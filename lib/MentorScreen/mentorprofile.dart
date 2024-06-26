@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:techmate/BottonNavigationBar/navbar.dart';
+import 'package:techmate/HomeScreens/home.dart';
+import 'package:techmate/ProfileScreen/profile.dart';
 import 'bookmeeting.dart';
-import '../Profile/profile.dart';
-import '../Home/home.dart';
 import 'mentors.dart';
-import 'package:home/navbar.dart';
+
 
 class MentorProfileScreen extends StatelessWidget {
   @override

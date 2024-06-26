@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:techmate/HomeScreens/home_screen.dart';
+import 'package:techmate/HomeScreens/home.dart';
 import 'package:techmate/IntershipsScreen/intershipScreen.dart';
-import 'package:techmate/MentorScreen/mentorScreen.dart';
-import 'package:techmate/ProfileScreen/ProfileScreen.dart';
+import 'package:techmate/MentorScreen/mentors.dart';
+import 'package:techmate/ProfileScreen/profile.dart';
 import 'package:techmate/courses/MainCourseScreen.dart';
 
 class CustomBottomNavigationBar extends StatefulWidget {
@@ -78,13 +78,13 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
           case 2:
             // If already on the "Home" screen, do nothing
             if (widget.currentIndex == 2) return;
-            Navigator.pushReplacementNamed(context, home_screen.routeName,
+            Navigator.pushReplacementNamed(context, HomeScreen.routeName,
                 arguments: 2); // Pass currentIndex as argument
             break;
           case 3:
             // If already on the "Mentor" screen, do nothing
             if (widget.currentIndex == 3) return;
-            Navigator.pushReplacementNamed(context, MentorShipScreen.routeName,
+            Navigator.pushReplacementNamed(context, MentorsScreen.routeName,
                 arguments: 3); // Pass currentIndex as argument
             break;
           case 4:

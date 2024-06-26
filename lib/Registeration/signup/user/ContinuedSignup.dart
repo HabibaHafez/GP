@@ -1,7 +1,6 @@
 // ignore_for_file: use_key_in_widget_constructors, prefer_const_constructors
 
 import 'package:flutter/material.dart';
-import 'package:techmate/HomeScreens/home_screen.dart';
 import 'package:techmate/Registeration/login/login.dart';
 import 'package:techmate/Registeration/signup/student/skills_choosen.dart';
 import 'package:techmate/commponent/button.dart';

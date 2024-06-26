@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import '../Home/home.dart';
-import '../Profile/profile.dart';
+import 'package:techmate/BottonNavigationBar/navbar.dart';
+import 'package:techmate/HomeScreens/home.dart';
+import 'package:techmate/ProfileScreen/profile.dart';
 import 'mentorprofile.dart';
-import 'package:home/navbar.dart';
 
 
 class MentorsScreen extends StatelessWidget {
+  static const String routeName = 'mentor screen';
   @override
   Widget build(BuildContext context) {
     return Scaffold(

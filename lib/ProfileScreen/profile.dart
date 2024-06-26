@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:home/Profile/Experince.dart';
-import 'package:home/Profile/skills.dart';
-import '../Home/home.dart';
-import 'package:home/Mentor/mentors.dart';
-import 'package:home/Profile/Saved.dart';
-import 'package:home/Profile/editprofile.dart';
-import 'package:home/navbar.dart';
+import 'package:techmate/BottonNavigationBar/navbar.dart';
+import 'package:techmate/HomeScreens/home.dart';
+import 'package:techmate/MentorScreen/mentors.dart';
+import 'package:techmate/ProfileScreen/Experince.dart';
+import 'package:techmate/ProfileScreen/Saved.dart';
+import 'package:techmate/ProfileScreen/editprofile.dart';
+import 'package:techmate/ProfileScreen/skills.dart';
+
 
 class ProfileScreen extends StatelessWidget {
+  static const String routeName = 'profile screen';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
