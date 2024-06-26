@@ -6,7 +6,7 @@ class ChooseSkills extends StatefulWidget {
   static const routeName = 'choose_skills';
 
   @override
-  ChooseSkillsState  createState() => ChooseSkillsState();
+  ChooseSkillsState  get createState => ChooseSkillsState();
 }
 
 class ChooseSkillsState extends State<ChooseSkills> {

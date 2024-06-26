@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:techmate/BottonNavigationBar/navbar.dart';
 import 'package:techmate/Chats/Track_Chat.dart';
+import 'package:techmate/IntershipsScreen/intershipScreen.dart';
 import 'package:techmate/ProfileScreen/profile.dart';
 import 'package:techmate/HomeScreens/home.dart';
 import 'package:techmate/MentorScreen/mentors.dart';
-import 'MainCourseScreen.dart';
-import 'package:techmate/IntershipsScreen/intershipScreen.dart';
+import 'package:techmate/courses/MainCourseScreen.dart';
 
 class CourseCategoryScreen extends StatelessWidget {
   static const routeName = 'course details';
@@ -108,13 +108,13 @@ class CourseCategoryScreen extends StatelessWidget {
             case 0:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => MainCourseScreen()),
+                MaterialPageRoute(builder: (context) => CoursesScreen()),
               );
               break;
             case 1:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => internshipScreen()),
+                MaterialPageRoute(builder: (context) => InternshipsScreen()),
               );
               break;
             case 2:

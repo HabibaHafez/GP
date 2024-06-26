@@ -6,7 +6,7 @@ import 'profile.dart';
 
 class EditProfileScreen extends StatefulWidget {
   @override
-  _EditProfileScreenState  createState() => _EditProfileScreenState();
+  _EditProfileScreenState  get createState => _EditProfileScreenState();
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {

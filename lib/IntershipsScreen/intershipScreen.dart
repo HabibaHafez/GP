@@ -200,7 +200,7 @@ class InternshipsScreen extends StatelessWidget {
 
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => MainCourseScreen()),
+                MaterialPageRoute(builder: (context) => CoursesScreen()),
               );
               break;
             case 1:
