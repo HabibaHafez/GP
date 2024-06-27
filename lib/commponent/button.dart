@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 class button_component extends StatelessWidget {
   String usage;
   String routename;
-  button_component({required this.usage, required this.routename});
+  button_component({required this.usage, required this.routename,  Future<Null> Function()? onPressed});
 
   @override
   Widget build(BuildContext context) {

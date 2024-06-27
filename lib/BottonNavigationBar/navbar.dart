@@ -17,7 +17,6 @@ class BottomNavBar extends StatelessWidget {
       selectedItemColor: Colors.blue[800],
       currentIndex: currentIndex,
       onTap: (currentIndex) {
-        // Handle navigation based on index
         switch (currentIndex) {
           case 0:
             Navigator.push(

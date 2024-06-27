@@ -27,25 +27,23 @@ class MyApp extends StatelessWidget {
     return MaterialApp(routes: {
       login_screen.routeName: ((BuildContext context) => login_screen()),
       welcome_screen.routeName: ((BuildContext context) => welcome_screen()),
-      student_signup.routeName: ((BuildContext context) => student_signup()),
+      StudentSignup.routeName: ((BuildContext context) => StudentSignup()),
       mentor_signup.routeName: ((BuildContext context) => mentor_signup()),
       hr_signup.routeName: ((BuildContext context) => hr_signup()),
       HomeScreen.routeName: ((BuildContext context) => HomeScreen()),
-      ContinuedSignup.routeName: ((BuildContext context) => ContinuedSignup()),
-      ChooseSkills.routeName: ((BuildContext context) => ChooseSkills()),
+      ContinuedSignup.routeName: ((BuildContext context) => ContinuedSignup(firstName: '', email: '', lastName: '', nationalId: '',)),
+      ChooseAreaOfInterest.routeName: ((BuildContext context) => ChooseAreaOfInterest(firstName: '', lastName: '', email: '', nationalId: '',)),
       ProfileScreen.routeName: ((BuildContext context) => ProfileScreen()),
       InternshipsScreen.routeName: ((BuildContext context) =>
           InternshipsScreen()),
-      MentorsScreen.routeName: ((BuildContext context) =>
-          MentorsScreen()),
+      MentorsScreen.routeName: ((BuildContext context) => MentorsScreen()),
       CoursesScreen.routeName: ((BuildContext context) => CoursesScreen()),
       CourseCategoryScreen.routeName: ((BuildContext context) =>
           CourseCategoryScreen()),
       WritingMessageScreen.routeName: ((BuildContext context) =>
           WritingMessageScreen()),
       CourseDetailsScreen.routeName: ((BuildContext context) =>
-          CourseDetailsScreen(
-          )),
+          CourseDetailsScreen()),
     }, initialRoute: welcome_screen.routeName);
   }
 }

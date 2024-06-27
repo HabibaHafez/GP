@@ -42,7 +42,7 @@ class Registeration extends StatelessWidget {
                   height: 50,
                 ),
                 button_component(
-                    usage: "Student", routename: student_signup.routeName),
+                    usage: "Student", routename: StudentSignup.routeName),
                 SizedBox(
                   height: 35,
                 ),

@@ -1,16 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:techmate/HomeScreens/home.dart';
 import 'package:techmate/commponent/button.dart';
+import 'package:techmate/services/registeration/signup/Student/studentApi.dart';
 
-class ChooseSkills extends StatefulWidget {
-  static const routeName = 'choose_skills';
+class ChooseAreaOfInterest extends StatefulWidget {
+  static const routeName = 'choose_AreaOfInterst';
+  final String firstName;
+  final String lastName;
+  final String email;
+  final String nationalId;
+  final String? address; // Nullable type for optional parameters
+  final String? gender; // Nullable type for optional parameters
+  final String? level; // Nullable type for optional parameters
+  final String? password; // Nullable type for optional parameters
+  
+  ChooseAreaOfInterest({
+    required this.firstName,
+    required this.lastName,
+    required this.email,
+    required this.nationalId,
+    this.address,
+    this.gender,
+    this.level,
+    this.password,
+  });
 
   @override
-  ChooseSkillsState  get createState => ChooseSkillsState();
+  ChooseAreaOfInterstState get createState => ChooseAreaOfInterstState();
 }
 
-class ChooseSkillsState extends State<ChooseSkills> {
-  List<String> selectedSkills = [];
+class ChooseAreaOfInterstState extends State<ChooseAreaOfInterest> {
+  String areaOfInterest = ''; // Initialize areaOfInterest
 
   @override
   Widget build(BuildContext context) {
@@ -29,9 +49,11 @@ class ChooseSkillsState extends State<ChooseSkills> {
         title: Padding(
           padding: const EdgeInsets.only(top: 40, left: 0),
           child: Text(
-            'Choose your skills',
-            style:
-                TextStyle(color: Color.fromARGB(255, 61, 60, 60), fontSize: 25),
+            'Choose your Tracks',
+            style: TextStyle(
+              color: Color.fromARGB(255, 61, 60, 60),
+              fontSize: 25,
+            ),
           ),
         ),
       ),
@@ -45,32 +67,25 @@ class ChooseSkillsState extends State<ChooseSkills> {
                   spacing: 8.0,
                   runSpacing: 8.0,
                   children: [
-                    buildChoiceChip('c++'),
-                    buildChoiceChip('c'),
-                    buildChoiceChip('python'),
                     buildChoiceChip('Data Analysis'),
-                    buildChoiceChip('SQL'),
-                    buildChoiceChip('Database Managment'),
-                    buildChoiceChip('css'),
-                    buildChoiceChip('Software Engineering'),
-                    buildChoiceChip('java'),
-                    buildChoiceChip('CyberSecurity'),
-                    buildChoiceChip('java script'),
-                    buildChoiceChip('dart'),
-                    buildChoiceChip('flutter'),
-                    buildChoiceChip('html'),
+                    buildChoiceChip('Software Engineer'),
+                    buildChoiceChip('Dev Ops'),
                     buildChoiceChip('Data Science'),
-                    buildChoiceChip('front-end'),
-                    buildChoiceChip('Back-end'),
-                    buildChoiceChip('web-development'),
-                    buildChoiceChip('machine learning'),
+                    buildChoiceChip('Data Engineer'),
+                    buildChoiceChip('Web Developer'),
+                    buildChoiceChip('Flutter Developer'),
+                    buildChoiceChip('FrontEnd Developer'),
+                    buildChoiceChip('BackEnd Developer'),
+                    buildChoiceChip('Cloud Computing'),
                   ],
                 ),
                 SizedBox(
                   height: 45,
                 ),
                 button_component(
-                    usage: 'Done', routename: HomeScreen.routeName),
+                  usage: 'Done',
+                  routename: HomeScreen.routeName,
+                ),
               ],
             ),
           ),
@@ -80,7 +95,7 @@ class ChooseSkillsState extends State<ChooseSkills> {
   }
 
   Widget buildChoiceChip(String label) {
-    final isSelected = selectedSkills.contains(label);
+    final isSelected = areaOfInterest == label; // Check if label is selected
 
     return ChoiceChip(
       label: Text(
@@ -94,9 +109,9 @@ class ChooseSkillsState extends State<ChooseSkills> {
       onSelected: (bool selected) {
         setState(() {
           if (selected) {
-            selectedSkills.add(label);
+            areaOfInterest = label; // Set areaOfInterest to selected label
           } else {
-            selectedSkills.remove(label);
+            areaOfInterest = ''; // Reset or handle deselection logic
           }
         });
       },
@@ -106,5 +121,31 @@ class ChooseSkillsState extends State<ChooseSkills> {
       elevation: isSelected ? 4.0 : 2.0,
       padding: EdgeInsets.symmetric(horizontal: 16.0),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _registerStudent();
+  }
+
+  void _registerStudent() async {
+    try {
+      await registerStudent(
+        widget.firstName,
+        widget.lastName,
+        widget.email,
+        widget.nationalId,
+        widget.address!,
+        widget.gender!,
+        widget.level!, // Assuming you handle this correctly
+        widget.password!,
+        areaOfInterest,
+        // Assuming you handle this correctly
+      );
+    } catch (e) {
+      print('Error registering student: $e');
+      // Handle error
+    }
   }
 }

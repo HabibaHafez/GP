@@ -41,7 +41,7 @@ class welcome_screen extends StatelessWidget {
                   height: 50,
                 ),
                 button_component(
-                    usage: "Let's Start", routename: login_screen.routeName)
+                    usage: "Let's Start", routename: login_screen.routeName,)
               ],
             ),
           ),
