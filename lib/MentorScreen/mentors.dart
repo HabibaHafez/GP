@@ -5,29 +5,37 @@ import 'package:techmate/IntershipsScreen/intershipScreen.dart';
 import 'package:techmate/ProfileScreen/profile.dart';
 import 'package:techmate/courses/MainCourseScreen.dart';
 import 'mentorprofile.dart';
-
+import 'package:techmate/Notification/notification.dart';
+import 'package:techmate/Chats/Mentorchat.dart';
 class MentorsScreen extends StatelessWidget {
   static const String routeName = 'mentor screen';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Find a Mentor', style: TextStyle(color: Colors.black)),
-        backgroundColor: Colors.white,
-        iconTheme: IconThemeData(color: Colors.black),
+        title: Text('Find a Mentor', style: TextStyle(color: Colors.white)),
+
+        backgroundColor: Colors.blue[800],
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
-        elevation: 0,
         actions: [
           IconButton(
-            icon: Icon(Icons.notifications),
+            icon: Icon(
+              Icons.notifications,
+              color: Colors.white,
+            ),
             onPressed: () {
-              // Navigate to notifications page
-              // Navigator.push(context, MaterialPageRoute(builder: (context) => NotificationsScreen()));
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => NotificationScreen()),
+              );
             },
           ),
         ],
@@ -150,7 +158,13 @@ class MentorsScreen extends StatelessWidget {
                       IconButton(
                         icon: Icon(Icons.message),
                         onPressed: () {
-                          // Navigate to chat screen specific to this mentor
+    Navigator.push(
+    context,
+    MaterialPageRoute(
+    builder: (context) => MentorChatScreen(),
+    ),
+    );
+
                         },
                       ),
                     ],

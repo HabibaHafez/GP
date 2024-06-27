@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class SavedScreen extends StatefulWidget {
   @override
-  _SavedScreenState get createState => _SavedScreenState();
+  _SavedScreenState createState() => _SavedScreenState();
 }
 
 class _SavedScreenState extends State<SavedScreen> {
@@ -30,9 +30,12 @@ class _SavedScreenState extends State<SavedScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Saved Items'),
-        backgroundColor: Colors.white,
-      ),
+        title: Text('Saved Items',
+        style:  TextStyle(color: Colors.white) ),
+        backgroundColor: Colors.blue[800],
+   ),
+
+
       body: Column(
         children: [
           Padding(

@@ -6,7 +6,7 @@ import 'package:techmate/ProfileScreen/Experince.dart';
 import 'package:techmate/ProfileScreen/Saved.dart';
 import 'package:techmate/ProfileScreen/editprofile.dart';
 import 'package:techmate/ProfileScreen/skills.dart';
-
+import 'package:techmate/Notification/notification.dart';
 
 class ProfileScreen extends StatelessWidget {
   static const String routeName = 'profile screen';
@@ -14,26 +14,32 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Profile'),
-        backgroundColor: Colors.white,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.blue[800]),
+        title: Text('Profile' , style: TextStyle(color: Colors.white) ),
+      backgroundColor: Colors.blue[800],
+      leading: IconButton(
+        icon: Icon(
+          Icons.arrow_back,
+          color: Colors.white,
+        ),
+        onPressed: () {
+          Navigator.pop(context);
+        },
+      ),
+      actions: [
+        IconButton(
+          icon: Icon(
+            Icons.notifications,
+            color: Colors.white,
+          ),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => NotificationScreen()),
+            );
           },
         ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.notifications, color: Colors.black),
-            onPressed: () {
-              // Navigate to notifications screen
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(builder: (context) => NotificationsScreen()),
-              // );
-            },
-          ),
-        ],
+      ],
+
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

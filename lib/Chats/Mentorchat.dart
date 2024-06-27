@@ -1,22 +1,22 @@
-// ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
 
-class WritingMessageScreen extends StatefulWidget {
-  static const routeName = 'trackchat';
+class MentorChatScreen extends StatefulWidget {
+  static const routeName = 'mentorchat';
 
   @override
-  _WritingMessageScreenState createState() => _WritingMessageScreenState();
+  _MentorChatScreenState createState() => _MentorChatScreenState();
 }
 
-class _WritingMessageScreenState extends State<WritingMessageScreen> {
+class _MentorChatScreenState extends State<MentorChatScreen> {
   final List<ChatMessage> _messages = [
     ChatMessage(
         isUser: false,
-        text: "I'm excited to guide you through your learning journey. Let's get started!"),
-    ChatMessage(isUser: true, text: 'Sure! When works for you?'),
-    ChatMessage(isUser: false, text: 'Today 11:00'),
-    ChatMessage(isUser: true, text: 'I have some questions about the assignment.'),
+        text: "Hi there! I'm your mentor. How can I assist you today?"),
+    ChatMessage(isUser: true, text: 'Hello! I need help with my project.'),
+    ChatMessage(isUser: false, text: 'Sure, what specifically do you need help with?'),
+    ChatMessage(
+        isUser: true, text: 'I am struggling with the data analysis part.'),
   ];
 
   final TextEditingController _controller = TextEditingController();
@@ -35,7 +35,7 @@ class _WritingMessageScreenState extends State<WritingMessageScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Data Analysis',
+          'Chat with Mentor',
           style: TextStyle(color: Colors.white),
         ),
         backgroundColor: Colors.blue[800],

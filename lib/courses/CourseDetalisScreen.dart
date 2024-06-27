@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:techmate/BottonNavigationBar/navbar.dart';
 import 'package:techmate/ProfileScreen/profile.dart';
@@ -6,19 +5,31 @@ import 'package:techmate/HomeScreens/home.dart';
 import 'package:techmate/MentorScreen/mentors.dart';
 import 'MainCourseScreen.dart';
 import 'package:techmate/IntershipsScreen/intershipScreen.dart';
+
 class CourseDetailsScreen extends StatelessWidget {
   static const String routeName = 'courseDetailsScreen';
   final String courseTitle = 'python';
 
-  //CourseDetailsScreen({required this.courseTitle});
+  // CourseDetailsScreen({required this.courseTitle});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(courseTitle,
-          style: TextStyle(color: Colors.white),),
+        title: Text(
+          courseTitle,
+          style: TextStyle(color: Colors.white),
+        ),
         backgroundColor: Colors.blue[800],
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -105,9 +116,8 @@ class CourseDetailsScreen extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: BottomNavBar(
-        currentIndex: 1, 
+        currentIndex: 0,
       ),
-
     );
   }
 }
