@@ -3,10 +3,11 @@ import 'package:techmate/BottonNavigationBar/navbar.dart';
 import 'package:techmate/HomeScreens/home.dart';
 import 'package:techmate/MentorScreen/mentors.dart';
 import 'profile.dart';
+import 'package:techmate/Notification/notification.dart';
 
 class EditProfileScreen extends StatefulWidget {
   @override
-  _EditProfileScreenState  get createState => _EditProfileScreenState();
+  _EditProfileScreenState  createState() => _EditProfileScreenState();
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
@@ -27,14 +28,32 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Edit Profile'),
-        backgroundColor: Colors.white,
+        title: Text('Edit Profile',
+          style: TextStyle(color: Colors.white) ),
+        backgroundColor: Colors.blue[800],
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.blue[800]),
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
+        actions: [
+          IconButton(
+            icon: Icon(
+              Icons.notifications,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => NotificationScreen()),
+              );
+            },
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

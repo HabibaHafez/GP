@@ -18,8 +18,18 @@ class CoursesScreen extends StatelessWidget {
         title: Text(
           'Courses',
           style: TextStyle(color: Colors.white),
+
         ),
         backgroundColor: Colors.blue[800],
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -201,7 +211,7 @@ class CoursesScreen extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: BottomNavBar(
-        currentIndex: 1, 
+        currentIndex: 0,
       ),
 
     );

@@ -17,14 +17,8 @@ class NotificationScreen extends StatelessWidget {
             Navigator.pop(context);
           },
         ),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.edit),
-            onPressed: () {
-              // Edit action
-            },
-          ),
-        ],
+
+
       ),
       body: ListView(
         children: <Widget>[

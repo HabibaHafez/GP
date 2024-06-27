@@ -13,7 +13,7 @@ class ChooseAreaOfInterest extends StatefulWidget {
   final String? gender; // Nullable type for optional parameters
   final String? level; // Nullable type for optional parameters
   final String? password; // Nullable type for optional parameters
-  
+
   ChooseAreaOfInterest({
     required this.firstName,
     required this.lastName,

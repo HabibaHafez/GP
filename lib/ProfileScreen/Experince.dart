@@ -4,14 +4,38 @@ import 'package:techmate/HomeScreens/home.dart';
 import 'package:techmate/MentorScreen/mentors.dart';
 import 'add.dart';
 import 'profile.dart';
+import 'package:techmate/Notification/notification.dart';
 
 class ExperienceScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Experience', style: TextStyle(color: Colors.blue[800])),
-        backgroundColor: Colors.white,
+        title: Text('Experience', style: TextStyle(color: Colors.white)),
+      backgroundColor: Colors.blue[800],
+      leading: IconButton(
+        icon: Icon(
+          Icons.arrow_back,
+          color: Colors.white,
+        ),
+        onPressed: () {
+          Navigator.pop(context);
+        },
+      ),
+      actions: [
+        IconButton(
+          icon: Icon(
+            Icons.notifications,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => NotificationScreen()),
+            );
+          },
+        ),
+      ],
       ),
       body: ListView(
         padding: const EdgeInsets.all(16.0),
@@ -56,7 +80,7 @@ class ExperienceScreen extends StatelessWidget {
             MaterialPageRoute(builder: (context) => AddExperienceScreen()),
           );
         },
-        child: Icon(Icons.add),
+        child: Icon(Icons.add, color: Colors.white,),
         backgroundColor: Colors.blue[800],
       ),
     );

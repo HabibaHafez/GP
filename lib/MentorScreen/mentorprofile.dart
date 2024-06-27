@@ -4,6 +4,8 @@ import 'package:techmate/HomeScreens/home.dart';
 import 'package:techmate/ProfileScreen/profile.dart';
 import 'bookmeeting.dart';
 import 'mentors.dart';
+import 'package:techmate/Notification/notification.dart';
+import 'package:techmate/Chats/Mentorchat.dart';
 
 
 class MentorProfileScreen extends StatelessWidget {
@@ -11,16 +13,31 @@ class MentorProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Mentor Profile', style: TextStyle(color: Colors.black)),
-        backgroundColor: Colors.white,
-        iconTheme: IconThemeData(color: Colors.black),
+        title: Text('Mentor Profile', style: TextStyle(color: Colors.white)),
+        backgroundColor: Colors.blue[800],
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
-        elevation: 0,
+        actions: [
+          IconButton(
+            icon: Icon(
+              Icons.notifications,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => NotificationScreen()),
+              );
+            },
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -103,10 +120,18 @@ class MentorProfileScreen extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Handle FAB press
-        },
-        child: Icon(Icons.message),
+
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => MentorChatScreen(),
+              ),
+            );
+          },
+
+        child: Icon(Icons.message, color: Colors.white,),
         backgroundColor: Colors.blue[800],
+
       ),
     );
   }

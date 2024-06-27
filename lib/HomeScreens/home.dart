@@ -4,15 +4,15 @@ import 'package:techmate/MentorScreen/mentors.dart';
 import 'package:techmate/ProfileScreen/Saved.dart';
 import 'package:techmate/ProfileScreen/profile.dart';
 import 'search.dart';
+import 'package:techmate/Notification/notification.dart';
 
 class HomeScreen extends StatefulWidget {
   static const routeName = 'home screen';
   @override
-  _HomeScreenState  get createState => _HomeScreenState();
+  _HomeScreenState createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  
   // Sample data for saved items
   final List<Map<String, String>> _savedItems = [
     {'type': 'internship', 'title': 'Web Development Intern', 'image': 'https://example.com/internship1.jpg'},
@@ -28,10 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if (_selectedFilter == 'all') {
       return _savedItems.take(2).toList(); // Show the latest 2-3 items
     } else {
-      return _savedItems
-          .where((item) => item['type'] == _selectedFilter)
-          .take(3)
-          .toList();
+      return _savedItems.where((item) => item['type'] == _selectedFilter).take(3).toList();
     }
   }
 
@@ -41,15 +38,28 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Welcome, Habiba Hafez', style: TextStyle(color: Colors.black)),
-        backgroundColor: Colors.white,
-        iconTheme: IconThemeData(color: Colors.black),
-        elevation: 0,
+        title: Text('Welcome, Habiba Hafez', style: TextStyle(color: Colors.white)),
+        backgroundColor: Colors.blue[800],
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
         actions: [
           IconButton(
-            icon: Icon(Icons.notifications),
+            icon: Icon(
+              Icons.notifications,
+              color: Colors.white,
+            ),
             onPressed: () {
-              // Handle notifications tap
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => NotificationScreen()),
+              );
             },
           ),
         ],

@@ -52,15 +52,7 @@ class InternshipsScreen extends StatelessWidget {
               );
             },
           ),
-          IconButton(
-            icon: Icon(
-              Icons.more_vert,
-              color: Colors.white,
-            ),
-            onPressed: () {
-              // Handle menu button press
-            },
-          ),
+
         ],
       ),
       body: Column(
@@ -192,7 +184,7 @@ class InternshipsScreen extends StatelessWidget {
         ],
       ),
       bottomNavigationBar: BottomNavBar(
-        currentIndex: 2, 
+        currentIndex: 1,
       ),
 
     );

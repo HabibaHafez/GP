@@ -4,7 +4,7 @@ import 'package:file_picker/file_picker.dart';
 
 class ApplyToInternshipScreen extends StatefulWidget {
   @override
-  _ApplyToInternshipScreenState get createState =>
+  _ApplyToInternshipScreenState createState() =>
       _ApplyToInternshipScreenState();
 }
 
@@ -25,6 +25,15 @@ class _ApplyToInternshipScreenState extends State<ApplyToInternshipScreen> {
         title: Text('Apply to Internship',
           style: TextStyle(color: Colors.white),),
         backgroundColor: Colors.blue[800],
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
       ),
       body: SingleChildScrollView(
         child: Padding(

@@ -6,7 +6,7 @@ import 'profile.dart';
 
 class SkillsScreen extends StatefulWidget {
   @override
-  _SkillsScreenState get createState => _SkillsScreenState();
+  _SkillsScreenState  createState() => _SkillsScreenState();
 }
 
 class _SkillsScreenState extends State<SkillsScreen> {
@@ -75,8 +75,17 @@ class _SkillsScreenState extends State<SkillsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Skills', style: TextStyle(color: Colors.blue[800])),
-        backgroundColor: Colors.white,
+        title: Text('Skills', style: TextStyle(color: Colors.white)),
+        backgroundColor: Colors.blue[800],
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
       ),
       body: ListView.builder(
         padding: const EdgeInsets.all(16.0),
@@ -118,7 +127,7 @@ class _SkillsScreenState extends State<SkillsScreen> {
         onPressed: () {
           _openAddSkillForm(context);
         },
-        child: Icon(Icons.add),
+        child: Icon(Icons.add, color: Colors.white,),
         backgroundColor: Colors.blue[800],
       ),
     );
@@ -132,7 +141,7 @@ class AddSkillDialog extends StatefulWidget {
   AddSkillDialog({this.skill, required this.onSave});
 
   @override
-  _AddSkillDialogState get createState => _AddSkillDialogState();
+  _AddSkillDialogState  createState() => _AddSkillDialogState();
 }
 
 class _AddSkillDialogState extends State<AddSkillDialog> {
