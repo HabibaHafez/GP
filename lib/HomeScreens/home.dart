@@ -3,16 +3,21 @@ import 'package:techmate/BottonNavigationBar/navbar.dart';
 import 'package:techmate/MentorScreen/mentors.dart';
 import 'package:techmate/ProfileScreen/Saved.dart';
 import 'package:techmate/ProfileScreen/profile.dart';
-import 'search.dart';
 import 'package:techmate/Notification/notification.dart';
+import 'search.dart';
+import 'package:techmate/services/Home/intern_recommendations_service.dart';
 
 class HomeScreen extends StatefulWidget {
   static const routeName = 'home screen';
   @override
-  _HomeScreenState get createState => _HomeScreenState();
+  _HomeScreenState createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final InternRecommendationsService _internService = InternRecommendationsService();
+  List<Map<String, dynamic>> _recommendedInternships = [];
+  bool _isLoading = true;
+
   // Sample data for saved items
   final List<Map<String, String>> _savedItems = [
     {'type': 'internship', 'title': 'Web Development Intern', 'image': 'https://example.com/internship1.jpg'},
@@ -29,6 +34,29 @@ class _HomeScreenState extends State<HomeScreen> {
       return _savedItems.take(2).toList(); // Show the latest 2-3 items
     } else {
       return _savedItems.where((item) => item['type'] == _selectedFilter).take(3).toList();
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchRecommendations();
+  }
+
+  Future<void> _fetchRecommendations() async {
+    try {
+      List<Map<String, dynamic>> recommendations = await _internService.fetchRecommendations('1234566322');
+      setState(() {
+        _recommendedInternships = recommendations;
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to load recommendations: $e')),
+      );
     }
   }
 
@@ -92,15 +120,18 @@ class _HomeScreenState extends State<HomeScreen> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: Text(
-              'Recommended for you',
+              'Recommended internships for you',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
             ),
           ),
           Container(
             height: 180,
-            child: PageView.builder(
-              itemCount: 10,
+            child: _isLoading
+                ? Center(child: CircularProgressIndicator())
+                : PageView.builder(
+              itemCount: _recommendedInternships.length,
               itemBuilder: (context, index) {
+                final internship = _recommendedInternships[index];
                 return Container(
                   margin: EdgeInsets.symmetric(horizontal: 8.0, vertical: 16.0),
                   child: Card(
@@ -111,14 +142,14 @@ class _HomeScreenState extends State<HomeScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Image.network(
-                          'https://example.com/image$index.jpg',
+                          'https://example.com/image.jpg', // Static image
                           height: 80,
                           errorBuilder: (context, error, stackTrace) => Icon(Icons.error),
                         ),
                         SizedBox(height: 8),
-                        Text('Web Development', style: TextStyle(color: Colors.black)),
+                        Text(internship['title'] ?? 'No title', style: TextStyle(color: Colors.black)),
                         SizedBox(height: 4),
-                        Text('Dell Technologies', style: TextStyle(color: Colors.grey)),
+                        Text(internship['company'] ?? 'No company', style: TextStyle(color: Colors.grey)),
                         SizedBox(height: 8),
                         ElevatedButton(
                           onPressed: () {},
@@ -246,12 +277,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     errorBuilder: (context, error, stackTrace) => Icon(Icons.error),
                   ),
                   title: Text(item['title']!),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => SavedScreen()),
-                    );
-                  },
                 );
               }).toList(),
             ),

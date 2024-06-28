@@ -1,7 +1,7 @@
 import 'package:http/http.dart' as http;
 
 Future<void> registerStudent(String firstName, String lastName, String email, String nationalId, String address, String gender, String level,String password,String areaOfInterest) async {
-  var url = Uri.parse('https://your-api-url/signup/student');
+  var url = Uri.parse('http://localhost:5000/auth/register');
 
   try {
     var response = await http.post(

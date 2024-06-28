@@ -97,7 +97,7 @@ class ContinuedSignup extends StatefulWidget {
   }
 
   @override
-  _ContinuedSignupState get createState => _ContinuedSignupState();
+  _ContinuedSignupState createState() => _ContinuedSignupState();
 }
 
 class _ContinuedSignupState extends State<ContinuedSignup> {
