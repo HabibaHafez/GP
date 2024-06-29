@@ -12,11 +12,9 @@ Future<bool> registerStudent(
     String password,
     String areaOfInterest,
     String role) async {
-<<<<<<< HEAD
+
   var url = Uri.parse('http://192.168.1.6:5000/auth/register');
-=======
-  var url = Uri.parse('http://192.168.1.3:5000/auth/register');
->>>>>>> 7b4d192c08adcf94c040b0061b2364beed4676a3
+
 
 
   try {

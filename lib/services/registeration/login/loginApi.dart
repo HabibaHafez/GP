@@ -2,12 +2,10 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class ApiService {
-<<<<<<< HEAD
-  static const String baseUrl = 'http://192.168.1.11:5000';
-=======
-  static const String baseUrl = 'http://192.168.1.3:5000';
->>>>>>> 7b4d192c08adcf94c040b0061b2364beed4676a3
 
+  static const String baseUrl = 'http://192.168.1.11:5000';
+
+  
   Future<Map<String, dynamic>> login(String email, String password) async {
     try {
       final response = await http.post(

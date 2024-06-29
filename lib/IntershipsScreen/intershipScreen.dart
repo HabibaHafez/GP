@@ -14,11 +14,12 @@ class InternshipsScreen extends StatefulWidget {
   const InternshipsScreen({super.key});
 
   @override
-  _InternshipsScreenState createState() => _InternshipsScreenState();
+  _InternshipsScreenState get createState => _InternshipsScreenState();
 }
 
 class _InternshipsScreenState extends State<InternshipsScreen> {
-  final InternRecommendationsService _internService = InternRecommendationsService();
+  final InternRecommendationsService _internService =
+      InternRecommendationsService();
   List<Map<String, dynamic>> _internships = [];
   bool _isLoading = true;
 
@@ -30,7 +31,8 @@ class _InternshipsScreenState extends State<InternshipsScreen> {
 
   Future<void> _fetchInternships() async {
     try {
-      List<Map<String, dynamic>> internships = await _internService.fetchRecommendations('1234566322');
+      List<Map<String, dynamic>> internships =
+          await _internService.fetchRecommendations('1234566322');
       setState(() {
         _internships = internships;
         _isLoading = false;
@@ -45,7 +47,8 @@ class _InternshipsScreenState extends State<InternshipsScreen> {
     }
   }
 
-  void _showInternshipDetails(BuildContext context, Map<String, dynamic> internship) {
+  void _showInternshipDetails(
+      BuildContext context, Map<String, dynamic> internship) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -106,113 +109,122 @@ class _InternshipsScreenState extends State<InternshipsScreen> {
             child: _isLoading
                 ? Center(child: CircularProgressIndicator())
                 : ListView.builder(
-              itemCount: _internships.length,
-              itemBuilder: (BuildContext context, int index) {
-                final internship = _internships[index];
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                  child: Card(
-                    elevation: 4.0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    child: InkWell(
-                      onTap: () {
-                        _showInternshipDetails(context, internship);
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                CircleAvatar(
-                                  radius: 25,
-                                  backgroundImage: NetworkImage(internship['Link'] ?? 'images/cs.jpeg'), // Ensure the image URL is correct
-                                ),
-                                SizedBox(width: 16.0),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                    itemCount: _internships.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      final internship = _internships[index];
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16.0, vertical: 8.0),
+                        child: Card(
+                          elevation: 4.0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          child: InkWell(
+                            onTap: () {
+                              _showInternshipDetails(context, internship);
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.all(12.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
                                     children: [
-                                      Text(
-                                        internship['InternTitle'] ?? 'No title',
-                                        style: TextStyle(
-                                          fontSize: 16.0,
-                                          fontWeight: FontWeight.bold,
+                                      CircleAvatar(
+                                        radius: 25,
+                                        backgroundImage: NetworkImage(internship[
+                                                'Link'] ??
+                                            'images/cs.jpeg'), // Ensure the image URL is correct
+                                      ),
+                                      SizedBox(width: 16.0),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              internship['InternTitle'] ??
+                                                  'No title',
+                                              style: TextStyle(
+                                                fontSize: 16.0,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            SizedBox(height: 4.0),
+                                            Text(
+                                              internship['CompanyName'] ??
+                                                  'No company',
+                                              style: TextStyle(
+                                                color: Colors.grey[600],
+                                              ),
+                                            ),
+                                            SizedBox(height: 4.0),
+                                            Text(
+                                              internship['Location'] ??
+                                                  'No location',
+                                              style: TextStyle(
+                                                color: Colors.grey[600],
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ),
-                                      SizedBox(height: 4.0),
+                                      IconButton(
+                                        icon: Icon(Icons.more_vert),
+                                        onPressed: () {
+                                          // Handle menu button press
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 8.0),
+                                  Row(
+                                    children: [
                                       Text(
-                                        internship['CompanyName'] ?? 'No company',
+                                        '1 month ago', // Replace with actual posted time if available
                                         style: TextStyle(
                                           color: Colors.grey[600],
                                         ),
                                       ),
-                                      SizedBox(height: 4.0),
+                                      Spacer(),
                                       Text(
-                                        internship['Location'] ?? 'No location',
+                                        internship['WorkType'] ??
+                                            'No work type', // Work type
                                         style: TextStyle(
                                           color: Colors.grey[600],
                                         ),
                                       ),
                                     ],
                                   ),
-                                ),
-                                IconButton(
-                                  icon: Icon(Icons.more_vert),
-                                  onPressed: () {
-                                    // Handle menu button press
-                                  },
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 8.0),
-                            Row(
-                              children: [
-                                Text(
-                                  '1 month ago', // Replace with actual posted time if available
-                                  style: TextStyle(
-                                    color: Colors.grey[600],
+                                  SizedBox(height: 8.0),
+                                  ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.blue[800],
+                                      foregroundColor: Colors.white,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                    ),
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              ApplyToInternshipScreen(),
+                                        ),
+                                      );
+                                    },
+                                    child: Text('Apply'),
                                   ),
-                                ),
-                                Spacer(),
-                                Text(
-                                  internship['WorkType'] ?? 'No work type', // Work type
-                                  style: TextStyle(
-                                    color: Colors.grey[600],
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 8.0),
-                            ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.blue[800],
-                                foregroundColor: Colors.white,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
+                                ],
                               ),
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => ApplyToInternshipScreen(),
-                                  ),
-                                );
-                              },
-                              child: Text('Apply'),
                             ),
-                          ],
+                          ),
                         ),
-                      ),
-                    ),
+                      );
+                    },
                   ),
-                );
-              },
-            ),
           ),
         ],
       ),
