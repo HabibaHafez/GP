@@ -62,226 +62,212 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final double screenWidth = MediaQuery.of(context).size.width;
-
     return Scaffold(
       appBar: AppBar(
         title: Text('Welcome, Habiba Hafez', style: TextStyle(color: Colors.white)),
         backgroundColor: Colors.blue[800],
         leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: Colors.white,
-          ),
+          icon: Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
         actions: [
           IconButton(
-            icon: Icon(
-              Icons.notifications,
-              color: Colors.white,
-            ),
+            icon: Icon(Icons.notifications, color: Colors.white),
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => NotificationScreen()),
-              );
+              Navigator.push(context, MaterialPageRoute(builder: (context) => NotificationScreen()));
             },
           ),
         ],
       ),
-      body: ListView(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: TextField(
-              decoration: InputDecoration(
-                hintText: 'Search for courses and internships',
-                prefixIcon: Icon(Icons.search, color: Colors.grey),
-                border: OutlineInputBorder(
-                  borderSide: BorderSide.none,
-                  borderRadius: BorderRadius.circular(8.0),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: TextField(
+                decoration: InputDecoration(
+                  hintText: 'Search for courses and internships',
+                  prefixIcon: Icon(Icons.search, color: Colors.grey),
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide.none,
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  filled: true,
+                  fillColor: Colors.grey[200],
+                  contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 16),
                 ),
-                filled: true,
-                fillColor: Colors.grey[200],
-                contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 16),
+                readOnly: true, // Makes the TextField read-only
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => SearchScreen()));
+                },
               ),
-              readOnly: true, // Makes the TextField read-only
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => SearchScreen()),
-                );
-              },
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Text(
-              'Recommended internships for you',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Text(
+                'Recommended internships for you',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
+              ),
             ),
-          ),
-          Container(
-            height: 180,
-            child: _isLoading
-                ? Center(child: CircularProgressIndicator())
-                : PageView.builder(
-              itemCount: _recommendedInternships.length,
-              itemBuilder: (context, index) {
-                final internship = _recommendedInternships[index];
-                return Container(
-                  margin: EdgeInsets.symmetric(horizontal: 8.0, vertical: 16.0),
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.network(
-                          'https://example.com/image.jpg', // Static image
-                          height: 80,
-                          errorBuilder: (context, error, stackTrace) => Icon(Icons.error),
-                        ),
-                        SizedBox(height: 8),
-                        Text(internship['title'] ?? 'No title', style: TextStyle(color: Colors.black)),
-                        SizedBox(height: 4),
-                        Text(internship['company'] ?? 'No company', style: TextStyle(color: Colors.grey)),
-                        SizedBox(height: 8),
-                        ElevatedButton(
-                          onPressed: () {},
-                          child: Text(
-                            'Apply',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
+            Container(
+              height: 220,
+              child: _isLoading
+                  ? Center(child: CircularProgressIndicator())
+                  : PageView.builder(
+                itemCount: _recommendedInternships.length,
+                itemBuilder: (context, index) {
+                  final internship = _recommendedInternships[index];
+                  return Container(
+                    margin: EdgeInsets.symmetric(horizontal: 8.0, vertical: 16.0),
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.network(
+                            'https://example.com/image.jpg', // Static image
+                            height: 80,
+                            errorBuilder: (context, error, stackTrace) => Icon(Icons.error),
+                          ),
+                          SizedBox(height: 8),
+                          Text(internship['title'] ?? 'No title', style: TextStyle(color: Colors.black)),
+                          SizedBox(height: 4),
+                          Text(internship['company'] ?? 'No company', style: TextStyle(color: Colors.grey)),
+                          SizedBox(height: 8),
+                          ElevatedButton(
+                            onPressed: () {},
+                            child: Text(
+                              'Apply',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.blue[800],
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
                             ),
                           ),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.blue[800],
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8.0),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Text(
+                'Courses',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
+              ),
+            ),
+            Container(
+              height: 220,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: 10,
+                itemBuilder: (context, index) {
+                  return Container(
+                    width: 160,
+                    margin: EdgeInsets.all(8.0),
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.network(
+                            'https://example.com/course$index.jpg',
+                            height: 80,
+                            errorBuilder: (context, error, stackTrace) => Icon(Icons.error),
+                          ),
+                          SizedBox(height: 8),
+                          Text('Course $index', style: TextStyle(color: Colors.black)),
+                          ElevatedButton(
+                            onPressed: () {},
+                            child: Text(
+                              'Enroll',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.blue[800],
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
+                  );
+                },
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Text(
+                'Saved',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  DropdownButton<String>(
+                    value: _selectedFilter,
+                    items: [
+                      DropdownMenuItem(value: 'all', child: Text('All')),
+                      DropdownMenuItem(value: 'internship', child: Text('Internships')),
+                      DropdownMenuItem(value: 'course', child: Text('Courses')),
+                    ],
+                    onChanged: (value) {
+                      setState(() {
+                        _selectedFilter = value!;
+                      });
+                    },
                   ),
-                );
-              },
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Text(
-              'Courses',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
-            ),
-          ),
-          Container(
-            height: 180,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: 10,
-              itemBuilder: (context, index) {
-                return Container(
-                  width: 160,
-                  margin: EdgeInsets.all(8.0),
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.network(
-                          'https://example.com/course$index.jpg',
-                          height: 80,
-                          errorBuilder: (context, error, stackTrace) => Icon(Icons.error),
-                        ),
-                        SizedBox(height: 8),
-                        Text('Course $index', style: TextStyle(color: Colors.black)),
-                        ElevatedButton(
-                          onPressed: () {},
-                          child: Text(
-                            'Enroll',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.blue[800],
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => SavedScreen()));
+                    },
+                    child: Text('Show More'),
                   ),
-                );
-              },
+                ],
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Text(
-              'Saved',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+              child: Column(
+                children: _getFilteredSavedItems().map((item) {
+                  return ListTile(
+                    leading: Image.network(
+                      item['image']!,
+                      width: 50,
+                      height: 50,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) => Icon(Icons.error),
+                    ),
+                    title: Text(item['title']!),
+                  );
+                }).toList(),
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                DropdownButton<String>(
-                  value: _selectedFilter,
-                  items: [
-                    DropdownMenuItem(value: 'all', child: Text('All')),
-                    DropdownMenuItem(value: 'internship', child: Text('Internships')),
-                    DropdownMenuItem(value: 'course', child: Text('Courses')),
-                  ],
-                  onChanged: (value) {
-                    setState(() {
-                      _selectedFilter = value!;
-                    });
-                  },
-                ),
-                TextButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => SavedScreen()),
-                    );
-                  },
-                  child: Text('Show More'),
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-            child: Column(
-              children: _getFilteredSavedItems().map((item) {
-                return ListTile(
-                  leading: Image.network(
-                    item['image']!,
-                    width: 50,
-                    height: 50,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) => Icon(Icons.error),
-                  ),
-                  title: Text(item['title']!),
-                );
-              }).toList(),
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
       bottomNavigationBar: BottomNavBar(
         currentIndex: 2,

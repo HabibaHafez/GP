@@ -17,7 +17,9 @@ import 'package:techmate/courses/MainCourseScreen.dart';
 import 'package:techmate/courses/CategoryDetailsScreen.dart';
 import 'package:techmate/welcom/welcome_screen.dart';
 
-void main() {
+
+void  main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(MyApp());
 }
 
