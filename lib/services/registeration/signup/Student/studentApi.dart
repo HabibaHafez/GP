@@ -1,6 +1,7 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+<<<<<<<<< Temporary merge branch 1
 Future<bool> registerStudent(
     String firstName,
     String lastName,
@@ -12,7 +13,8 @@ Future<bool> registerStudent(
     String password,
     String areaOfInterest,
     String role) async {
-  var url = Uri.parse('http://192.168.1.11:5000/auth/register');
+  var url = Uri.parse('http://192.168.1.6:5000/auth/register');
+=========
 
   try {
     var response = await http.post(
