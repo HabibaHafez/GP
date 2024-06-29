@@ -5,7 +5,7 @@ import 'package:techmate/Registeration/validations/validator.dart';
 import 'package:techmate/Registeration/signup/student/skills_choosen.dart';
 import 'package:techmate/services/registeration/signup/Mentor/MentorApi.dart';
 import 'package:techmate/services/registeration/signup/Recruiter/RecruiterApi.dart';
-
+import 'package:techmate/services/registeration/signup/Student/studentApi.dart';
 
 class ContinuedSignup extends StatefulWidget {
   static const routeName = 'ContinuedSignup';
@@ -15,11 +15,13 @@ class ContinuedSignup extends StatefulWidget {
   final String email;
   final String nationalId;
   final String? address; // Nullable type for optional parameters
-  final String? gender;  // Nullable type for optional parameters
-  final String? level;   // Nullable type for optional parameters
+  final String? gender; // Nullable type for optional parameters
+  final String? level; // Nullable type for optional parameters
   final String? jobtitle; // Nullable type for optional parameters
   final String? companyName; // Nullable type for optional parameters
-  final String? company_description; // Nullable type for optional parameters
+  final String? company_description;
+
+  // Nullable type for optional parameters
 
   ContinuedSignup({
     required this.firstName,
@@ -104,6 +106,7 @@ class _ContinuedSignupState extends State<ContinuedSignup> {
   final _formKey = GlobalKey<FormState>();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
+  String role = 'student';
 
   bool _isLoading = false;
   String _errorMessage = '';
@@ -115,30 +118,38 @@ class _ContinuedSignupState extends State<ContinuedSignup> {
     });
 
     try {
-      // Simulate API call delay
-      await Future.delayed(Duration(seconds: 2));
+      bool isRegistered = false;
+      String areaOfInterest =
+          "Data Analysis"; // Replace with actual area of interest if needed
 
-      // Determine which API function to call based on user type
+      print({
+        'National_ID': widget.nationalId,
+        'Email': widget.email,
+        'Password': _passwordController.text,
+        'first_name': widget.firstName,
+        'last_name': widget.lastName,
+        'Gender': widget.gender ?? "",
+        'AreaOfInterest': areaOfInterest,
+        'Level': widget.level ?? "",
+        'Country': widget.address ?? "",
+      });
+
       if (widget.level != null) {
         // Student registration
-         Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ChooseAreaOfInterest(
-            firstName: widget.firstName,
-            lastName: widget.lastName,
-            email: widget.email,
-            nationalId: widget.nationalId,
-            address: widget.address,
-            gender: widget.gender,
-            level: widget.level,
-            password: _passwordController.text,
-          ),
-        ),
-      );
+        isRegistered = await registerStudent(
+            widget.firstName,
+            widget.lastName,
+            widget.email,
+            widget.nationalId,
+            widget.address!,
+            widget.gender!,
+            widget.level!,
+            _passwordController.text,
+            areaOfInterest,
+            role);
       } else if (widget.jobtitle != null) {
         // Mentor registration
-        await registerMentor(
+        isRegistered = await registerMentor(
           widget.firstName,
           widget.lastName,
           widget.email,
@@ -148,9 +159,10 @@ class _ContinuedSignupState extends State<ContinuedSignup> {
           widget.jobtitle!,
           _passwordController.text,
         );
-      } else if (widget.companyName != null && widget.company_description != null) {
+      } else if (widget.companyName != null &&
+          widget.company_description != null) {
         // Recruiter registration
-        await registerRecruiter(
+        isRegistered = await registerRecruiter(
           widget.firstName,
           widget.lastName,
           widget.email,
@@ -163,11 +175,17 @@ class _ContinuedSignupState extends State<ContinuedSignup> {
         );
       }
 
-      // After successful registration
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => login_screen()),
-      );
+      if (isRegistered) {
+        // After successful registration
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => login_screen()),
+        );
+      } else {
+        setState(() {
+          _errorMessage = 'Registration failed. Please try again.';
+        });
+      }
     } catch (error) {
       setState(() {
         _errorMessage = 'Error: $error';
@@ -218,11 +236,10 @@ class _ContinuedSignupState extends State<ContinuedSignup> {
                   SizedBox(height: 30),
                   TextFormField(
                     controller: _confirmPasswordController,
-                    decoration:
-                        InputDecoration(labelText: 'Confirm Password'),
+                    decoration: InputDecoration(labelText: 'Confirm Password'),
                     obscureText: true,
-                    validator: (value) =>
-                        Validator.validateConfirmPassword(value!, _passwordController.text),
+                    validator: (value) => Validator.validateConfirmPassword(
+                        value!, _passwordController.text),
                   ),
                   SizedBox(height: 80),
                   _isLoading

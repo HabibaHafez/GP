@@ -14,14 +14,14 @@ class UserSignupState extends State<UserSignup> {
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _nationalIdController = TextEditingController();
-  final TextEditingController _addressController = TextEditingController();
+  final TextEditingController _countryController = TextEditingController();
   String? _selectedGender;
 
   String get firstName => _firstNameController.text.trim();
   String get lastName => _lastNameController.text.trim();
   String get email => _emailController.text.trim();
   String get nationalId => _nationalIdController.text.trim();
-  String get address => _addressController.text.trim();
+  String get address => _countryController.text.trim();
   String? get gender => _selectedGender;
 
   @override
@@ -56,8 +56,8 @@ class UserSignupState extends State<UserSignup> {
           ),
           SizedBox(height: 20),
           TextFormField(
-            controller: _addressController,
-            decoration: InputDecoration(labelText: 'Address'),
+            controller: _countryController,
+            decoration: InputDecoration(labelText: 'Country'),
           ),
           SizedBox(height: 20),
           DropdownButtonFormField<String>(

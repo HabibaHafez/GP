@@ -18,7 +18,7 @@ class _login_screenState extends State<login_screen> {
   final ApiService _apiService = ApiService();
 
   bool loggedIn = false; // Variable to store login status
-  String? nationalId; // Variable to store national ID
+  int? nationalId; // Variable to store national ID
 
   @override
   Widget build(BuildContext context) {
@@ -64,8 +64,7 @@ class _login_screenState extends State<login_screen> {
                 SizedBox(
                   height: 50,
                 ),
-                button_component(
-                  usage: 'Sign in',
+                ElevatedButton(
                   onPressed: () async {
                     // Call your login API
                     Map<String, dynamic> response = await _apiService.login(
@@ -73,9 +72,11 @@ class _login_screenState extends State<login_screen> {
                       _passwordController.text.trim(),
                     );
 
+                    print('API Response: $response');
+
                     if (response['success']) {
-                      // Login successful, extract national ID
-                      nationalId = response['nationalId'];
+                      nationalId = response['National_ID'];
+                      print('National ID: $nationalId');
 
                       setState(() {
                         loggedIn = true;
@@ -83,11 +84,12 @@ class _login_screenState extends State<login_screen> {
 
                       Navigator.pushNamed(context, HomeScreen.routeName);
                     } else {
+                      print('Login failed');
                       showDialog(
                         context: context,
                         builder: (context) => AlertDialog(
                           title: Text('Login Failed'),
-                          content: Text(
+                          content: Text(response['message'] ??
                               'Invalid email or password. Please try again.'),
                           actions: [
                             TextButton(
@@ -101,7 +103,17 @@ class _login_screenState extends State<login_screen> {
                       );
                     }
                   },
-                  routename: HomeScreen.routeName,
+                  style: ElevatedButton.styleFrom(
+                    minimumSize: Size(400, 55),
+                    backgroundColor: Color.fromARGB(255, 48, 134, 232),
+                  ),
+                  child: Text(
+                    'Continue',
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.white,
+                    ),
+                  ),
                 ),
                 TextButton(
                   onPressed: () {

@@ -7,6 +7,8 @@ class ChooseAreaOfInterest extends StatefulWidget {
   static const routeName = 'choose_AreaOfInterst';
   final String firstName;
   final String lastName;
+ 
+
   final String email;
   final String nationalId;
   final String? address; // Nullable type for optional parameters
@@ -31,6 +33,7 @@ class ChooseAreaOfInterest extends StatefulWidget {
 
 class ChooseAreaOfInterstState extends State<ChooseAreaOfInterest> {
   String areaOfInterest = ''; // Initialize areaOfInterest
+  String role='student';
 
   @override
   Widget build(BuildContext context) {
@@ -141,6 +144,8 @@ class ChooseAreaOfInterstState extends State<ChooseAreaOfInterest> {
         widget.level!, // Assuming you handle this correctly
         widget.password!,
         areaOfInterest,
+        role
+        
         // Assuming you handle this correctly
       );
     } catch (e) {
