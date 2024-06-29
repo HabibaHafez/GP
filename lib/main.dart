@@ -15,6 +15,7 @@ import 'package:techmate/Registeration/signup/user/ContinuedSignup.dart';
 import 'package:techmate/courses/CourseDetalisScreen.dart';
 import 'package:techmate/courses/MainCourseScreen.dart';
 import 'package:techmate/courses/CategoryDetailsScreen.dart';
+import 'package:techmate/services/courses/CourseCategoryApiService.dart';
 import 'package:techmate/welcom/welcome_screen.dart';
 
 
@@ -45,7 +46,8 @@ class MyApp extends StatelessWidget {
       WritingMessageScreen.routeName: ((BuildContext context) =>
           WritingMessageScreen()),
       CourseDetailsScreen.routeName: ((BuildContext context) =>
-          CourseDetailsScreen()),
+    CourseDetailsScreen(course: sampleCourse)),
+
     }, initialRoute: welcome_screen.routeName);
   }
 }

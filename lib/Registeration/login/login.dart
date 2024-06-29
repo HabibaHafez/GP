@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:techmate/HomeScreens/home.dart';
 import 'package:techmate/Registeration/signup/Registeration/Registeration.dart';
 import 'package:techmate/commponent/button.dart';
@@ -17,8 +18,7 @@ class _login_screenState extends State<login_screen> {
   final TextEditingController _passwordController = TextEditingController();
   final ApiService _apiService = ApiService();
 
-  bool loggedIn = false; // Variable to store login status
-  int? nationalId; // Variable to store national ID
+  bool loggedIn = false;
 
   @override
   Widget build(BuildContext context) {
@@ -75,12 +75,16 @@ class _login_screenState extends State<login_screen> {
                     print('API Response: $response');
 
                     if (response['success']) {
-                      nationalId = response['National_ID'];
+                      int nationalId = response['National_ID'];
                       print('National ID: $nationalId');
 
                       setState(() {
                         loggedIn = true;
                       });
+
+                      // Save National ID using SharedPreferences
+                      SharedPreferences prefs = await SharedPreferences.getInstance();
+                      await prefs.setInt('national_id', nationalId);
 
                       Navigator.pushNamed(context, HomeScreen.routeName);
                     } else {

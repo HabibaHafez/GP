@@ -1,15 +1,46 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:techmate/BottonNavigationBar/navbar.dart';
 import 'package:techmate/courses/CategoryDetailsScreen.dart';
 import 'package:techmate/courses/CourseDetalisScreen.dart';
-import 'package:techmate/HomeScreens/home.dart';
-import 'package:techmate/MentorScreen/mentors.dart';
-import 'package:techmate/ProfileScreen/profile.dart';
-import 'package:techmate/courses/MainCourseScreen.dart';
-import 'package:techmate/IntershipsScreen/intershipScreen.dart';
+import 'package:techmate/services/courses/CourseCategoryApiService.dart';
+import 'package:techmate/services/courses/courseApiService.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-class CoursesScreen extends StatelessWidget {
+class CoursesScreen extends StatefulWidget {
   static const String routeName = 'courses screen';
+
+  @override
+  _CoursesScreenState get createState => _CoursesScreenState();
+}
+
+class _CoursesScreenState extends State<CoursesScreen> {
+  final CourseCategoryApiService _courseApiService = CourseCategoryApiService();
+  late Future<List<Course>> _startedCoursesFuture;
+  late Future<List<Course>> _suggestedCoursesFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadCourses();
+  }
+
+  Future<void> _loadCourses() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    int? nationalId = prefs.getInt('national_id');
+    if (nationalId != null) {
+      setState(() {
+        _startedCoursesFuture = _courseApiService.fetchStartedCourses();
+        _suggestedCoursesFuture = _courseApiService.fetchSuggestedCourses(nationalId);
+      });
+    } else {
+      setState(() {
+        _startedCoursesFuture = Future.error('National ID not found');
+        _suggestedCoursesFuture = Future.error('National ID not found');
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +49,6 @@ class CoursesScreen extends StatelessWidget {
         title: Text(
           'Courses',
           style: TextStyle(color: Colors.white),
-
         ),
         backgroundColor: Colors.blue[800],
         leading: IconButton(
@@ -50,37 +80,31 @@ class CoursesScreen extends StatelessWidget {
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 12),
-              Container(
-                height: 180,
-                child: Stack(
-                  children: [
-                    // Image
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: Image.asset(
-                        'images/cs.jpeg', // Replace with your image path
-                        width: double.infinity,
-                        height: 180,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    // Text overlay
-                    Positioned.fill(
-                      child: Align(
-                        alignment: Alignment.center,
-                        child: Text(
-                          'Getting Started With SQL',
-                          style: TextStyle(
-                            fontSize: 23,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white, // Set text color
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+              FutureBuilder<List<Course>>(
+                future: _suggestedCoursesFuture,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text('Failed to load suggested courses'));
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return Center(child: Text('No suggested courses available'));
+                  } else {
+                    List<Course> courses = snapshot.data!;
+                    return Column(
+                      children: courses.map((course) {
+                        return CourseCard(
+                          course: course,
+                          onTap: () {
+                            if (course.link.isNotEmpty) {
+                              _launchURL(course.link);
+                            }
+                          },
+                        );
+                      }).toList(),
+                    );
+                  }
+                },
               ),
               SizedBox(height: 30),
               Text(
@@ -158,52 +182,33 @@ class CoursesScreen extends StatelessWidget {
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 8),
-              CourseCard(
-                title: 'Data Analysis Basics',
-                progress: 0.69,
-                imagePath: 'images/cs.jpeg',
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => CourseDetailsScreen()),
-                  );
-                },
-              ),
-              CourseCard(
-                title: 'Python for Beginners',
-                progress: 0.45,
-                imagePath: 'images/cs.jpeg',
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => CourseDetailsScreen()),
-                  );
-                },
-              ),
-              CourseCard(
-                title: 'SQL Development',
-                progress: 0.30,
-                imagePath: 'images/cs.jpeg',
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => CourseDetailsScreen()),
-                  );
-                },
-              ),
-              CourseCard(
-                title: 'Flutter Development',
-                progress: 0.85,
-                imagePath: 'images/cs.jpeg',
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => CourseDetailsScreen()),
-                  );
+              FutureBuilder<List<Course>>(
+                future: _startedCoursesFuture,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text('Failed to load started courses'));
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return Center(child: Text('No started courses available'));
+                  } else {
+                    List<Course> courses = snapshot.data!;
+                    return Column(
+                      children: courses.map((course) {
+                        return CourseCard(
+                          course: course,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => CourseDetailsScreen(course: course),
+                              ),
+                            );
+                          },
+                        );
+                      }).toList(),
+                    );
+                  }
                 },
               ),
             ],
@@ -213,10 +218,18 @@ class CoursesScreen extends StatelessWidget {
       bottomNavigationBar: BottomNavBar(
         currentIndex: 0,
       ),
-
     );
   }
+
+  void _launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
 }
+
 
 class CategoryCard extends StatelessWidget {
   final IconData icon;
@@ -252,16 +265,13 @@ class CategoryCard extends StatelessWidget {
   }
 }
 
+
 class CourseCard extends StatelessWidget {
-  final String title;
-  final double progress;
-  final String imagePath;
+  final Course course;
   final VoidCallback onTap;
 
   CourseCard({
-    required this.title,
-    required this.progress,
-    required this.imagePath,
+    required this.course,
     required this.onTap,
   });
 
@@ -277,7 +287,7 @@ class CourseCard extends StatelessWidget {
               ClipRRect(
                 borderRadius: BorderRadius.circular(15),
                 child: Image.asset(
-                  imagePath,
+                  'images/cs.jpeg', // Use a default image or course-specific image
                   width: 100,
                   height: 100,
                   fit: BoxFit.cover,
@@ -290,19 +300,14 @@ class CourseCard extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      title,
+                      course.name,
                       style:
                           TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                     SizedBox(height: 8),
-                    LinearProgressIndicator(
-                      value: progress,
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                          const Color.fromRGBO(21, 101, 192, 1)),
-                    ), // Set the desired color
-
+                    Text(course.level),
                     SizedBox(height: 8),
-                    Text('${(progress * 100).toStringAsFixed(0)}% complete'),
+                    Text(course.provider),
                   ],
                 ),
               ),
