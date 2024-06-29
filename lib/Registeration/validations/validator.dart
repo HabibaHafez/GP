@@ -14,8 +14,8 @@ class Validator {
     if (value.isEmpty) {
       return 'This field cannot be empty';
     }
-    final emailExp = RegExp(
-        r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
+    final emailExp =
+        RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
     if (!emailExp.hasMatch(value)) {
       return 'Please enter a valid email address';
     }
@@ -26,8 +26,8 @@ class Validator {
     if (value.isEmpty) {
       return 'This field cannot be empty';
     }
-    if (value.length != 11) {
-      return 'National ID must be 11 digits';
+    if (value.length != 10) {
+      return 'National ID must be 10 digits';
     }
     final idExp = RegExp(r'^[0-9]+$');
     if (!idExp.hasMatch(value)) {
