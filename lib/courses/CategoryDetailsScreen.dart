@@ -6,6 +6,7 @@ import 'package:techmate/ProfileScreen/profile.dart';
 import 'package:techmate/HomeScreens/home.dart';
 import 'package:techmate/MentorScreen/mentors.dart';
 import 'package:techmate/courses/MainCourseScreen.dart';
+import 'package:techmate/BottonNavigationBar/navbar.dart';
 
 class CourseCategoryScreen extends StatelessWidget {
   static const routeName = 'course details';
@@ -171,6 +172,9 @@ class SuggestedCourseCard extends StatelessWidget {
           ),
         ],
       ),
+
     );
+
   }
+
 }

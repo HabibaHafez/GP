@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:techmate/IntershipsScreen/application.dart';
 
 class InternshipDetails extends StatelessWidget {
-  final int index;
-  const InternshipDetails({super.key, required this.index});
+  final Map<String, dynamic> internship;
+
+  const InternshipDetails({super.key, required this.internship});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +22,7 @@ class InternshipDetails extends StatelessWidget {
                   children: [
                     CircleAvatar(
                       radius: 25,
-                      backgroundImage: AssetImage('images/cs.jpeg'), // Replace with the correct path or network image
+                      backgroundImage: NetworkImage(internship['Link'] ?? 'images/cs.jpeg'), // Ensure the image URL is correct
                     ),
                     SizedBox(width: 16.0),
                     Expanded(
@@ -29,7 +30,7 @@ class InternshipDetails extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Position $index', // Replace with position name
+                            internship['InternTitle'] ?? 'No title', // Internship title
                             style: TextStyle(
                               fontSize: 16.0,
                               fontWeight: FontWeight.bold,
@@ -37,14 +38,14 @@ class InternshipDetails extends StatelessWidget {
                           ),
                           SizedBox(height: 4.0),
                           Text(
-                            'Company $index', // Replace with company name
+                            internship['CompanyName'] ?? 'No company', // Company name
                             style: TextStyle(
                               color: Colors.grey[600],
                             ),
                           ),
                           SizedBox(height: 4.0),
                           Text(
-                            'Cairo, Cairo, Egypt', // Replace with location info
+                            internship['Location'] ?? 'No location', // Location info
                             style: TextStyle(
                               color: Colors.grey[600],
                             ),
@@ -64,28 +65,28 @@ class InternshipDetails extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      '1 month ago', // Replace with actual posted time
+                      '1 month ago', // Replace with actual posted time if available
                       style: TextStyle(
                         color: Colors.grey[600],
                       ),
                     ),
                     Spacer(),
                     Text(
-                      'Remote', // Replace with actual work type
+                      internship['WorkType'] ?? 'No work type', // Work type
                       style: TextStyle(
                         color: Colors.grey[600],
                       ),
                     ),
                     SizedBox(width: 8.0),
                     Text(
-                      'Full-time', // Replace with actual job type
+                      internship['JobType'] ?? 'No job type', // Job type
                       style: TextStyle(
                         color: Colors.grey[600],
                       ),
                     ),
                     SizedBox(width: 8.0),
                     Text(
-                      'Mid-Senior level', // Replace with actual job level
+                      internship['JobLevel'] ?? 'No job level', // Job level
                       style: TextStyle(
                         color: Colors.grey[600],
                       ),
@@ -96,14 +97,14 @@ class InternshipDetails extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      '51-200 employees', // Replace with actual company size
+                      internship['CompanySize'] ?? 'No company size', // Company size
                       style: TextStyle(
                         color: Colors.grey[600],
                       ),
                     ),
                     Spacer(),
                     Text(
-                      'IT Services and IT Consulting', // Replace with actual industry
+                      internship['Industry'] ?? 'No industry', // Industry
                       style: TextStyle(
                         color: Colors.grey[600],
                       ),
@@ -112,7 +113,7 @@ class InternshipDetails extends StatelessWidget {
                 ),
                 SizedBox(height: 8.0),
                 Text(
-                  '6 of 10 skills match your profile - you may be a good fit', // Replace with actual skill match
+                  '6 of 10 skills match your profile - you may be a good fit', // Replace with actual skill match if available
                   style: TextStyle(
                     color: Colors.grey[600],
                   ),
@@ -173,11 +174,7 @@ class InternshipDetails extends StatelessWidget {
                 ),
                 SizedBox(height: 8.0),
                 Text(
-                  'Dot-IT, a leading marketing company, is seeking a highly skilled and experienced Senior Web Developer to join our team. As a Senior Web Developer at Dot-IT, you will be responsible for developing and maintaining high-quality, scalable web applications and solutions.',
-                ),
-                SizedBox(height: 8.0),
-                Text(
-                  'In this role, you will collaborate with cross-functional teams to understand project requirements and develop innovative web solutions. You will write clean, efficient code using modern programming languages and frameworks, ensuring optimal performance and usability. Additionally, you will conduct thorough testing and debugging to ensure the reliability and functionality of web applications.',
+                  internship['JobDescription'] ?? 'No description available', // Job description
                 ),
                 Divider(),
                 Text(
@@ -189,12 +186,11 @@ class InternshipDetails extends StatelessWidget {
                 ),
                 SizedBox(height: 8.0),
                 Text(
-                  '• Collaborate with cross-functional teams to understand project requirements and develop innovative web solutions.',
+                  internship['Responsibilities'] ?? 'No responsibilities listed', // Responsibilities
                   style: TextStyle(
                     color: Colors.grey[600],
                   ),
                 ),
-                // Add more responsibilities as needed
                 Divider(),
                 Text(
                   'Qualifications',
@@ -205,7 +201,7 @@ class InternshipDetails extends StatelessWidget {
                 ),
                 SizedBox(height: 8.0),
                 Text(
-                  '6 of 10 skills match your profile - you may be a good fit',
+                  internship['Qualifications'] ?? 'No qualifications listed', // Qualifications
                   style: TextStyle(
                     color: Colors.grey[600],
                   ),
@@ -213,7 +209,6 @@ class InternshipDetails extends StatelessWidget {
               ],
             ),
           ),
-
         );
       },
     );

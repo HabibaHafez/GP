@@ -6,6 +6,7 @@ import 'package:techmate/ProfileScreen/profile.dart';
 import 'package:techmate/Notification/notification.dart';
 import 'search.dart';
 import 'package:techmate/services/Home/intern_recommendations_service.dart';
+import 'package:url_launcher/url_launcher.dart';  // Import the url_launcher package
 
 class HomeScreen extends StatefulWidget {
   static const routeName = 'home screen';
@@ -57,6 +58,15 @@ class _HomeScreenState extends State<HomeScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to load recommendations: $e')),
       );
+    }
+  }
+
+  // Method to launch the URL
+  Future<void> _launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
     }
   }
 
@@ -130,17 +140,21 @@ class _HomeScreenState extends State<HomeScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Image.network(
-                            'https://example.com/image.jpg', // Static image
+                            internship['Link'] ?? 'https://example.com/default_image.jpg', // Ensure the image URL is correct
                             height: 80,
                             errorBuilder: (context, error, stackTrace) => Icon(Icons.error),
                           ),
                           SizedBox(height: 8),
-                          Text(internship['title'] ?? 'No title', style: TextStyle(color: Colors.black)),
+                          Text(internship['InternTitle'] ?? 'No title', style: TextStyle(color: Colors.black)),
                           SizedBox(height: 4),
-                          Text(internship['company'] ?? 'No company', style: TextStyle(color: Colors.grey)),
+                          Text(internship['CompanyName'] ?? 'No company', style: TextStyle(color: Colors.grey)),
                           SizedBox(height: 8),
                           ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              if (internship['Link'] != null) {
+                                _launchURL(internship['Link']);  // Use the _launchURL method
+                              }
+                            },
                             child: Text(
                               'Apply',
                               style: TextStyle(
