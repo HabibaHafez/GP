@@ -4,7 +4,7 @@ import 'package:file_picker/file_picker.dart';
 
 class ApplyToInternshipScreen extends StatefulWidget {
   @override
-  _ApplyToInternshipScreenState createState() =>
+  _ApplyToInternshipScreenState get createState =>
       _ApplyToInternshipScreenState();
 }
 
