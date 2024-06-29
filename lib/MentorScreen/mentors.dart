@@ -8,7 +8,7 @@ class MentorsScreen extends StatefulWidget {
   static const String routeName = 'mentor screen';
 
   @override
-  _MentorsScreenState createState() => _MentorsScreenState();
+  _MentorsScreenState get createState=> _MentorsScreenState();
 }
 
 class _MentorsScreenState extends State<MentorsScreen> {

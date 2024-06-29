@@ -11,7 +11,7 @@ import 'package:url_launcher/url_launcher.dart';  // Import the url_launcher pac
 class HomeScreen extends StatefulWidget {
   static const routeName = 'home screen';
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  _HomeScreenState get createState => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
