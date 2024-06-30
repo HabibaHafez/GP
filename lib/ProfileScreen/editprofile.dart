@@ -6,7 +6,7 @@ import 'package:techmate/shared%20attributes/shared.dart';
 
 class EditProfileScreen extends StatefulWidget {
   @override
-  _EditProfileScreenState get createState => _EditProfileScreenState();
+  _EditProfileScreenState createState ()=> _EditProfileScreenState();
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {

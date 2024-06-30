@@ -28,7 +28,7 @@ class ChooseAreaOfInterest extends StatefulWidget {
   });
 
   @override
-  ChooseAreaOfInterstState get createState => ChooseAreaOfInterstState();
+  ChooseAreaOfInterstState createState() => ChooseAreaOfInterstState();
 }
 
 class ChooseAreaOfInterstState extends State<ChooseAreaOfInterest> {
