@@ -13,7 +13,9 @@ Future<bool> registerStudent(
     String areaOfInterest,
     String role) async {
 
+
   var url = Uri.parse('http://192.168.1.2:5000/auth/register');
+
 
 
 

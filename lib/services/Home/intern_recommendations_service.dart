@@ -2,11 +2,17 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class InternRecommendationsService {
+
   final String baseUrl = "http://192.168.1.2:5000/internships/recommend";
 
-  Future<List<Map<String, dynamic>>> fetchRecommendations(String userId) async {
+
+  Future<List<Map<String, dynamic>>> fetchRecommendations(String userId, {String? searchTerm}) async {
     try {
-      final response = await http.get(Uri.parse('$baseUrl/$userId'));
+      final uri = searchTerm != null && searchTerm.isNotEmpty
+          ? Uri.parse('$baseUrl/search?InternTitle=$searchTerm')
+          : Uri.parse('$baseUrl/recommend/$userId');
+
+      final response = await http.get(uri);
 
       if (response.statusCode == 200) {
         List<dynamic> data = jsonDecode(response.body);
