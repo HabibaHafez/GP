@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:techmate/BottonNavigationBar/navbar.dart';
-import 'package:techmate/HomeScreens/home.dart';
-import 'package:techmate/MentorScreen/mentors.dart';
-import 'profile.dart';
 import 'package:techmate/Notification/notification.dart';
+import 'package:techmate/services/profile/profileApiService.dart';
+import 'package:techmate/shared%20attributes/shared.dart';
 
 class EditProfileScreen extends StatefulWidget {
   @override
-  _EditProfileScreenState createState() => _EditProfileScreenState();
+  _EditProfileScreenState get createState => _EditProfileScreenState();
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
   final _formKey = GlobalKey<FormState>();
+  final ProfileApiService _profileApiService = ProfileApiService();
 
-  String firstName = 'Habiba';
-  String lastName = 'Hafez';
-  String email = 'habiba@example.com';
-  String password = '********';
-  String phoneNumber = '123456789';
+  String firstName = '';
+  String lastName = '';
+  String email = '';
+  String password = '';
+  String? phoneNumber = '';
   String country = 'Country';
   String city = 'City';
   String university = 'University';
@@ -25,27 +25,85 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   String level = '1';
 
   @override
+  void initState() {
+    super.initState();
+    _fetchProfileData();
+  }
+
+  void _fetchProfileData() async {
+    int? nationalId = await getNationalId();
+    if (nationalId != null) {
+      final profileData = await _profileApiService.getUserProfile(nationalId);
+
+      if (profileData != null) {
+        setState(() {
+          final user = profileData['user'];
+          firstName = user['first_name'];
+          lastName = user['last_name'];
+          email = user['Email'];
+          phoneNumber = user['PhoneNumber'];
+          country = user['Country'] ?? 'Country';
+          city = user['City'] ?? 'City';
+          university = user['University'] ?? 'University';
+          faculty = user['Faculty'] ?? 'Faculty';
+          level = user['Level'] ?? '1';
+        });
+      } else {
+        print('Failed to load user profile data.');
+      }
+    } else {
+      print('Failed to get national ID.');
+    }
+  }
+
+  void _saveProfile() async {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+
+      int? nationalId = await getNationalId();
+      if (nationalId != null) {
+        Map<String, dynamic> updatedFields = {
+          'first_name': firstName,
+          'last_name': lastName,
+          'Email': email,
+          'Password': password,
+          'PhoneNumber': phoneNumber,
+          'Country': country,
+          'City': city,
+          'University': university,
+          'Faculty': faculty,
+          'Level': level,
+          'National_ID': nationalId,
+        };
+
+        bool success = await _profileApiService.updateProfile(updatedFields);
+
+        if (success) {
+          Navigator.pop(context);
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Failed to update profile')),
+          );
+        }
+      }
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Edit Profile',
-          style: TextStyle(color: Colors.white) ),
+        title: Text('Edit Profile', style: TextStyle(color: Colors.white)),
         backgroundColor: Colors.blue[800],
         leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: Colors.white,
-          ),
+          icon: Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
         actions: [
           IconButton(
-            icon: Icon(
-              Icons.notifications,
-              color: Colors.white,
-            ),
+            icon: Icon(Icons.notifications, color: Colors.white),
             onPressed: () {
               Navigator.push(
                 context,
@@ -81,11 +139,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   password = value;
                 });
               }, obscureText: true),
-              buildTextFormField('Phone Number', phoneNumber, (value) {
-                setState(() {
-                  phoneNumber = value;
-                });
-              }, keyboardType: TextInputType.phone),
+              // buildTextFormField('Phone Number', phoneNumber!, (value) {
+              //   setState(() {
+              //     phoneNumber = value;
+              //   });
+              // }, keyboardType: TextInputType.phone),
               buildTextFormField('Country', country, (value) {
                 setState(() {
                   country = value;
@@ -122,14 +180,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   );
                 }).toList(),
               ),
-              SizedBox(height: 20),ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    // Save the form
-                    _formKey.currentState!.save();
-                    Navigator.pop(context);
-                  }
-                },
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: _saveProfile,
                 child: Text('Save'),
                 style: ElevatedButton.styleFrom(
                   foregroundColor: Colors.white,
@@ -139,7 +192,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   ),
                 ),
               ),
-
             ],
           ),
         ),
@@ -152,7 +204,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   Widget buildTextFormField(
       String labelText, String initialValue, Function(String) onChanged,
-      {TextInputType keyboardType = TextInputType.text, bool obscureText = false}) {
+      {TextInputType keyboardType = TextInputType.text,
+      bool obscureText = false}) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
       child: TextFormField(

@@ -9,7 +9,7 @@ class StudentSignup extends StatefulWidget {
   static const routeName = 'student_signup';
 
   @override
-  _StudentSignupState createState() => _StudentSignupState();
+  _StudentSignupState get createState => _StudentSignupState();
 }
 
 class _StudentSignupState extends State<StudentSignup> {
