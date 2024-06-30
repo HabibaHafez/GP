@@ -17,8 +17,6 @@ Future<bool> registerStudent(
   var url = Uri.parse('http://192.168.1.105:5000/auth/register');
 
 
-
-
   try {
     var response = await http.post(
       url,
