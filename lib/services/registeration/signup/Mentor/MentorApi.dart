@@ -9,7 +9,7 @@ Future<bool> registerMentor(
     String gender,
     String jobtitle,
     String password) async {
-  var url = Uri.parse('http://192.168.1.2:5000/auth/register');
+  var url = Uri.parse('http://192.168.1.105:5000/auth/register');
 
   try {
     var response = await http.post(

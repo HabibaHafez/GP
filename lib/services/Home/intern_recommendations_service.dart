@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 
 class InternRecommendationsService {
 
-  final String baseUrl = "http://192.168.1.2:5000/internships/recommend";
+  final String baseUrl = "http://192.168.1.105:5000/internships/recommend";
 
 
   Future<List<Map<String, dynamic>>> fetchRecommendations(String userId, {String? searchTerm}) async {

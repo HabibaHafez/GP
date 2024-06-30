@@ -44,7 +44,7 @@ class Course {
 }
 
 class CourseApiService {
-  static const String _baseUrl = 'http://192.168.1.2:5000';
+  static const String _baseUrl = 'http://192.168.1.105:5000';
 
   Future<List<Course>> fetchStartedCourses() async {
     final response = await http.get(Uri.parse('$_baseUrl/internships/courseid'));

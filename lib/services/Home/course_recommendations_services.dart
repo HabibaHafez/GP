@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class CourseRecommendationService {
-  final String baseUrl = "http://192.168.1.2:5000";
+  final String baseUrl = "http://192.168.1.105:5000";
 
   Future<dynamic> getCourseRecommendation(String courseId) async {
     try {
