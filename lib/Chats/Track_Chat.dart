@@ -6,7 +6,7 @@ class WritingMessageScreen extends StatefulWidget {
   static const routeName = 'trackchat';
 
   @override
-  _WritingMessageScreenState  get createState => _WritingMessageScreenState();
+  _WritingMessageScreenState   createState() => _WritingMessageScreenState();
 }
 
 class _WritingMessageScreenState extends State<WritingMessageScreen> {
