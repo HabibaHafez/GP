@@ -238,7 +238,6 @@
 //     );
 //   }
 // }
-
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:techmate/BottonNavigationBar/navbar.dart';
@@ -305,6 +304,7 @@ class _SkillsScreenState extends State<SkillsScreen> {
     _updateSkills('delete');
   }
 
+
   void _confirmDeleteSkill(BuildContext context, int index) {
     showDialog(
       context: context,
@@ -333,6 +333,7 @@ class _SkillsScreenState extends State<SkillsScreen> {
   void _updateSkills(String action) async {
     int? nationalId = await getNationalId();
     if (nationalId != null) {
+      print('Updating skills with payload: $nationalId, $skills, $action');
       bool success = await _apiService.updateSkills(nationalId, skills, action);
       if (!success) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -341,6 +342,7 @@ class _SkillsScreenState extends State<SkillsScreen> {
       }
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
