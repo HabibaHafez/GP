@@ -1,12 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:techmate/BottonNavigationBar/navbar.dart';
-import 'package:techmate/IntershipsScreen/application.dart';
 import 'package:techmate/IntershipsScreen/internship_details.dart';
 import 'package:techmate/Notification/notification.dart';
-import 'package:techmate/HomeScreens/home.dart';
-import 'package:techmate/MentorScreen/mentors.dart';
-import 'package:techmate/courses/MainCourseScreen.dart';
-import 'package:techmate/ProfileScreen/profile.dart';
 import 'package:techmate/services/Home/intern_recommendations_service.dart';
 
 class InternshipsScreen extends StatefulWidget {
@@ -19,6 +14,7 @@ class InternshipsScreen extends StatefulWidget {
 
 class _InternshipsScreenState extends State<InternshipsScreen> {
   final InternRecommendationsService _internService = InternRecommendationsService();
+  final TextEditingController _searchController = TextEditingController();
   List<Map<String, dynamic>> _internships = [];
   bool _isLoading = true;
 
@@ -28,9 +24,13 @@ class _InternshipsScreenState extends State<InternshipsScreen> {
     _fetchInternships();
   }
 
-  Future<void> _fetchInternships() async {
+  Future<void> _fetchInternships({String? searchTerm}) async {
+    setState(() {
+      _isLoading = true;
+    });
+
     try {
-      List<Map<String, dynamic>> internships = await _internService.fetchRecommendations('1234566322');
+      List<Map<String, dynamic>> internships = await _internService.fetchRecommendations('1234566322', searchTerm: searchTerm);
       setState(() {
         _internships = internships;
         _isLoading = false;
@@ -46,13 +46,16 @@ class _InternshipsScreenState extends State<InternshipsScreen> {
   }
 
   void _showInternshipDetails(BuildContext context, Map<String, dynamic> internship) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      builder: (BuildContext context) {
-        return InternshipDetails(internship: internship);
-      },
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => InternshipDetails(internship: internship),
+      ),
     );
+  }
+
+  void _onSearch() {
+    _fetchInternships(searchTerm: _searchController.text);
   }
 
   @override
@@ -93,13 +96,18 @@ class _InternshipsScreenState extends State<InternshipsScreen> {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
             child: TextField(
+              controller: _searchController,
               decoration: InputDecoration(
                 labelText: 'Search for internships',
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8.0),
                 ),
-                suffixIcon: Icon(Icons.search),
+                suffixIcon: IconButton(
+                  icon: Icon(Icons.search),
+                  onPressed: _onSearch,
+                ),
               ),
+              onSubmitted: (_) => _onSearch(),
             ),
           ),
           Expanded(
@@ -152,7 +160,7 @@ class _InternshipsScreenState extends State<InternshipsScreen> {
                                       ),
                                       SizedBox(height: 4.0),
                                       Text(
-                                        internship['Location'] ?? 'No location',
+                                        internship['City'] ?? 'No location',
                                         style: TextStyle(
                                           color: Colors.grey[600],
                                         ),
@@ -171,17 +179,23 @@ class _InternshipsScreenState extends State<InternshipsScreen> {
                             SizedBox(height: 8.0),
                             Row(
                               children: [
-                                Text(
-                                  '1 month ago', // Replace with actual posted time if available
-                                  style: TextStyle(
-                                    color: Colors.grey[600],
+                                Flexible(
+                                  child: Text(
+                                    internship['Date'] ?? 'Posted date not available', // Replace with actual posted time if available
+                                    style: TextStyle(
+                                      color: Colors.grey[600],
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
                                 Spacer(),
-                                Text(
-                                  internship['WorkType'] ?? 'No work type', // Work type
-                                  style: TextStyle(
-                                    color: Colors.grey[600],
+                                Flexible(
+                                  child: Text(
+                                    internship['Paid'] ?? 'No compensation info', // Compensation info
+                                    style: TextStyle(
+                                      color: Colors.grey[600],
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
                               ],
@@ -196,12 +210,7 @@ class _InternshipsScreenState extends State<InternshipsScreen> {
                                 ),
                               ),
                               onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => ApplyToInternshipScreen(),
-                                  ),
-                                );
+                                _showInternshipDetails(context, internship); // Navigate to InternshipDetails page
                               },
                               child: Text('Apply'),
                             ),

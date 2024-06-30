@@ -5,7 +5,7 @@ class UserSignup extends StatefulWidget {
   const UserSignup({super.key});
 
   @override
-  UserSignupState get  createState => UserSignupState();
+  UserSignupState createState() => UserSignupState();
 }
 
 class UserSignupState extends State<UserSignup> {

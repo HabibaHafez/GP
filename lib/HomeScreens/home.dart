@@ -6,12 +6,12 @@ import 'package:techmate/ProfileScreen/profile.dart';
 import 'package:techmate/Notification/notification.dart';
 import 'search.dart';
 import 'package:techmate/services/Home/intern_recommendations_service.dart';
-import 'package:url_launcher/url_launcher.dart';  // Import the url_launcher package
+import 'package:techmate/IntershipsScreen/internship_details.dart';
 
 class HomeScreen extends StatefulWidget {
   static const routeName = 'home screen';
   @override
-  _HomeScreenState get createState => _HomeScreenState();
+  _HomeScreenState createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
@@ -58,15 +58,6 @@ class _HomeScreenState extends State<HomeScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to load recommendations: $e')),
       );
-    }
-  }
-
-  // Method to launch the URL
-  Future<void> _launchURL(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
     }
   }
 
@@ -139,21 +130,38 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Image.network(
-                            internship['Link'] ?? 'https://example.com/default_image.jpg', // Ensure the image URL is correct
-                            height: 80,
-                            errorBuilder: (context, error, stackTrace) => Icon(Icons.error),
+                          Flexible(
+                            child: Image.network(
+                              internship['Link'] ?? 'https://example.com/default_image.jpg', // Ensure the image URL is correct
+                              height: 80,
+                              errorBuilder: (context, error, stackTrace) => Icon(Icons.error),
+                            ),
                           ),
                           SizedBox(height: 8),
-                          Text(internship['InternTitle'] ?? 'No title', style: TextStyle(color: Colors.black)),
+                          Flexible(
+                            child: Text(
+                              internship['InternTitle'] ?? 'No title',
+                              style: TextStyle(color: Colors.black),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
                           SizedBox(height: 4),
-                          Text(internship['CompanyName'] ?? 'No company', style: TextStyle(color: Colors.grey)),
+                          Flexible(
+                            child: Text(
+                              internship['CompanyName'] ?? 'No company',
+                              style: TextStyle(color: Colors.grey),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
                           SizedBox(height: 8),
                           ElevatedButton(
                             onPressed: () {
-                              if (internship['Link'] != null) {
-                                _launchURL(internship['Link']);  // Use the _launchURL method
-                              }
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => InternshipDetails(internship: internship),
+                                ),
+                              );
                             },
                             child: Text(
                               'Apply',
@@ -199,13 +207,21 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Image.network(
-                            'https://example.com/course$index.jpg',
-                            height: 80,
-                            errorBuilder: (context, error, stackTrace) => Icon(Icons.error),
+                          Flexible(
+                            child: Image.network(
+                              'https://example.com/course$index.jpg',
+                              height: 80,
+                              errorBuilder: (context, error, stackTrace) => Icon(Icons.error),
+                            ),
                           ),
                           SizedBox(height: 8),
-                          Text('Course $index', style: TextStyle(color: Colors.black)),
+                          Flexible(
+                            child: Text(
+                              'Course $index',
+                              style: TextStyle(color: Colors.black),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
                           ElevatedButton(
                             onPressed: () {},
                             child: Text(
