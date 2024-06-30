@@ -45,8 +45,8 @@ class MyApp extends StatelessWidget {
           CourseCategoryScreen()),
       WritingMessageScreen.routeName: ((BuildContext context) =>
           WritingMessageScreen()),
-      CourseDetailsScreen.routeName: ((BuildContext context) =>
-    CourseDetailsScreen(course: sampleCourse)),
+    //   CourseDetailsScreen.routeName: ((BuildContext context) =>
+    // CourseDetailsScreen(course: ,)),
 
     }, initialRoute: welcome_screen.routeName);
   }

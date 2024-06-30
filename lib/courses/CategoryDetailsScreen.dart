@@ -1,40 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:techmate/BottonNavigationBar/navbar.dart';
 import 'package:techmate/Chats/Track_Chat.dart';
-import 'package:techmate/services/courses/CourseCategoryApiService.dart';
-import 'package:techmate/services/courses/courseApiService.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:techmate/shared%20attributes/shared.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:techmate/IntershipsScreen/intershipScreen.dart';
+import 'package:techmate/ProfileScreen/profile.dart';
+import 'package:techmate/HomeScreens/home.dart';
+import 'package:techmate/MentorScreen/mentors.dart';
+import 'package:techmate/courses/MainCourseScreen.dart';
+import 'package:techmate/BottonNavigationBar/navbar.dart';
 
-
-
-class CourseCategoryScreen extends StatefulWidget {
+class CourseCategoryScreen extends StatelessWidget {
   static const routeName = 'course details';
-
-  @override
-  _CourseCategoryScreenState get createState => _CourseCategoryScreenState();
-}
-
-class _CourseCategoryScreenState extends State<CourseCategoryScreen> {
-  final CourseCategoryApiService _courseApiService = CourseCategoryApiService();
-  late Future<List<Course>> _startedCoursesFuture;
-  late Future<List<Course>> _suggestedCoursesFuture;
-  String? trackType;
-
-  @override
-  void initState() {
-    super.initState();
-    _fetchCourses();
-  }
-
-  Future<void> _fetchCourses() async {
-    int? nationalId = await getNationalId();
-    if (nationalId != null) {
-      _startedCoursesFuture = _courseApiService.fetchStartedCourses();
-      _suggestedCoursesFuture = _courseApiService.fetchSuggestedCourses(nationalId);
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,34 +42,47 @@ class _CourseCategoryScreenState extends State<CourseCategoryScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                trackType ?? 'Track Type',
+                'Data Analysis Roadmap',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 16),
-              FutureBuilder<List<Course>>(
-                future: _startedCoursesFuture,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
-                  } else if (snapshot.hasError) {
-                    return Center(child: Text('Failed to load started courses'));
-                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                    return Center(child: Text('No started courses available'));
-                  } else {
-                    List<Course> courses = snapshot.data!;
-                    trackType = courses.isNotEmpty ? courses[0].trackType : null;
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: courses.map((course) {
-                        return CourseCard(
-                          title: course.name,
-                          level: course.level,
-                          link: course.link,
-                        );
-                      }).toList(),
-                    );
-                  }
-                },
+              Container(
+                height: 180,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.2), // Shadow color
+                      spreadRadius: 3, // Spread radius
+                      blurRadius: 7, // Blur radius
+                      offset: Offset(0, 3), // Shadow offset (x, y)
+                    ),
+                  ],
+                  image: DecorationImage(
+                    image: AssetImage('images/data_analysis.jpg'),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+              SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white, backgroundColor: Colors.blue[800], // Set the text color
+                    ),
+                    onPressed: () {},
+                    child: Text('View'),
+                  ),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white, backgroundColor: Colors.blue[800], // Set the text color
+                    ),
+                    onPressed: () {},
+                    child: Text('Start'),
+                  ),
+                ],
               ),
               SizedBox(height: 16),
               Text(
@@ -102,32 +90,13 @@ class _CourseCategoryScreenState extends State<CourseCategoryScreen> {
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 8),
-              FutureBuilder<List<Course>>(
-                future: _suggestedCoursesFuture,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
-                  } else if (snapshot.hasError) {
-                    return Center(child: Text('Failed to load suggested courses'));
-                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                    return Center(child: Text('No suggested courses available'));
-                  } else {
-                    List<Course> courses = snapshot.data!;
-                    return GridView.count(
-                      crossAxisCount: 2,
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      children: courses.map((course) {
-                        return SuggestedCourseCard(
-                          title: course.name,
-                          level: course.level,
-                          link: course.link,
-                        );
-                      }).toList(),
-                    );
-                  }
-                },
+              SuggestedCourses(),
+              Text(
+                'Enrolled courses',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
+              SizedBox(height: 8),
+              EnrolledCourses(),
             ],
           ),
         ),
@@ -139,16 +108,44 @@ class _CourseCategoryScreenState extends State<CourseCategoryScreen> {
   }
 }
 
+class SuggestedCourses extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return GridView.count(
+      crossAxisCount: 2,
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
+      children: [
+        SuggestedCourseCard(title: 'Python for Beginners'),
+        SuggestedCourseCard(title: 'Java Programming'),
+        SuggestedCourseCard(title: 'Power BI Dashboard'),
+        SuggestedCourseCard(title: 'SQL Development'),
+      ],
+    );
+  }
+}
+
+class EnrolledCourses extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return GridView.count(
+      crossAxisCount: 2,
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
+      children: [
+        SuggestedCourseCard(title: 'Python for Beginners'),
+        SuggestedCourseCard(title: 'Java Programming'),
+        SuggestedCourseCard(title: 'Power BI Dashboard'),
+        SuggestedCourseCard(title: 'SQL Development'),
+      ],
+    );
+  }
+}
+
 class SuggestedCourseCard extends StatelessWidget {
   final String title;
-  final String level;
-  final String link;
 
-  SuggestedCourseCard({
-    required this.title,
-    required this.level,
-    required this.link,
-  });
+  SuggestedCourseCard({required this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -163,20 +160,15 @@ class SuggestedCourseCard extends StatelessWidget {
           ),
           SizedBox(height: 15),
           Text(title),
-          SizedBox(height: 5),
-          Text(level),
           SizedBox(height: 10),
           ElevatedButton(
             onPressed: () {
-              // Open course link
-              if (link != null) {
-                launch(link);
-              }
+              // Handle enroll button action
             },
             style: ElevatedButton.styleFrom(
               foregroundColor: Colors.white, backgroundColor: Color.fromRGBO(21, 101, 192, 1), // Set the text color
             ),
-            child: Text('Start'),
+            child: Text('Enroll'),
           ),
         ],
       ),
@@ -185,61 +177,4 @@ class SuggestedCourseCard extends StatelessWidget {
 
   }
 
-}
-
-class CourseCard extends StatelessWidget {
-  final String title;
-  final String level;
-  final String link;
-
-  CourseCard({
-    required this.title,
-    required this.level,
-    required this.link,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: InkWell(
-        onTap: () {
-          // Open course link
-          if (link != null) {
-            launch(link);
-          }
-        },
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Row(
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(15),
-                child: Image.asset(
-                  'images/cs.jpeg', // Replace with your course image path
-                  width: 100,
-                  height: 100,
-                  fit: BoxFit.cover,
-                ),
-              ),
-              SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      title,
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(height: 8),
-                    Text(level),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
 }

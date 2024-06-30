@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:techmate/BottonNavigationBar/navbar.dart';
-import 'package:techmate/HomeScreens/home.dart';
-import 'package:techmate/ProfileScreen/profile.dart';
+import 'package:techmate/Notification/notification.dart';
+import 'package:techmate/services/Mentor/getmentor.dart';
 import 'bookmeeting.dart';
 import 'mentors.dart';
-import 'package:techmate/Notification/notification.dart';
 import 'package:techmate/Chats/Mentorchat.dart';
 
-
 class MentorProfileScreen extends StatelessWidget {
+  final Mentor mentor;
+
+  MentorProfileScreen({required this.mentor});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,25 +52,26 @@ class MentorProfileScreen extends StatelessWidget {
                   children: <Widget>[
                     CircleAvatar(
                       radius: 50.0,
-                      backgroundImage: NetworkImage('https://example.com/mentor_image.jpg'),
+                      //backgroundImage: NetworkImage(mentor.image),
                     ),
                     SizedBox(height: 10),
-                    Text(
-                      'John Smith',
-                      style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                    ),
-                    Text(
-                      'Tech Enthusiast & Mentor',
-                      style: TextStyle(fontSize: 16, color: Colors.grey),
-                    ),
-                    Text(
-                      'Experienced in Web Development, UI/UX Design',
-                      textAlign: TextAlign.center,
-                    ),
+                    // Text(
+                    //   mentor.name,
+                    //   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                    // ),
+                    // Text(
+                    //   mentor.jobtitle,
+                    //   style: TextStyle(fontSize: 16, color: Colors.grey),
+                    // ),
+                    // Text(
+                    //   mentor.gender,
+                    //   textAlign: TextAlign.center,
+                    // ),
                     SizedBox(height: 20),
                     Text(
                       'Bio',
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                     SizedBox(height: 10),
                     Text(
@@ -78,7 +81,8 @@ class MentorProfileScreen extends StatelessWidget {
                     SizedBox(height: 20),
                     Text(
                       'Experience',
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                     SizedBox(height: 10),
                     Text(
@@ -90,7 +94,8 @@ class MentorProfileScreen extends StatelessWidget {
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => SelectDateTimeScreen()),
+                          MaterialPageRoute(
+                              builder: (context) => SelectDateTimeScreen()),
                         );
                       },
                       child: Text(
@@ -116,22 +121,22 @@ class MentorProfileScreen extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: BottomNavBar(
-        currentIndex: 3, 
+        currentIndex: 3,
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => MentorChatScreen(),
-              ),
-            );
-          },
-
-        child: Icon(Icons.message, color: Colors.white,),
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => MentorChatScreen(),
+            ),
+          );
+        },
+        child: Icon(
+          Icons.message,
+          color: Colors.white,
+        ),
         backgroundColor: Colors.blue[800],
-
       ),
     );
   }

@@ -3,22 +3,21 @@ import 'package:techmate/BottonNavigationBar/navbar.dart';
 import 'package:techmate/ProfileScreen/profile.dart';
 import 'package:techmate/HomeScreens/home.dart';
 import 'package:techmate/MentorScreen/mentors.dart';
-import 'package:techmate/services/courses/CourseCategoryApiService.dart';
 import 'MainCourseScreen.dart';
 import 'package:techmate/IntershipsScreen/intershipScreen.dart';
 
 class CourseDetailsScreen extends StatelessWidget {
   static const String routeName = 'courseDetailsScreen';
-  late final Course course;
+  final String courseTitle = 'python';
 
-   CourseDetailsScreen({required this.course});
+  // CourseDetailsScreen({required this.courseTitle});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          course.name,
+          courseTitle,
           style: TextStyle(color: Colors.white),
         ),
         backgroundColor: Colors.blue[800],
@@ -122,14 +121,3 @@ class CourseDetailsScreen extends StatelessWidget {
     );
   }
 }
-// Define a sample course
-final sampleCourse = Course(
-  id: 1,
-  name: 'Sample Course',
-  duration: '10 hours',
-  level: 'Beginner',
-  provider: 'Sample Provider',
-  link: 'http://example.com',
-  paid: true,
-  trackType: 'Data Analysis',
-);

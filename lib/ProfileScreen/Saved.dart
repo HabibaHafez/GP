@@ -1,22 +1,50 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:techmate/services/savedApiService/savedapiservice.dart';
+import 'package:techmate/shared%20attributes/shared.dart';
 
 class SavedScreen extends StatefulWidget {
   @override
-  _SavedScreenState  get createState => _SavedScreenState();
+  _SavedScreenState get createState => _SavedScreenState();
 }
 
 class _SavedScreenState extends State<SavedScreen> {
-  // Sample data (replace with your actual saved items data)
-  List<Map<String, String>> savedItems = [
-    {'type': 'internship', 'title': 'Internship 1', 'subtitle': 'Company A', 'image': 'https://example.com/internship1.jpg'},
-    {'type': 'course', 'title': 'Course 1', 'subtitle': 'Instructor A', 'image': 'https://example.com/course1.jpg'},
-    {'type': 'internship', 'title': 'Internship 2', 'subtitle': 'Company B', 'image': 'https://example.com/internship2.jpg'},
-    {'type': 'course', 'title': 'Course 2', 'subtitle': 'Instructor B', 'image': 'https://example.com/course2.jpg'},
-  ];
-
+  savedApiService savedapiService = savedApiService();
+  List<Map<String, dynamic>> savedItems = [];
   String filterType = 'all';
 
-  List<Map<String, String>> getFilteredItems() {
+  @override
+  void initState() {
+    super.initState();
+    _loadSavedItems();
+  }
+
+  void _loadSavedItems() async {
+    try {
+      int nationalId = 1234566209;
+      print(nationalId);
+      if (nationalId != null) {
+        List<Map<String, dynamic>> courses =
+            await savedapiService.getSavedCourses(nationalId);
+        List<Map<String, dynamic>> internships =
+            await savedapiService.getSavedInternships(nationalId);
+
+        setState(() {
+          savedItems = [...courses, ...internships];
+        });
+      } else {
+        print('National ID not found');
+        // Handle the case when national ID is not found
+      }
+    } catch (e) {
+      print('Error loading saved items: $e');
+      // Handle error
+    }
+  }
+
+  List<Map<String, dynamic>> getFilteredItems() {
     if (filterType == 'all') {
       return savedItems;
     } else {
@@ -26,16 +54,16 @@ class _SavedScreenState extends State<SavedScreen> {
 
   @override
   Widget build(BuildContext context) {
-    List<Map<String, String>> filteredItems = getFilteredItems();
+    List<Map<String, dynamic>> filteredItems = getFilteredItems();
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Saved Items',
-        style:  TextStyle(color: Colors.white) ),
+        title: Text(
+          'Saved Items',
+          style: TextStyle(color: Colors.white),
+        ),
         backgroundColor: Colors.blue[800],
-   ),
-
-
+      ),
       body: Column(
         children: [
           Padding(
@@ -47,7 +75,8 @@ class _SavedScreenState extends State<SavedScreen> {
                   label: Text(
                     'All',
                     style: TextStyle(
-                      color: filterType == 'all' ? Colors.white : Colors.blue[800],
+                      color:
+                          filterType == 'all' ? Colors.white : Colors.blue[800],
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -65,16 +94,18 @@ class _SavedScreenState extends State<SavedScreen> {
                   label: Text(
                     'Internships',
                     style: TextStyle(
-                      color: filterType == 'internships' ? Colors.white : Colors.blue[800],
+                      color: filterType == 'internship'
+                          ? Colors.white
+                          : Colors.blue[800],
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  selected: filterType == 'internships',
+                  selected: filterType == 'internship',
                   selectedColor: Colors.blue[800],
                   backgroundColor: Colors.grey[200],
                   onSelected: (bool selected) {
                     setState(() {
-                      filterType = 'internships';
+                      filterType = 'internship';
                     });
                   },
                 ),
@@ -83,16 +114,18 @@ class _SavedScreenState extends State<SavedScreen> {
                   label: Text(
                     'Courses',
                     style: TextStyle(
-                      color: filterType == 'courses' ? Colors.white : Colors.blue[800],
+                      color: filterType == 'course'
+                          ? Colors.white
+                          : Colors.blue[800],
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  selected: filterType == 'courses',
+                  selected: filterType == 'course',
                   selectedColor: Colors.blue[800],
                   backgroundColor: Colors.grey[200],
                   onSelected: (bool selected) {
                     setState(() {
-                      filterType = 'courses';
+                      filterType = 'course';
                     });
                   },
                 ),
@@ -103,16 +136,20 @@ class _SavedScreenState extends State<SavedScreen> {
             child: ListView.builder(
               itemCount: filteredItems.length,
               itemBuilder: (context, index) {
-                return ListTile(
-                  leading: Image.network(
-                    filteredItems[index]['image']!,
-                    width: 50,
-                    height: 50,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) => Icon(Icons.error),
+                return Card(
+                  margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  child: ListTile(
+                    leading: Image.network(
+                      filteredItems[index]['image']!,
+                      width: 50,
+                      height: 50,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) =>
+                          Icon(Icons.error),
+                    ),
+                    title: Text(filteredItems[index]['title']!),
+                    subtitle: Text(filteredItems[index]['subtitle']!),
                   ),
-                  title: Text(filteredItems[index]['title']!),
-                  subtitle: Text(filteredItems[index]['subtitle']!),
                 );
               },
             ),

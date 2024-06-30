@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
-import 'mentorprofile.dart';
+import 'package:techmate/BottonNavigationBar/navbar.dart';
 import 'package:techmate/Notification/notification.dart';
 import 'package:techmate/Chats/Mentorchat.dart';
-import 'package:techmate/BottonNavigationBar/navbar.dart';
 import 'package:techmate/services/Mentor/getmentor.dart';
+import 'mentorprofile.dart';
+
 class MentorsScreen extends StatefulWidget {
   static const String routeName = 'mentor screen';
 
   @override
-  _MentorsScreenState get createState=> _MentorsScreenState();
+  _MentorsScreenState get createState => _MentorsScreenState();
 }
 
 class _MentorsScreenState extends State<MentorsScreen> {
@@ -126,14 +127,15 @@ class _MentorsScreenState extends State<MentorsScreen> {
                       final mentor = mentors[index];
                       return ListTile(
                         leading: CircleAvatar(
-                          backgroundImage: NetworkImage(mentor.image),
-                        ),
-                        title: Text(mentor.name),
+                            //backgroundImage: NetworkImage(mentor.image),
+                            ),
+                        title: Text(mentor.firstname),
                         subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(mentor.expertise),
-                            Text('${mentor.reviews} reviews'),
+                            Text(mentor.jobtitle),
+                            Text(
+                                '${mentor.price} price'), // Adjust as per your data structure
                           ],
                         ),
                         trailing: Row(
@@ -146,7 +148,7 @@ class _MentorsScreenState extends State<MentorsScreen> {
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) =>
-                                        MentorProfileScreen(),
+                                        MentorProfileScreen(mentor: mentor),
                                   ),
                                 );
                               },

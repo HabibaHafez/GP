@@ -1,13 +1,10 @@
-
 import 'package:flutter/material.dart';
 import 'package:techmate/BottonNavigationBar/navbar.dart';
-import 'package:techmate/HomeScreens/home.dart';
-import 'package:techmate/ProfileScreen/profile.dart';
 import 'mentors.dart';
 
 class SelectDateTimeScreen extends StatefulWidget {
   @override
-  _SelectDateTimeScreenState  get createState=> _SelectDateTimeScreenState();
+  _SelectDateTimeScreenState get createState => _SelectDateTimeScreenState();
 }
 
 class _SelectDateTimeScreenState extends State<SelectDateTimeScreen> {
@@ -16,8 +13,6 @@ class _SelectDateTimeScreenState extends State<SelectDateTimeScreen> {
 
   @override
   Widget build(BuildContext context) {
-
-
     return Scaffold(
       appBar: AppBar(
         title: Text('Book Meeting', style: TextStyle(color: Colors.black)),

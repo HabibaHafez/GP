@@ -1,46 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:techmate/BottonNavigationBar/navbar.dart';
 import 'package:techmate/courses/CategoryDetailsScreen.dart';
 import 'package:techmate/courses/CourseDetalisScreen.dart';
-import 'package:techmate/services/courses/CourseCategoryApiService.dart';
-import 'package:techmate/services/courses/courseApiService.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:techmate/HomeScreens/home.dart';
+import 'package:techmate/MentorScreen/mentors.dart';
+import 'package:techmate/ProfileScreen/profile.dart';
+import 'package:techmate/courses/MainCourseScreen.dart';
+import 'package:techmate/IntershipsScreen/intershipScreen.dart';
 
-class CoursesScreen extends StatefulWidget {
+class CoursesScreen extends StatelessWidget {
   static const String routeName = 'courses screen';
-
-  @override
-  _CoursesScreenState get createState => _CoursesScreenState();
-}
-
-class _CoursesScreenState extends State<CoursesScreen> {
-  final CourseCategoryApiService _courseApiService = CourseCategoryApiService();
-  late Future<List<Course>> _startedCoursesFuture;
-  late Future<List<Course>> _suggestedCoursesFuture;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadCourses();
-  }
-
-  Future<void> _loadCourses() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    int? nationalId = prefs.getInt('national_id');
-    if (nationalId != null) {
-      setState(() {
-        _startedCoursesFuture = _courseApiService.fetchStartedCourses();
-        _suggestedCoursesFuture = _courseApiService.fetchSuggestedCourses(nationalId);
-      });
-    } else {
-      setState(() {
-        _startedCoursesFuture = Future.error('National ID not found');
-        _suggestedCoursesFuture = Future.error('National ID not found');
-      });
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -80,31 +49,37 @@ class _CoursesScreenState extends State<CoursesScreen> {
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 12),
-              FutureBuilder<List<Course>>(
-                future: _suggestedCoursesFuture,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
-                  } else if (snapshot.hasError) {
-                    return Center(child: Text('Failed to load suggested courses'));
-                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                    return Center(child: Text('No suggested courses available'));
-                  } else {
-                    List<Course> courses = snapshot.data!;
-                    return Column(
-                      children: courses.map((course) {
-                        return CourseCard(
-                          course: course,
-                          onTap: () {
-                            if (course.link.isNotEmpty) {
-                              _launchURL(course.link);
-                            }
-                          },
-                        );
-                      }).toList(),
-                    );
-                  }
-                },
+              Container(
+                height: 180,
+                child: Stack(
+                  children: [
+                    // Image
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Image.asset(
+                        'images/cs.jpeg', // Replace with your image path
+                        width: double.infinity,
+                        height: 180,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    // Text overlay
+                    Positioned.fill(
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: Text(
+                          'Getting Started With SQL',
+                          style: TextStyle(
+                            fontSize: 23,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white, // Set text color
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
               SizedBox(height: 30),
               Text(
@@ -182,33 +157,52 @@ class _CoursesScreenState extends State<CoursesScreen> {
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 8),
-              FutureBuilder<List<Course>>(
-                future: _startedCoursesFuture,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
-                  } else if (snapshot.hasError) {
-                    return Center(child: Text('Failed to load started courses'));
-                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                    return Center(child: Text('No started courses available'));
-                  } else {
-                    List<Course> courses = snapshot.data!;
-                    return Column(
-                      children: courses.map((course) {
-                        return CourseCard(
-                          course: course,
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => CourseDetailsScreen(course: course),
-                              ),
-                            );
-                          },
-                        );
-                      }).toList(),
-                    );
-                  }
+              CourseCard(
+                title: 'Data Analysis Basics',
+                progress: 0.69,
+                imagePath: 'images/cs.jpeg',
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => CourseDetailsScreen()),
+                  );
+                },
+              ),
+              CourseCard(
+                title: 'Python for Beginners',
+                progress: 0.45,
+                imagePath: 'images/cs.jpeg',
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => CourseDetailsScreen()),
+                  );
+                },
+              ),
+              CourseCard(
+                title: 'SQL Development',
+                progress: 0.30,
+                imagePath: 'images/cs.jpeg',
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => CourseDetailsScreen()),
+                  );
+                },
+              ),
+              CourseCard(
+                title: 'Flutter Development',
+                progress: 0.85,
+                imagePath: 'images/cs.jpeg',
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => CourseDetailsScreen()),
+                  );
                 },
               ),
             ],
@@ -220,16 +214,7 @@ class _CoursesScreenState extends State<CoursesScreen> {
       ),
     );
   }
-
-  void _launchURL(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
 }
-
 
 class CategoryCard extends StatelessWidget {
   final IconData icon;
@@ -265,13 +250,16 @@ class CategoryCard extends StatelessWidget {
   }
 }
 
-
 class CourseCard extends StatelessWidget {
-  final Course course;
+  final String title;
+  final double progress;
+  final String imagePath;
   final VoidCallback onTap;
 
   CourseCard({
-    required this.course,
+    required this.title,
+    required this.progress,
+    required this.imagePath,
     required this.onTap,
   });
 
@@ -287,7 +275,7 @@ class CourseCard extends StatelessWidget {
               ClipRRect(
                 borderRadius: BorderRadius.circular(15),
                 child: Image.asset(
-                  'images/cs.jpeg', // Use a default image or course-specific image
+                  imagePath,
                   width: 100,
                   height: 100,
                   fit: BoxFit.cover,
@@ -300,14 +288,19 @@ class CourseCard extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      course.name,
+                      title,
                       style:
                           TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                     SizedBox(height: 8),
-                    Text(course.level),
+                    LinearProgressIndicator(
+                      value: progress,
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                          const Color.fromRGBO(21, 101, 192, 1)),
+                    ), // Set the desired color
+
                     SizedBox(height: 8),
-                    Text(course.provider),
+                    Text('${(progress * 100).toStringAsFixed(0)}% complete'),
                   ],
                 ),
               ),

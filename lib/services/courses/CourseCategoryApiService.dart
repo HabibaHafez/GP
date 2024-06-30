@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:techmate/shared%20attributes/shared.dart';
 
 class Course {
   final int id;
@@ -10,6 +11,8 @@ class Course {
   final String link;
   final bool paid;
   final String trackType;
+  final String roadMap;
+
 
   Course({
     required this.id,
@@ -20,42 +23,46 @@ class Course {
     required this.link,
     required this.paid,
     required this.trackType,
+    required this.roadMap,
+
   });
 
   factory Course.fromJson(Map<String, dynamic> json) {
     return Course(
-      id: json['course_id'],
-      name: json['course_name'],
-      duration: json['course_duration'],
-      level: json['level'],
-      provider: json['provider'],
-      link: json['link'],
-      paid: json['paid'],
-      trackType: json['tracktype'],
+      id: json['CourseID'],
+      name: json['CourseName'],
+      duration: json['Duration'],
+      level: json['Level'],
+      provider: json['Provider'],
+      link: json['Link'],
+      paid: json['Paid'],
+      trackType: json['TrackType'],
+      roadMap: json['RoadMap'],
+
     );
   }
 }
 
-
-class CourseCategoryApiService {
-  final String startedCoursesUrl = 'http://localhost:5000/internships/courseid';
-  final String suggestedCoursesUrl = 'http://localhost:5000/takes/notTaken/';
+class CourseApiService {
+  static const String _baseUrl = 'http://192.168.1.2:5000';
 
   Future<List<Course>> fetchStartedCourses() async {
-    final response = await http.get(Uri.parse(startedCoursesUrl));
+    final response = await http.get(Uri.parse('$_baseUrl/internships/courseid'));
+
     if (response.statusCode == 200) {
-      List<dynamic> body = jsonDecode(response.body);
-      return body.map((dynamic item) => Course.fromJson(item)).toList();
+      List<dynamic> data = json.decode(response.body);
+      return data.map((course) => Course.fromJson(course)).toList();
     } else {
       throw Exception('Failed to load started courses');
     }
   }
 
   Future<List<Course>> fetchSuggestedCourses(int nationalId) async {
-    final response = await http.get(Uri.parse('$suggestedCoursesUrl$nationalId'));
+    final response = await http.get(Uri.parse('$_baseUrl/takes/notTaken/$nationalId'));
+
     if (response.statusCode == 200) {
-      List<dynamic> body = jsonDecode(response.body);
-      return body.map((dynamic item) => Course.fromJson(item)).toList();
+      List<dynamic> data = json.decode(response.body);
+      return data.map((course) => Course.fromJson(course)).toList();
     } else {
       throw Exception('Failed to load suggested courses');
     }

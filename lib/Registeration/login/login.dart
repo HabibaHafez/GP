@@ -83,7 +83,8 @@ class _login_screenState extends State<login_screen> {
                       });
 
                       // Save National ID using SharedPreferences
-                      SharedPreferences prefs = await SharedPreferences.getInstance();
+                      SharedPreferences prefs =
+                          await SharedPreferences.getInstance();
                       await prefs.setInt('national_id', nationalId);
 
                       Navigator.pushNamed(context, HomeScreen.routeName);
