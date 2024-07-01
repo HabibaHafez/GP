@@ -7,7 +7,7 @@ import 'package:techmate/shared%20attributes/shared.dart';
 
 class SavedScreen extends StatefulWidget {
   @override
-  _SavedScreenState  createState() => _SavedScreenState();
+  _SavedScreenState get  createState => _SavedScreenState();
 }
 
 class _SavedScreenState extends State<SavedScreen> {

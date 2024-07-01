@@ -5,7 +5,7 @@ class MentorChatScreen extends StatefulWidget {
   static const routeName = 'mentorchat';
 
   @override
-  _MentorChatScreenState  createState() => _MentorChatScreenState();
+  _MentorChatScreenState get createState => _MentorChatScreenState();
 }
 
 class _MentorChatScreenState extends State<MentorChatScreen> {
