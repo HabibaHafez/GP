@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:techmate/BottonNavigationBar/navbar.dart';
-import 'package:techmate/IntershipsScreen/internship_details.dart';
 import 'package:techmate/Notification/notification.dart';
+import 'package:techmate/StudentUser/BottonNavigationBar/navbar.dart';
+import 'package:techmate/StudentUser/IntershipsScreen/internship_details.dart';
 import 'package:techmate/services/Home/intern_recommendations_service.dart';
 
 class InternshipsScreen extends StatefulWidget {
@@ -9,7 +9,7 @@ class InternshipsScreen extends StatefulWidget {
   const InternshipsScreen({super.key});
 
   @override
-  _InternshipsScreenState  createState() => _InternshipsScreenState();
+  _InternshipsScreenState  get createState => _InternshipsScreenState();
 }
 
 class _InternshipsScreenState extends State<InternshipsScreen> {

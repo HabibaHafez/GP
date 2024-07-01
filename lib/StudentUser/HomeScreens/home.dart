@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:techmate/BottonNavigationBar/navbar.dart';
-import 'package:techmate/MentorScreen/mentors.dart';
+import 'package:techmate/StudentUser/BottonNavigationBar/navbar.dart';
+import 'package:techmate/StudentUser/MentorScreen/mentors.dart';
 import 'package:techmate/ProfileScreen/Saved.dart';
 import 'package:techmate/ProfileScreen/profile.dart';
 import 'package:techmate/Notification/notification.dart';
 import 'search.dart';
 import 'package:techmate/services/Home/intern_recommendations_service.dart';
-import 'package:techmate/IntershipsScreen/internship_details.dart';
+import 'package:techmate/StudentUser/IntershipsScreen/internship_details.dart';
 
 class HomeScreen extends StatefulWidget {
   static const routeName = 'home screen';

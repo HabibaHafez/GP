@@ -2,6 +2,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 Future<bool> registerStudent(
+
     String firstName,
     String lastName,
     String email,
@@ -15,7 +16,6 @@ Future<bool> registerStudent(
 
 
   var url = Uri.parse('http://192.168.1.105:5000/auth/register');
-
 
   try {
     var response = await http.post(
@@ -33,11 +33,11 @@ Future<bool> registerStudent(
         'AreaOfInterest': areaOfInterest,
         'Level': level,
         'Country': country,
-        'role': role,
+        // 'role': role,
       }),
     );
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 200 || response.statusCode == 201) {
       print('Student registered successfully');
       return true;
     } else {

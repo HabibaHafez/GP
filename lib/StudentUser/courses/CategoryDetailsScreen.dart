@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:techmate/BottonNavigationBar/navbar.dart';
-import 'package:techmate/Chats/Track_Chat.dart';
-import 'package:techmate/IntershipsScreen/intershipScreen.dart';
+import 'package:techmate/StudentUser/BottonNavigationBar/navbar.dart';
+import 'package:techmate/StudentUser/Chats/Track_Chat.dart';
+import 'package:techmate/StudentUser/IntershipsScreen/intershipScreen.dart';
 import 'package:techmate/ProfileScreen/profile.dart';
-import 'package:techmate/HomeScreens/home.dart';
-import 'package:techmate/MentorScreen/mentors.dart';
-import 'package:techmate/courses/MainCourseScreen.dart';
-import 'package:techmate/BottonNavigationBar/navbar.dart';
+import 'package:techmate/StudentUser/HomeScreens/home.dart';
+import 'package:techmate/StudentUser/MentorScreen/mentors.dart';
+import 'package:techmate/StudentUser/courses/MainCourseScreen.dart';
+import 'package:techmate/StudentUser/BottonNavigationBar/navbar.dart';
 
 class CourseCategoryScreen extends StatelessWidget {
   static const routeName = 'course details';

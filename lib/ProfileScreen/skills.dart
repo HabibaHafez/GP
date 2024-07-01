@@ -239,14 +239,16 @@
 //   }
 // }
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:techmate/BottonNavigationBar/navbar.dart';
+
+import 'package:techmate/StudentUser/BottonNavigationBar/navbar.dart';
+import 'package:techmate/StudentUser/HomeScreens/home.dart';
+import 'package:techmate/StudentUser/MentorScreen/mentors.dart';
 import 'package:techmate/services/profile/profileUpdateApiService.dart';
 import 'profile.dart';
 
 class SkillsScreen extends StatefulWidget {
   @override
-  _SkillsScreenState createState() => _SkillsScreenState();
+  _SkillsScreenState get createState => _SkillsScreenState();
 }
 
 class _SkillsScreenState extends State<SkillsScreen> {
@@ -412,7 +414,7 @@ class AddSkillDialog extends StatefulWidget {
   AddSkillDialog({this.skill, required this.onSave});
 
   @override
-  _AddSkillDialogState createState() => _AddSkillDialogState();
+  _AddSkillDialogState get createState => _AddSkillDialogState();
 }
 
 class _AddSkillDialogState extends State<AddSkillDialog> {

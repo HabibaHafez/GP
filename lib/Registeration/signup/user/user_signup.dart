@@ -13,15 +13,16 @@ class UserSignupState extends State<UserSignup> {
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _nationalIdController = TextEditingController();
-  final TextEditingController _countryController = TextEditingController();
+  final TextEditingController _nationalIdController =
+      TextEditingController(); // Use TextEditingController for handling text input
+
   String? _selectedGender;
 
   String get firstName => _firstNameController.text.trim();
   String get lastName => _lastNameController.text.trim();
   String get email => _emailController.text.trim();
-  String get nationalId => _nationalIdController.text.trim();
-  String get address => _countryController.text.trim();
+  String get nationalId =>
+      _nationalIdController.text.trim(); 
   String? get gender => _selectedGender;
 
   @override
@@ -52,12 +53,8 @@ class UserSignupState extends State<UserSignup> {
           TextFormField(
             controller: _nationalIdController,
             decoration: InputDecoration(labelText: 'National ID'),
+            keyboardType: TextInputType.number,
             validator: (value) => Validator.validateNationalId(value!),
-          ),
-          SizedBox(height: 20),
-          TextFormField(
-            controller: _countryController,
-            decoration: InputDecoration(labelText: 'Country'),
           ),
           SizedBox(height: 20),
           DropdownButtonFormField<String>(

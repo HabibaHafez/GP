@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:techmate/ProfileScreen/editprofile.dart';
+import 'package:techmate/ProfileScreen/skills.dart';
+import 'package:techmate/Registeration/login/login.dart';
 import 'package:techmate/services/profile/profileApiService.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
-import 'package:techmate/BottonNavigationBar/navbar.dart';
 import 'package:techmate/Notification/notification.dart';
-import 'package:techmate/ProfileScreen/editprofile.dart';
-import 'package:techmate/ProfileScreen/skills.dart';
+import 'package:techmate/StudentUser/BottonNavigationBar/navbar.dart';
+import 'package:techmate/StudentUser/HomeScreens/home.dart';
+import 'package:techmate/StudentUser/MentorScreen/mentors.dart';
+import 'package:techmate/ProfileScreen/Experince.dart';
 import 'package:techmate/ProfileScreen/Saved.dart';
-import 'package:techmate/Registeration/login/login.dart';
+
 
 Future<int?> getNationalId() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -19,7 +23,7 @@ class ProfileScreen extends StatefulWidget {
   static const String routeName = 'profile screen';
 
   @override
-  _ProfileScreenState createState() => _ProfileScreenState();
+  _ProfileScreenState get createState => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {

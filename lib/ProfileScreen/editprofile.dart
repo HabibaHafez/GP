@@ -225,7 +225,7 @@
 // }
 
 import 'package:flutter/material.dart';
-import 'package:techmate/BottonNavigationBar/navbar.dart';
+import 'package:techmate/StudentUser/BottonNavigationBar/navbar.dart';
 import 'package:techmate/Notification/notification.dart';
 import 'package:techmate/services/profile/profileApiService.dart';
 import 'package:techmate/shared%20attributes/shared.dart';
