@@ -11,13 +11,14 @@ import 'package:techmate/IntershipsScreen/internship_details.dart';
 class HomeScreen extends StatefulWidget {
   static const routeName = 'home screen';
   @override
-  _HomeScreenState  createState() => _HomeScreenState();
+  _HomeScreenState createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
   final InternRecommendationsService _internService = InternRecommendationsService();
   List<Map<String, dynamic>> _recommendedInternships = [];
   bool _isLoading = true;
+  bool _showSavedSection = false; // Control visibility of the "Saved" section
 
   // Sample data for saved items
   final List<Map<String, String>> _savedItems = [
@@ -187,7 +188,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Text(
-                'Courses',
+                'Recommended Courses',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
               ),
             ),
@@ -195,7 +196,7 @@ class _HomeScreenState extends State<HomeScreen> {
               height: 220,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
-                itemCount: 10,
+                itemCount: 10, // Adjust this based on the number of recommended courses
                 itemBuilder: (context, index) {
                   return Container(
                     width: 160,
@@ -217,27 +218,19 @@ class _HomeScreenState extends State<HomeScreen> {
                           SizedBox(height: 8),
                           Flexible(
                             child: Text(
-                              'Course $index',
+                              'Google Data Analytics',
                               style: TextStyle(color: Colors.black),
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
-                          ElevatedButton(
-                            onPressed: () {},
+                          Flexible(
                             child: Text(
-                              'Enroll',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.blue[800],
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
+                              'Google',
+                              style: TextStyle(color: Colors.grey),
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
+                          SizedBox(height: 8),
                         ],
                       ),
                     ),
@@ -245,57 +238,59 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Text(
-                'Saved',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
+            if (_showSavedSection) ...[
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Text(
+                  'Saved',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  DropdownButton<String>(
-                    value: _selectedFilter,
-                    items: [
-                      DropdownMenuItem(value: 'all', child: Text('All')),
-                      DropdownMenuItem(value: 'internship', child: Text('Internships')),
-                      DropdownMenuItem(value: 'course', child: Text('Courses')),
-                    ],
-                    onChanged: (value) {
-                      setState(() {
-                        _selectedFilter = value!;
-                      });
-                    },
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => SavedScreen()));
-                    },
-                    child: Text('Show More'),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-              child: Column(
-                children: _getFilteredSavedItems().map((item) {
-                  return ListTile(
-                    leading: Image.network(
-                      item['image']!,
-                      width: 50,
-                      height: 50,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) => Icon(Icons.error),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    DropdownButton<String>(
+                      value: _selectedFilter,
+                      items: [
+                        DropdownMenuItem(value: 'all', child: Text('All')),
+                        DropdownMenuItem(value: 'internship', child: Text('Internships')),
+                        DropdownMenuItem(value: 'course', child: Text('Courses')),
+                      ],
+                      onChanged: (value) {
+                        setState(() {
+                          _selectedFilter = value!;
+                        });
+                      },
                     ),
-                    title: Text(item['title']!),
-                  );
-                }).toList(),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => SavedScreen()));
+                      },
+                      child: Text('Show More'),
+                    ),
+                  ],
+                ),
               ),
-            ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                child: Column(
+                  children: _getFilteredSavedItems().map((item) {
+                    return ListTile(
+                      leading: Image.network(
+                        item['image']!,
+                        width: 50,
+                        height: 50,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) => Icon(Icons.error),
+                      ),
+                      title: Text(item['title']!),
+                    );
+                  }).toList(),
+                ),
+              ),
+            ],
           ],
         ),
       ),
