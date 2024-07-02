@@ -268,11 +268,154 @@
 //   }
 // }
 
+//
+// import 'package:flutter/material.dart';
+// import 'package:shared_preferences/shared_preferences.dart';
+// import 'package:techmate/services/courses/save_unsave_course_service.dart';
+// import 'package:url_launcher/url_launcher.dart';
+//
+// import '../BottonNavigationBar/navbar.dart';
+//
+// class CourseDetailsScreen extends StatefulWidget {
+//   static const String routeName = 'courseDetailsScreen';
+//   final String courseTitle;
+//   final String provider;
+//   final String level;
+//   final String duration;
+//   final String courseDescription;
+//   final String price;
+//   final String playUrl;
+//   final int courseId;
+//
+//   CourseDetailsScreen({
+//     required this.courseTitle,
+//     required this.provider,
+//     required this.level,
+//     required this.duration,
+//     required this.courseDescription,
+//     required this.price,
+//     required this.playUrl,
+//     required this.courseId,
+//   });
+//
+//   @override
+//   _CourseDetailsScreenState createState() => _CourseDetailsScreenState();
+// }
+//
+// class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
+//   @override
+//   void initState() {
+//     super.initState();
+//     _checkIfCourseIsSaved();
+//   }
+//
+//   void _checkIfCourseIsSaved() async {
+//     SharedPreferences prefs = await SharedPreferences.getInstance();
+//     String? nationalId = prefs.getString('national_id');
+//     if (nationalId != null) {
+//       bool saved = await SaveUnsaveCourseService.isCourseSaved(nationalId, widget.courseId);
+//       setState(() {
+//         //isSaved = saved;
+//       });
+//     }
+//   }
+//
+//   void _launchURL(String url) async {
+//     final Uri uri = Uri.parse(url);
+//     if (await canLaunchUrl(uri)) {
+//       await launchUrl(uri);
+//     } else {
+//       throw 'Could not launch $url';
+//     }
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text(
+//           widget.courseTitle,
+//           style: TextStyle(color: Colors.white, fontSize: 18),
+//         ),
+//         backgroundColor: Colors.blue[800],
+//         leading: IconButton(
+//           icon: Icon(
+//             Icons.arrow_back,
+//             color: Colors.white,
+//           ),
+//           onPressed: () {
+//             Navigator.pop(context);
+//           },
+//         ),
+//       ),
+//       body: SingleChildScrollView(
+//         padding: const EdgeInsets.all(16.0),
+//         child: Column(
+//           crossAxisAlignment: CrossAxisAlignment.start,
+//           children: [
+//             SizedBox(height: 16),
+//             Text(
+//               'Course Details',
+//               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+//             ),
+//             SizedBox(height: 8),
+//             Text(
+//               'Provider: ${widget.provider}',
+//               style: TextStyle(fontSize: 16),
+//             ),
+//             SizedBox(height: 8),
+//             Text(
+//               'Level: ${widget.level}',
+//               style: TextStyle(fontSize: 16),
+//             ),
+//             SizedBox(height: 8),
+//             Text(
+//               'Duration: ${widget.duration}',
+//               style: TextStyle(fontSize: 16),
+//             ),
+//             SizedBox(height: 16),
+//             Text(
+//               'Description:',
+//               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+//             ),
+//             Text(
+//               widget.courseDescription,
+//               style: TextStyle(fontSize: 16),
+//             ),
+//             SizedBox(height: 16),
+//             Text(
+//               'Price: ${widget.price}',
+//               style: TextStyle(fontSize: 16, color: Colors.red),
+//             ),
+//             SizedBox(height: 16),
+//             Center(
+//               child: ElevatedButton(
+//                 style: ElevatedButton.styleFrom(
+//                   backgroundColor: Colors.blue[800],
+//                   foregroundColor: Colors.white,
+//                   shape: RoundedRectangleBorder(
+//                     borderRadius: BorderRadius.circular(10),
+//                   ),
+//                 ),
+//                 onPressed: () => _launchURL(widget.playUrl),
+//                 child: Text('Start'),
+//               ),
+//             ),
+//           ],
+//         ),
+//       ),
+//       bottomNavigationBar: BottomNavBar(
+//         currentIndex: 0,
+//       ),
+//     );
+//   }
+// }
+
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:techmate/services/courses/save_unsave_course_service.dart';
 import 'package:url_launcher/url_launcher.dart';
-
 import '../BottonNavigationBar/navbar.dart';
 
 class CourseDetailsScreen extends StatefulWidget {
@@ -321,21 +464,6 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
     }
   }
 
-  void toggleSave() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? nationalId = prefs.getString('national_id');
-    if (nationalId != null) {
-      if (isSaved) {
-        await SaveUnsaveCourseService.unsaveCourse(nationalId, widget.courseId);
-      } else {
-        await SaveUnsaveCourseService.saveCourse(nationalId, widget.courseId);
-      }
-      setState(() {
-        isSaved = !isSaved;
-      });
-    }
-  }
-
   void _launchURL(String url) async {
     final Uri uri = Uri.parse(url);
     if (await canLaunchUrl(uri)) {
@@ -369,32 +497,10 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Center(
-              child: IconButton(
-                icon: Icon(
-                  Icons.play_circle_filled,
-                  color: Colors.blue[800],
-                  size: 64,
-                ),
-                onPressed: () => _launchURL(widget.playUrl),
-              ),
-            ),
             SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Course Details',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-                IconButton(
-                  icon: Icon(
-                    isSaved ? Icons.star : Icons.star_border,
-                    color: isSaved ? Colors.yellow : Colors.grey,
-                  ),
-                  onPressed: toggleSave,
-                ),
-              ],
+            Text(
+              'Course Details',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 8),
             Text(
@@ -424,6 +530,20 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
             Text(
               'Price: ${widget.price}',
               style: TextStyle(fontSize: 16, color: Colors.red),
+            ),
+            SizedBox(height: 16),
+            Center(
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue[800],
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                onPressed: () => _launchURL(widget.playUrl),
+                child: Text('Start'),
+              ),
             ),
           ],
         ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:techmate/BottonNavigationBar/navbar.dart';
-import 'package:techmate/HomeScreens/home.dart';
-import 'package:techmate/MentorScreen/mentors.dart';
+import 'package:techmate/StudentUser/BottonNavigationBar/navbar.dart';
+import 'package:techmate/StudentUser/HomeScreens/home.dart';
+import 'package:techmate/StudentUser/MentorScreen/mentors.dart';
 import 'add.dart';
 import 'profile.dart';
 import 'package:techmate/Notification/notification.dart';

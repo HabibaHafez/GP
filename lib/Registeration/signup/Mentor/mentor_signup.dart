@@ -3,7 +3,8 @@ import 'package:techmate/Registeration/login/login.dart';
 import 'package:techmate/Registeration/signup/user/ContinuedSignup.dart';
 import 'package:techmate/Registeration/signup/user/user_signup.dart';
 import 'package:techmate/commponent/button.dart';
-import 'package:techmate/commponent/textField.dart'; // Make sure this import is correct
+import 'package:techmate/commponent/textField.dart';
+import 'package:techmate/shared%20attributes/shared.dart'; // Make sure this import is correct
 
 class mentor_signup extends StatelessWidget {
   final _userSignupKey = GlobalKey<UserSignupState>();
@@ -38,27 +39,40 @@ class mentor_signup extends StatelessWidget {
                   SizedBox(height: 20),
                   UserSignup(key: _userSignupKey),
                   SizedBox(height: 20),
-                  // Make sure TextField_component accepts 'controller' as a named parameter
-                  TextField_component(attribute: 'job title', controller: _jobTitleController,),
+                  TextField_component(
+                    attribute: 'job title',
+                    controller: _jobTitleController,
+                  ),
                   SizedBox(height: 45),
                   ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       if (_formKey.currentState!.validate() &&
                           _userSignupKey.currentState!.validate()) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ContinuedSignup.fromMentor(
-                              firstName: _userSignupKey.currentState!.firstName,
-                              lastName: _userSignupKey.currentState!.lastName,
-                              email: _userSignupKey.currentState!.email,
-                              nationalId: _userSignupKey.currentState!.nationalId,
-                              address: _userSignupKey.currentState!.address,
-                              gender: _userSignupKey.currentState!.gender!,
-                              jobtitle: _jobTitleController.text,
+                        String? role = await getRole();
+                        if (role != null) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ContinuedSignup.fromMentor(
+                                firstName:
+                                _userSignupKey.currentState!.firstName,
+                                lastName: _userSignupKey.currentState!.lastName,
+                                email: _userSignupKey.currentState!.email,
+                                nationalId: _userSignupKey
+                                    .currentState!.nationalId
+                                    .toString(),
+                                gender: _userSignupKey.currentState!.gender!,
+                                jobtitle: _jobTitleController.text,
+                                //role: role,
+                              ),
                             ),
-                          ),
-                        );
+                          );
+                        } else {
+                          // Handle the case when role is null (e.g., show a message to the user)
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Role is not available')),
+                          );
+                        }
                       }
                     },
                     style: ElevatedButton.styleFrom(

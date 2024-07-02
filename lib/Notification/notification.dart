@@ -102,15 +102,15 @@ class NotificationSection extends StatelessWidget {
           child: Text(
             title,
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black54,
-                ),
+              fontWeight: FontWeight.bold,
+              color: Colors.black54,
+            ),
           ),
         ),
         Column(
           children: notifications
               .map((notification) =>
-                  NotificationTile(notification: notification))
+              NotificationTile(notification: notification))
               .toList(),
         ),
       ],

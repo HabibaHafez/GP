@@ -11,11 +11,9 @@ Future<bool> registerStudent(
     String level,
     String password,
     String areaOfInterest,
-    String role) async {
-
-
-  var url = Uri.parse('http://192.168.1.105:5000/auth/register');
-
+    //String role
+    ) async {
+  var url = Uri.parse('http://192.168.1.105:5000/auth/register/student');
 
   try {
     var response = await http.post(
@@ -33,11 +31,11 @@ Future<bool> registerStudent(
         'AreaOfInterest': areaOfInterest,
         'Level': level,
         'Country': country,
-        'role': role,
+        // 'role': role,
       }),
     );
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 200 || response.statusCode == 201) {
       print('Student registered successfully');
       return true;
     } else {

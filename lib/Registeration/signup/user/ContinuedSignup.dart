@@ -1,11 +1,13 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:techmate/Registeration/login/login.dart';
-import 'package:techmate/Registeration/signup/student/skills_choosen.dart';
 import 'package:techmate/Registeration/validations/validator.dart';
-import 'package:techmate/Registeration/signup/student/skills_choosen.dart';
 import 'package:techmate/services/registeration/signup/Mentor/MentorApi.dart';
-import 'package:techmate/services/registeration/signup/Recruiter/RecruiterApi.dart';
 import 'package:techmate/services/registeration/signup/Student/studentApi.dart';
+import 'package:techmate/services/registeration/signup/Recruiter/RecruiterApi.dart';
+
+import 'package:techmate/shared%20attributes/shared.dart';
 
 class ContinuedSignup extends StatefulWidget {
   static const routeName = 'ContinuedSignup';
@@ -18,10 +20,7 @@ class ContinuedSignup extends StatefulWidget {
   final String? gender; // Nullable type for optional parameters
   final String? level; // Nullable type for optional parameters
   final String? jobtitle; // Nullable type for optional parameters
-  final String? companyName; // Nullable type for optional parameters
-  final String? company_description;
-
-  // Nullable type for optional parameters
+  final String? companyName;
 
   ContinuedSignup({
     required this.firstName,
@@ -33,7 +32,6 @@ class ContinuedSignup extends StatefulWidget {
     this.level,
     this.jobtitle,
     this.companyName,
-    this.company_description,
   });
 
   factory ContinuedSignup.fromStudent({
@@ -61,7 +59,6 @@ class ContinuedSignup extends StatefulWidget {
     required String lastName,
     required String email,
     required String nationalId,
-    String? address,
     String? gender,
     required String jobtitle,
   }) {
@@ -70,7 +67,6 @@ class ContinuedSignup extends StatefulWidget {
       lastName: lastName,
       email: email,
       nationalId: nationalId,
-      address: address,
       gender: gender,
       jobtitle: jobtitle,
     );
@@ -81,20 +77,18 @@ class ContinuedSignup extends StatefulWidget {
     required String lastName,
     required String email,
     required String nationalId,
-    String? address,
     String? gender,
     required String companyName,
-    required String company_description,
+    required String jobtitle,
   }) {
     return ContinuedSignup(
       firstName: firstName,
       lastName: lastName,
       email: email,
       nationalId: nationalId,
-      address: address,
       gender: gender,
       companyName: companyName,
-      company_description: company_description,
+      jobtitle: jobtitle,
     );
   }
 
@@ -106,10 +100,9 @@ class _ContinuedSignupState extends State<ContinuedSignup> {
   final _formKey = GlobalKey<FormState>();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
-  String role = 'student';
-
   bool _isLoading = false;
   String _errorMessage = '';
+  Future<String?> role = getRole();
 
   Future<void> _registerUser() async {
     setState(() {
@@ -119,64 +112,49 @@ class _ContinuedSignupState extends State<ContinuedSignup> {
 
     try {
       bool isRegistered = false;
-      String areaOfInterest =
-          "Data Analysis"; // Replace with actual area of interest if needed
+      String? userRole = await role;
+      print('User role: $userRole');
 
-      print({
-        'National_ID': widget.nationalId,
-        'Email': widget.email,
-        'Password': _passwordController.text,
-        'first_name': widget.firstName,
-        'last_name': widget.lastName,
-        'Gender': widget.gender ?? "",
-        'AreaOfInterest': areaOfInterest,
-        'Level': widget.level ?? "",
-        'Country': widget.address ?? "",
-      });
+      // Simulate area of interest for demo purposes
+      String areaOfInterest = "Data Analysis";
 
-      if (widget.level != null) {
-        // Student registration
+      if (userRole == 'student') {
         isRegistered = await registerStudent(
-            widget.firstName,
-            widget.lastName,
-            widget.email,
-            widget.nationalId,
-            widget.address!,
-            widget.gender!,
-            widget.level!,
-            _passwordController.text,
-            areaOfInterest,
-            role);
-      } else if (widget.jobtitle != null) {
-        // Mentor registration
+          widget.firstName,
+          widget.lastName,
+          widget.email,
+          widget.nationalId,
+          widget.address!,
+          widget.gender!,
+          widget.level!,
+          _passwordController.text,
+          areaOfInterest,
+        );
+      } else if (userRole == 'mentor') {
         isRegistered = await registerMentor(
           widget.firstName,
           widget.lastName,
           widget.email,
           widget.nationalId,
-          widget.address!,
           widget.gender!,
           widget.jobtitle!,
           _passwordController.text,
+          areaOfInterest,
         );
-      } else if (widget.companyName != null &&
-          widget.company_description != null) {
-        // Recruiter registration
+      } else if (userRole == 'recruiter') {
         isRegistered = await registerRecruiter(
           widget.firstName,
           widget.lastName,
           widget.email,
           widget.nationalId,
-          widget.address!,
           widget.gender!,
           widget.companyName!,
-          widget.company_description!,
+          widget.jobtitle!,
           _passwordController.text,
         );
       }
 
       if (isRegistered) {
-        // After successful registration
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => login_screen()),
@@ -222,9 +200,10 @@ class _ContinuedSignupState extends State<ContinuedSignup> {
                   Text(
                     'Sign up',
                     style: TextStyle(
-                        fontSize: 35,
-                        color: Colors.blue[800],
-                        fontWeight: FontWeight.bold),
+                      fontSize: 35,
+                      color: Colors.blue[800],
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   SizedBox(height: 30),
                   TextFormField(
@@ -239,7 +218,9 @@ class _ContinuedSignupState extends State<ContinuedSignup> {
                     decoration: InputDecoration(labelText: 'Confirm Password'),
                     obscureText: true,
                     validator: (value) => Validator.validateConfirmPassword(
-                        value!, _passwordController.text),
+                      value!,
+                      _passwordController.text,
+                    ),
                   ),
                   SizedBox(height: 80),
                   _isLoading

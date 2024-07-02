@@ -27,6 +27,7 @@ import 'package:http/http.dart' as http;
 //     );
 //   }
 // }
+
 class RecommendedCourseService {
   static Future<List<RecommendedCourse>> fetchRecommendedCourses(String nationalId) async {
     final response = await http.get(Uri.parse('http://192.168.1.105:5000/recommend/course/$nationalId'));

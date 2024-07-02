@@ -10,8 +10,7 @@ class hr_signup extends StatelessWidget {
   final _formKey = GlobalKey<FormState>(); // Define _formKey
   static const routeName = 'hr sign up';
   final TextEditingController _companyNameController = TextEditingController();
-  final TextEditingController _companyDescriptionController =
-      TextEditingController();
+  final TextEditingController _jobtitleController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -43,9 +42,8 @@ class hr_signup extends StatelessWidget {
                   ),
                   SizedBox(height: 20),
                   TextField_component(
-                    attribute: 'company description',
-                    controller:
-                        _companyDescriptionController, // Pass the controller
+                    attribute: 'job title',
+                    controller: _jobtitleController, // Pass the controller
                   ),
                   SizedBox(height: 30),
                   ElevatedButton(
@@ -61,12 +59,12 @@ class hr_signup extends StatelessWidget {
                               lastName: _userSignupKey.currentState!.lastName,
                               email: _userSignupKey.currentState!.email,
                               nationalId:
-                                  _userSignupKey.currentState!.nationalId,
-                              address: _userSignupKey.currentState!.address,
+                              _userSignupKey.currentState!.nationalId,
                               gender: _userSignupKey.currentState!.gender!,
-                              companyName: _companyNameController.text, // Remove semicolon (;)
-                              company_description:
-                                  _companyDescriptionController.text, // Remove semicolon (;)
+                              companyName: _companyNameController
+                                  .text, // Remove semicolon (;)
+                              jobtitle: _jobtitleController
+                                  .text, // Remove semicolon (;)
                             ),
                           ),
                         );

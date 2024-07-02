@@ -3,7 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:techmate/services/profile/profileApiService.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
-import 'package:techmate/BottonNavigationBar/navbar.dart';
+import 'package:techmate/StudentUser/BottonNavigationBar/navbar.dart';
 import 'package:techmate/Notification/notification.dart';
 import 'package:techmate/ProfileScreen/editprofile.dart';
 import 'package:techmate/ProfileScreen/skills.dart';

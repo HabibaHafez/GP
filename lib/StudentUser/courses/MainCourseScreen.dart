@@ -1878,9 +1878,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:techmate/BottonNavigationBar/navbar.dart';
-import 'package:techmate/courses/CategoryDetailsScreen.dart';
-import 'package:techmate/courses/CourseDetalisScreen.dart';
+import 'package:techmate/StudentUser/BottonNavigationBar/navbar.dart';
+import 'package:techmate/StudentUser/courses/CategoryDetailsScreen.dart';
+import 'package:techmate/StudentUser/courses/CourseDetalisScreen.dart';
 import 'package:techmate/services/courses/recommended_course_service.dart';
 import 'package:techmate/services/courses/search_course_service.dart'; // Import the new service
 

@@ -3,20 +3,21 @@ import 'package:techmate/Registeration/login/login.dart';
 import 'package:techmate/Registeration/signup/user/ContinuedSignup.dart';
 import 'package:techmate/Registeration/signup/user/user_signup.dart';
 import 'package:techmate/Registeration/validations/validator.dart';
- // Import ContinuedSignup screen
+import 'package:techmate/shared%20attributes/shared.dart'; // Import ContinuedSignup screen
 
 class StudentSignup extends StatefulWidget {
   static const routeName = 'student_signup';
 
   @override
-  _StudentSignupState  createState() => _StudentSignupState();
+  _StudentSignupState  createState()=> _StudentSignupState();
 }
 
 class _StudentSignupState extends State<StudentSignup> {
   final _formKey = GlobalKey<FormState>();
   String? _selectedLevel;
+  final TextEditingController _countryController = TextEditingController();
+  String get address => _countryController.text.trim();
   final _userSignupKey = GlobalKey<UserSignupState>();
-  
 
   @override
   Widget build(BuildContext context) {
@@ -49,6 +50,10 @@ class _StudentSignupState extends State<StudentSignup> {
                 ),
                 SizedBox(height: 20),
                 UserSignup(key: _userSignupKey),
+                TextFormField(
+                  controller: _countryController,
+                  decoration: InputDecoration(labelText: 'Country'),
+                ),
                 SizedBox(height: 20),
                 DropdownButtonFormField<String>(
                   value: _selectedLevel,
@@ -67,24 +72,34 @@ class _StudentSignupState extends State<StudentSignup> {
                 ),
                 SizedBox(height: 20),
                 ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     if (_formKey.currentState!.validate() &&
                         _userSignupKey.currentState!.validate()) {
-                      // Navigate to ContinuedSignup and pass password
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ContinuedSignup(
-                            firstName: _userSignupKey.currentState!.firstName,
-                            lastName: _userSignupKey.currentState!.lastName,
-                            email: _userSignupKey.currentState!.email,
-                            nationalId: _userSignupKey.currentState!.nationalId,
-                            address: _userSignupKey.currentState!.address,
-                            gender: _userSignupKey.currentState!.gender!,
-                            level: _selectedLevel!,
+                      String? role = await getRole();
+                      // Navigate to ContinuedSignup and pass the data
+                      if (role != null) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ContinuedSignup(
+                              firstName: _userSignupKey.currentState!.firstName,
+                              lastName: _userSignupKey.currentState!.lastName,
+                              email: _userSignupKey.currentState!.email,
+                              nationalId:
+                              _userSignupKey.currentState!.nationalId,
+                              gender: _userSignupKey.currentState!.gender!,
+                              address: _countryController.text.trim(),
+                              level: _selectedLevel!,
+                              //role: role,
+                            ),
                           ),
-                        ),
-                      );
+                        );
+                      } else {
+                        // Handle the case when role is null (e.g., show a message to the user)
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Role is not available')),
+                        );
+                      }
                     }
                   },
                   style: ElevatedButton.styleFrom(

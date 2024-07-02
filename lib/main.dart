@@ -173,12 +173,92 @@
 //   }
 // }
 //
+//
+// import 'package:flutter/material.dart';
+// import 'package:techmate/Chats/Track_Chat.dart';
+// import 'package:techmate/HomeScreens/home.dart';
+// import 'package:techmate/IntershipsScreen/intershipScreen.dart';
+// import 'package:techmate/MentorScreen/mentors.dart';
+// import 'package:techmate/ProfileScreen/profile.dart';
+// import 'package:techmate/Registeration/login/login.dart';
+// import 'package:techmate/Registeration/signup/HR/hr_signup.dart';
+// import 'package:techmate/Registeration/signup/Mentor/mentor_signup.dart';
+// import 'package:techmate/Registeration/signup/student/skills_choosen.dart';
+// import 'package:techmate/Registeration/signup/student/studen_signup.dart';
+// import 'package:techmate/Registeration/signup/user/ContinuedSignup.dart';
+// import 'package:techmate/courses/CourseDetalisScreen.dart';
+// import 'package:techmate/courses/MainCourseScreen.dart';
+// import 'package:techmate/courses/CategoryDetailsScreen.dart';
+// import 'package:techmate/services/courses/CourseCategoryApiService.dart';
+// import 'package:techmate/welcom/welcome_screen.dart';
+//
+// void main() {
+//   WidgetsFlutterBinding.ensureInitialized();
+//   runApp(MyApp());
+// }
+//
+// class MyApp extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       routes: {
+//         login_screen.routeName: (context) => login_screen(),
+//         welcome_screen.routeName: (context) => welcome_screen(),
+//         StudentSignup.routeName: (context) => StudentSignup(),
+//         mentor_signup.routeName: (context) => mentor_signup(),
+//         hr_signup.routeName: (context) => hr_signup(),
+//         HomeScreen.routeName: (context) => HomeScreen(),
+//         ContinuedSignup.routeName: (context) => ContinuedSignup(
+//           firstName: '', email: '', lastName: '', nationalId: '',
+//         ),
+//         ChooseAreaOfInterest.routeName: (context) => ChooseAreaOfInterest(
+//           firstName: '', lastName: '', email: '', nationalId: '',
+//         ),
+//         ProfileScreen.routeName: (context) => ProfileScreen(),
+//         InternshipsScreen.routeName: (context) => InternshipsScreen(),
+//         MentorsScreen.routeName: (context) => MentorsScreen(),
+//         CoursesScreen.routeName: (context) => CoursesScreen(),
+//         WritingMessageScreen.routeName: (context) => WritingMessageScreen(),
+//       },
+//       onGenerateRoute: (settings) {
+//         if (settings.name == CourseCategoryScreen.routeName) {
+//           final args = settings.arguments as String;
+//           return MaterialPageRoute(
+//             builder: (context) {
+//               return CourseCategoryScreen(categoryName: args);
+//             },
+//           );
+//         }
+//         if (settings.name == CourseDetailsScreen.routeName) {
+//           final args = settings.arguments as Map<String, dynamic>;
+//           return MaterialPageRoute(
+//             builder: (context) {
+//               return CourseDetailsScreen(
+//                 courseTitle: args['courseTitle']!,
+//                 provider: args['provider']!,
+//                 level: args['level']!,
+//                 duration: args['duration']!,
+//                 courseDescription: args['courseDescription']!,
+//                 price: args['price']!,
+//                 playUrl: args['playUrl']!,
+//                 courseId: args['courseId']!,
+//               );
+//             },
+//           );
+//         }
+//         return null;
+//       },
+//       initialRoute: welcome_screen.routeName,
+//     );
+//   }
+// }
+
 
 import 'package:flutter/material.dart';
-import 'package:techmate/Chats/Track_Chat.dart';
-import 'package:techmate/HomeScreens/home.dart';
-import 'package:techmate/IntershipsScreen/intershipScreen.dart';
-import 'package:techmate/MentorScreen/mentors.dart';
+import 'package:techmate/StudentUser/Chats/Track_Chat.dart';
+import 'package:techmate/StudentUser/HomeScreens/home.dart';
+import 'package:techmate/StudentUser/IntershipsScreen/intershipScreen.dart';
+import 'package:techmate/StudentUser/MentorScreen/mentors.dart';
 import 'package:techmate/ProfileScreen/profile.dart';
 import 'package:techmate/Registeration/login/login.dart';
 import 'package:techmate/Registeration/signup/HR/hr_signup.dart';
@@ -186,11 +266,33 @@ import 'package:techmate/Registeration/signup/Mentor/mentor_signup.dart';
 import 'package:techmate/Registeration/signup/student/skills_choosen.dart';
 import 'package:techmate/Registeration/signup/student/studen_signup.dart';
 import 'package:techmate/Registeration/signup/user/ContinuedSignup.dart';
-import 'package:techmate/courses/CourseDetalisScreen.dart';
-import 'package:techmate/courses/MainCourseScreen.dart';
-import 'package:techmate/courses/CategoryDetailsScreen.dart';
+import 'package:techmate/StudentUser/courses/CourseDetalisScreen.dart';
+import 'package:techmate/StudentUser/courses/MainCourseScreen.dart';
+import 'package:techmate/StudentUser/courses/CategoryDetailsScreen.dart';
 import 'package:techmate/services/courses/CourseCategoryApiService.dart';
 import 'package:techmate/welcom/welcome_screen.dart';
+import 'package:techmate/RecruiterUser/Home/recruiterHome.dart';
+import 'package:flutter/material.dart';
+import 'package:techmate/ProfileScreen/editprofile.dart';
+import 'package:techmate/RecruiterUser/Home/recruiterHome.dart';
+import 'package:techmate/StudentUser/Chats/Track_Chat.dart';
+import 'package:techmate/StudentUser/HomeScreens/home.dart';
+import 'package:techmate/StudentUser/IntershipsScreen/intershipScreen.dart';
+import 'package:techmate/StudentUser/MentorScreen/mentors.dart';
+import 'package:techmate/ProfileScreen/profile.dart';
+import 'package:techmate/Registeration/login/login.dart';
+import 'package:techmate/Registeration/signup/HR/hr_signup.dart';
+import 'package:techmate/Registeration/signup/Mentor/mentor_signup.dart';
+import 'package:techmate/Registeration/signup/student/skills_choosen.dart';
+import 'package:techmate/Registeration/signup/student/studen_signup.dart';
+import 'package:techmate/Registeration/signup/user/ContinuedSignup.dart';
+import 'package:techmate/StudentUser/courses/CourseDetalisScreen.dart';
+import 'package:techmate/StudentUser/courses/MainCourseScreen.dart';
+import 'package:techmate/StudentUser/courses/CategoryDetailsScreen.dart';
+import 'package:techmate/services/courses/CourseCategoryApiService.dart';
+import 'package:techmate/welcom/welcome_screen.dart';
+
+
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -208,17 +310,26 @@ class MyApp extends StatelessWidget {
         mentor_signup.routeName: (context) => mentor_signup(),
         hr_signup.routeName: (context) => hr_signup(),
         HomeScreen.routeName: (context) => HomeScreen(),
-        ContinuedSignup.routeName: (context) => ContinuedSignup(
-          firstName: '', email: '', lastName: '', nationalId: '',
-        ),
-        ChooseAreaOfInterest.routeName: (context) => ChooseAreaOfInterest(
-          firstName: '', lastName: '', email: '', nationalId: '',
-        ),
+        ContinuedSignup.routeName: (( context) => ContinuedSignup(
+          firstName: '',
+          email: '',
+          lastName: '',
+          nationalId: '',
+        )),
+        ChooseAreaOfInterest.routeName: (( context) =>
+            ChooseAreaOfInterest(
+              firstName: '',
+              lastName: '',
+              email: '',
+              nationalId: '',
+            )),
         ProfileScreen.routeName: (context) => ProfileScreen(),
         InternshipsScreen.routeName: (context) => InternshipsScreen(),
         MentorsScreen.routeName: (context) => MentorsScreen(),
         CoursesScreen.routeName: (context) => CoursesScreen(),
-        WritingMessageScreen.routeName: (context) => WritingMessageScreen(),
+        RecruiterInternshipsScreen.routeName: (context) =>
+            RecruiterInternshipsScreen(),
+        EditProfileScreen.routeName: (context) => EditProfileScreen(),
       },
       onGenerateRoute: (settings) {
         if (settings.name == CourseCategoryScreen.routeName) {
@@ -246,9 +357,23 @@ class MyApp extends StatelessWidget {
             },
           );
         }
+        if (settings.name == WritingMessageScreen.routeName) {
+          final args = settings.arguments as WritingMessageScreenArguments;
+          return MaterialPageRoute(
+            builder: (context) {
+              return WritingMessageScreen(trackName: args.trackName);
+            },
+          );
+        }
         return null;
       },
       initialRoute: welcome_screen.routeName,
     );
   }
+}
+
+class WritingMessageScreenArguments {
+  final String trackName;
+
+  WritingMessageScreenArguments(this.trackName);
 }

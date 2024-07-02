@@ -223,226 +223,33 @@
 //     );
 //   }
 // }
-//
-// import 'package:flutter/material.dart';
-// import 'package:techmate/BottonNavigationBar/navbar.dart';
-// import 'package:techmate/Notification/notification.dart';
-// import 'package:techmate/services/profile/profileApiService.dart';
-// import 'package:techmate/shared%20attributes/shared.dart';
-// import 'package:techmate/services/profile/profileUpdateApiService.dart';
-//
-// class EditProfileScreen extends StatefulWidget {
-//   @override
-//   _EditProfileScreenState createState() => _EditProfileScreenState();
-// }
-//
-// class _EditProfileScreenState extends State<EditProfileScreen> {
-//   final _formKey = GlobalKey<FormState>();
-//   final ProfileApiService _profileApiService = ProfileApiService();
-//   final ProfileUpdateApiService _profileUpdateApiService = ProfileUpdateApiService();
-//
-//   TextEditingController firstNameController = TextEditingController();
-//   TextEditingController lastNameController = TextEditingController();
-//   TextEditingController emailController = TextEditingController();
-//   TextEditingController passwordController = TextEditingController();
-//   TextEditingController phoneNumberController = TextEditingController();
-//   TextEditingController countryController = TextEditingController();
-//   TextEditingController cityController = TextEditingController();
-//   TextEditingController universityController = TextEditingController();
-//   TextEditingController facultyController = TextEditingController();
-//   String level = '1';
-//
-//   @override
-//   void initState() {
-//     super.initState();
-//     _fetchProfileData();
-//   }
-//
-//   void _fetchProfileData() async {
-//     int? nationalId = await getNationalId();
-//     if (nationalId != null) {
-//       final profileData = await _profileUpdateApiService.getUserProfile(nationalId);
-//
-//       if (profileData != null) {
-//         setState(() {
-//           final user = profileData['user'];
-//           final student = profileData['student'];
-//           firstNameController.text = user['first_name'] ?? '';
-//           lastNameController.text = user['last_name'] ?? '';
-//           emailController.text = user['Email'] ?? '';
-//           passwordController.text = user['Password'] ?? '';
-//           phoneNumberController.text = user['PhoneNumber'] ?? '';
-//           countryController.text = student['Country'] ?? 'Country';
-//           cityController.text = student['City'] ?? 'City';
-//           universityController.text = student['University'] ?? 'University';
-//           facultyController.text = student['Faculity'] ?? 'Faculty';
-//           level = student['Level'].toString();
-//         });
-//       } else {
-//         print('Failed to load user profile data.');
-//       }
-//     } else {
-//       print('Failed to get national ID.');
-//     }
-//   }
-//
-//   void _saveProfile() async {
-//     if (_formKey.currentState!.validate()) {
-//       _formKey.currentState!.save();
-//
-//       int? nationalId = await getNationalId();
-//       if (nationalId != null) {
-//         Map<String, dynamic> updatedFields = {
-//           'first_name': firstNameController.text,
-//           'last_name': lastNameController.text,
-//           'Email': emailController.text,
-//           'Password': passwordController.text,
-//           'PhoneNumber': phoneNumberController.text,
-//           'Country': countryController.text,
-//           'City': cityController.text,
-//           'University': universityController.text,
-//           'Faculty': facultyController.text,
-//           'Level': level,
-//           'National_ID': nationalId,
-//         };
-//
-//         bool success = await _profileUpdateApiService.updateProfile(updatedFields);
-//
-//         if (success) {
-//           Navigator.pop(context);
-//         } else {
-//           ScaffoldMessenger.of(context).showSnackBar(
-//             SnackBar(content: Text('Failed to update profile')),
-//           );
-//         }
-//       }
-//     }
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text('Edit Profile', style: TextStyle(color: Colors.white)),
-//         backgroundColor: Colors.blue[800],
-//         leading: IconButton(
-//           icon: Icon(Icons.arrow_back, color: Colors.white),
-//           onPressed: () {
-//             Navigator.pop(context);
-//           },
-//         ),
-//         actions: [
-//           IconButton(
-//             icon: Icon(Icons.notifications, color: Colors.white),
-//             onPressed: () {
-//               Navigator.push(
-//                 context,
-//                 MaterialPageRoute(builder: (context) => NotificationScreen()),
-//               );
-//             },
-//           ),
-//         ],
-//       ),
-//       body: Padding(
-//         padding: const EdgeInsets.all(16.0),
-//         child: Form(
-//           key: _formKey,
-//           child: ListView(
-//             children: [
-//               buildTextFormField('First Name', firstNameController),
-//               buildTextFormField('Last Name', lastNameController),
-//               buildTextFormField('Email', emailController, keyboardType: TextInputType.emailAddress),
-//               buildTextFormField('Password', passwordController, obscureText: true),
-//               buildTextFormField('Phone Number', phoneNumberController, keyboardType: TextInputType.phone),
-//               buildTextFormField('Country', countryController),
-//               buildTextFormField('City', cityController),
-//               buildTextFormField('University', universityController),
-//               buildTextFormField('Faculty', facultyController),
-//               DropdownButtonFormField<String>(
-//                 decoration: InputDecoration(labelText: 'Level'),
-//                 value: level,
-//                 onChanged: (String? newValue) {
-//                   setState(() {
-//                     level = newValue!;
-//                   });
-//                 },
-//                 items: <String>['1', '2', '3', '4', '5', 'Others']
-//                     .map<DropdownMenuItem<String>>((String value) {
-//                   return DropdownMenuItem<String>(
-//                     value: value,
-//                     child: Text(value),
-//                   );
-//                 }).toList(),
-//               ),
-//               SizedBox(height: 20),
-//               ElevatedButton(
-//                 onPressed: _saveProfile,
-//                 child: Text('Save'),
-//                 style: ElevatedButton.styleFrom(
-//                   foregroundColor: Colors.white,
-//                   backgroundColor: Colors.blue[800],
-//                   shape: RoundedRectangleBorder(
-//                     borderRadius: BorderRadius.circular(18.0),
-//                   ),
-//                 ),
-//               ),
-//             ],
-//           ),
-//         ),
-//       ),
-//       bottomNavigationBar: BottomNavBar(
-//         currentIndex: 4,
-//       ),
-//     );
-//   }
-//
-//   Widget buildTextFormField(String labelText, TextEditingController controller,
-//       {TextInputType keyboardType = TextInputType.text, bool obscureText = false}) {
-//     return Padding(
-//       padding: const EdgeInsets.only(bottom: 16.0),
-//       child: TextFormField(
-//         controller: controller,
-//         decoration: InputDecoration(
-//           labelText: labelText,
-//           border: OutlineInputBorder(
-//             borderRadius: BorderRadius.circular(8),
-//           ),
-//         ),
-//         keyboardType: keyboardType,
-//         obscureText: obscureText,
-//       ),
-//     );
-//   }
-// }
 
 import 'package:flutter/material.dart';
-import 'package:techmate/Notification/notification.dart';
+import 'package:techmate/RecruiterUser/BottomNavigationBar/navbar.dart';
 import 'package:techmate/StudentUser/BottonNavigationBar/navbar.dart';
+import 'package:techmate/Notification/notification.dart';
+import 'package:techmate/services/RecruiterScreens/profileUpdateApi.dart';
 import 'package:techmate/services/profile/profileApiService.dart';
 import 'package:techmate/shared%20attributes/shared.dart';
 import 'package:techmate/services/profile/profileUpdateApiService.dart';
 
-class EditProfileScreen extends StatefulWidget {
-  static String routeName = 'edit profile';
+class RecruiterProfileScreen extends StatefulWidget {
   @override
-  _EditProfileScreenState createState() => _EditProfileScreenState();
+  _EditProfileScreenState  createState() => _EditProfileScreenState();
 }
 
-class _EditProfileScreenState extends State<EditProfileScreen> {
+class _EditProfileScreenState extends State<RecruiterProfileScreen> {
   final _formKey = GlobalKey<FormState>();
-  final ProfileUpdateApiService _profileUpdateApiService =
-  ProfileUpdateApiService();
+  final RecruiterProfileUpdateApiService _profileUpdateApiService =
+  RecruiterProfileUpdateApiService();
 
   TextEditingController firstNameController = TextEditingController();
   TextEditingController lastNameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController phoneNumberController = TextEditingController();
-  TextEditingController countryController = TextEditingController();
-  TextEditingController cityController = TextEditingController();
-  TextEditingController universityController = TextEditingController();
-  TextEditingController facultyController = TextEditingController();
-  String level = '1';
+  TextEditingController jobtitleController = TextEditingController();
+  TextEditingController CompanyNameController = TextEditingController();
 
   @override
   void initState() {
@@ -451,25 +258,28 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   void _fetchProfileData() async {
-    int? nationalId = await getNationalId();
+    //int? nationalId = await getNationalId();
+    int nationalId = 1234566304;
     if (nationalId != null) {
       final profileData =
       await _profileUpdateApiService.getUserProfile(nationalId);
 
       if (profileData != null) {
         setState(() {
-          final user = profileData['user'];
-          final student = profileData['student'];
-          firstNameController.text = user['first_name'] ?? '';
-          lastNameController.text = user['last_name'] ?? '';
-          emailController.text = user['Email'] ?? '';
-          passwordController.text = user['Password'] ?? '';
-          phoneNumberController.text = user['PhoneNumber'] ?? '';
-          countryController.text = student['Country'] ?? 'Country';
-          cityController.text = student['City'] ?? 'City';
-          universityController.text = student['University'] ?? 'University';
-          facultyController.text = student['Faculity'] ?? 'Faculty';
-          level = student['Level'].toString();
+
+          if (profileData != null) {
+            firstNameController.text = profileData['first_name'] ?? '';
+            lastNameController.text = profileData['last_name'] ?? '';
+            emailController.text = profileData['Email'] ?? '';
+            passwordController.text = profileData['Password'] ?? '';
+            phoneNumberController.text = profileData['PhoneNumber'] ?? '';
+            jobtitleController.text = profileData['JobTitle'] ?? 'JobTitle';
+            CompanyNameController.text =
+                profileData['Comapany_Name'] ?? 'Company_Name';
+          } else {
+            print('User data is null');
+          }
+
         });
       } else {
         print('Failed to load user profile data.');
@@ -483,7 +293,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
 
-      int? nationalId = await getNationalId();
+      //int? nationalId = await getNationalId();
+      int nationalId = 1234566304;
       if (nationalId != null) {
         Map<String, dynamic> updatedFields = {
           'first_name': firstNameController.text,
@@ -491,11 +302,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           'Email': emailController.text,
           'Password': passwordController.text,
           'PhoneNumber': phoneNumberController.text,
-          'Country': countryController.text,
-          'City': cityController.text,
-          'University': universityController.text,
-          'Faculty': facultyController.text,
-          'Level': level,
+          'JobTitle': jobtitleController.text,
+          'Company_Name': CompanyNameController.text,
           'National_ID': nationalId,
         };
 
@@ -526,8 +334,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           },
         ),
         actions: [
-          IconButton(
-            icon: Icon(Icons.notifications, color: Colors.white),
+          TextButton(
+            child: Text(
+              'Logout',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16.0,
+              ),
+            ),
             onPressed: () {
               Navigator.push(
                 context,
@@ -538,7 +352,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         ],
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 30),
         child: Form(
           key: _formKey,
           child: ListView(
@@ -551,26 +365,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   obscureText: true),
               buildTextFormField('Phone Number', phoneNumberController,
                   keyboardType: TextInputType.phone),
-              buildTextFormField('Country', countryController),
-              buildTextFormField('City', cityController),
-              buildTextFormField('University', universityController),
-              buildTextFormField('Faculty', facultyController),
-              DropdownButtonFormField<String>(
-                decoration: InputDecoration(labelText: 'Level'),
-                value: level,
-                onChanged: (String? newValue) {
-                  setState(() {
-                    level = newValue!;
-                  });
-                },
-                items: <String>['1', '2', '3', '4', '5', 'Others']
-                    .map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-              ),
+              buildTextFormField('JobTitle', jobtitleController),
+              buildTextFormField('Company_Name', CompanyNameController),
               SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _saveProfile,
@@ -587,8 +383,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           ),
         ),
       ),
-      bottomNavigationBar: BottomNavBar(
-        currentIndex: 4,
+      bottomNavigationBar: RecruiterBottomNavBar(
+        currentIndex: 1,
       ),
     );
   }
