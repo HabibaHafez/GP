@@ -1,7 +1,7 @@
 // import 'package:flutter/material.dart';
 // import 'package:techmate/BottonNavigationBar/navbar.dart';
 // import 'package:techmate/MentorScreen/mentors.dart';
-// import 'package:techmate/ProfileScreen/Saved.dart';
+// import 'package:techmate/ProfileScreen/area_of_interest.dart';
 // import 'package:techmate/ProfileScreen/profile.dart';
 // import 'package:techmate/Notification/notification.dart';
 // import 'search.dart';
