@@ -1,45 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:techmate/StudentUser/BottonNavigationBar/navbar.dart';
-import 'package:techmate/Notification/notification.dart';
-import 'package:techmate/services/Mentor/getmentor.dart';
-import 'bookmeeting.dart';
-import 'mentors.dart';
 import 'package:techmate/StudentUser/Chats/Mentorchat.dart';
+import 'package:techmate/services/Mentor/enrollment.dart';
+import 'package:techmate/services/Mentor/getmentor.dart';
+import 'package:techmate/services/profile/profileUpdateApiService.dart';
+
+import 'bookmeeting.dart';
 
 class MentorProfileScreen extends StatelessWidget {
   final Mentor mentor;
+  final ProfileUpdateApiService profileService = ProfileUpdateApiService();
+  final int currentUserId;
+  final EnrollService enrollService =
+  EnrollService(); // Initialize EnrollService
 
-  MentorProfileScreen({required this.mentor});
+  MentorProfileScreen({
+    Key? key,
+    required this.mentor,
+    required this.currentUserId,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Mentor Profile', style: TextStyle(color: Colors.white)),
+        title:
+        const Text('Mentor Profile', style: TextStyle(color: Colors.white)),
         backgroundColor: Colors.blue[800],
         leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: Colors.white,
-          ),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
-        actions: [
-          IconButton(
-            icon: Icon(
-              Icons.notifications,
-              color: Colors.white,
-            ),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => NotificationScreen()),
-              );
-            },
-          ),
-        ],
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -52,53 +45,68 @@ class MentorProfileScreen extends StatelessWidget {
                   children: <Widget>[
                     CircleAvatar(
                       radius: 50.0,
-                      //backgroundImage: NetworkImage(mentor.image),
+                      backgroundImage: mentor.imageUrl != null
+                          ? NetworkImage(mentor.imageUrl!)
+                          : null,
                     ),
-                    SizedBox(height: 10),
-                    // Text(
-                    //   mentor.name,
-                    //   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                    // ),
-                    // Text(
-                    //   mentor.jobtitle,
-                    //   style: TextStyle(fontSize: 16, color: Colors.grey),
-                    // ),
-                    // Text(
-                    //   mentor.gender,
-                    //   textAlign: TextAlign.center,
-                    // ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 10),
                     Text(
-                      'Bio',
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      '${mentor.firstname} ${mentor.lastname}',
+                      style: const TextStyle(
+                          fontSize: 24, fontWeight: FontWeight.bold),
                     ),
-                    SizedBox(height: 10),
                     Text(
-                      'A passionate tech mentor dedicated to helping individuals learn and grow in the tech industry.',
-                      textAlign: TextAlign.center,
+                      mentor.jobtitle,
+                      style: const TextStyle(fontSize: 16, color: Colors.grey),
                     ),
-                    SizedBox(height: 20),
-                    Text(
+                    const SizedBox(height: 20),
+                    const Text(
                       'Experience',
                       style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
-                    SizedBox(height: 10),
-                    Text(
-                      '5 years of experience in Web Development\n3 years of experience in UI/UX Design',
-                      textAlign: TextAlign.center,
+                    const SizedBox(height: 10),
+                    FutureBuilder<List<String>>(
+                      future: _fetchMentorExperiences(mentor.id.toString()),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          return Column(
+                            children: snapshot.data!.map((experience) {
+                              return Text(
+                                experience,
+                                textAlign: TextAlign.center,
+                              );
+                            }).toList(),
+                          );
+                        } else if (snapshot.hasError) {
+                          return const Text(
+                            'Failed to load experiences',
+                            textAlign: TextAlign.center,
+                          );
+                        } else {
+                          return const CircularProgressIndicator(); // Or placeholder widget
+                        }
+                      },
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     ElevatedButton(
                       onPressed: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => SelectDateTimeScreen()),
+                            builder: (context) => SelectDateTimeScreen(
+                              mentor: mentor,
+                            ),
+                          ),
                         );
                       },
-                      child: Text(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue[800],
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                      ),
+                      child: const Text(
                         'Book Meeting',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
@@ -106,10 +114,38 @@ class MentorProfileScreen extends StatelessWidget {
                           fontSize: 16,
                         ),
                       ),
+                    ),
+                    const SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: () async {
+                        bool enrolled =
+                        await EnrollService.enrollStudentWithMentor(
+                          currentUserId, // Assuming currentUserId is student ID
+                          mentor.id, // Mentor ID
+                        );
+
+                        if (enrolled) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Enrolled successfully')),
+                          );
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Failed to enroll')),
+                          );
+                        }
+                      },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue[800],
+                        backgroundColor: Colors.green,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8.0),
+                        ),
+                      ),
+                      child: const Text(
+                        'Enroll with Mentor',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          fontSize: 16,
                         ),
                       ),
                     ),
@@ -120,24 +156,42 @@ class MentorProfileScreen extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar: BottomNavBar(
-        currentIndex: 3,
-      ),
+      bottomNavigationBar:  BottomNavBar(currentIndex: 3),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => MentorChatScreen(),
+              builder: (context) => MentorChatScreen(
+                currentUserId: currentUserId.toString(),
+                mentorId: mentor.id.toString(),
+              ),
             ),
           );
         },
-        child: Icon(
+        backgroundColor: Colors.blue[800],
+        child: const Icon(
           Icons.message,
           color: Colors.white,
         ),
-        backgroundColor: Colors.blue[800],
       ),
     );
   }
+
+  Future<List<String>> _fetchMentorExperiences(String id) async {
+    try {
+      final response = await profileService.getMentorExperiences(id);
+
+      if (response != null) {
+        List<String> experiences =
+        List<String>.from(response.map((exp) => exp['Experience']));
+        return experiences;
+      } else {
+        return []; // Return empty list or handle error based on your app's logic
+      }
+    } catch (e) {
+      print('Error fetching mentor experiences: $e');
+      return []; // Handle error as needed
+      }
+    }
 }

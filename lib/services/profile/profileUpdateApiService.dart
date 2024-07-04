@@ -183,6 +183,28 @@ class ProfileUpdateApiService {
     }
   }
 
+
+  Future<List<Map<String, dynamic>>?> getMentorExperiences(String id) async {
+    final url = Uri.parse('$_baseUrl/mentors/$id/experiences');
+
+    try {
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        List<dynamic> data = jsonDecode(response.body);
+        List<Map<String, dynamic>> experiences =
+        data.map((item) => item as Map<String, dynamic>).toList();
+        return experiences;
+      } else {
+        print('Failed to load mentor experiences: ${response.statusCode}');
+        return null;
+      }
+    } catch (e) {
+      print('Error loading mentor experiences: $e');
+      return null;
+    }
+  }
+
   Future<bool> updateProfile(Map<String, dynamic> updatedFields) async {
     final url = Uri.parse('$_baseUrl/auth/updateStudentProfile');
 

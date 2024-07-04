@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:techmate/RecruiterUser/BottomNavigationBar/navbar.dart';
 import 'package:techmate/services/RecruiterScreens/AddInternshipApiService.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:techmate/shared%20attributes/shared.dart';
+import 'package:techmate/services/RecruiterScreens/getAllinternsforRecuiter.dart';
 
 class AddInternshipScreen extends StatefulWidget {
   const AddInternshipScreen({Key? key}) : super(key: key);
@@ -12,6 +12,7 @@ class AddInternshipScreen extends StatefulWidget {
 }
 
 class _AddInternshipScreenState extends State<AddInternshipScreen> {
+  final TextEditingController _internIdController = TextEditingController();
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _companyController = TextEditingController();
   final TextEditingController _cityController = TextEditingController();
@@ -21,10 +22,10 @@ class _AddInternshipScreenState extends State<AddInternshipScreen> {
   final TextEditingController _requirementsController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _linkController = TextEditingController();
-  late int internId;
 
   @override
   void dispose() {
+    _internIdController.dispose();
     _titleController.dispose();
     _companyController.dispose();
     _cityController.dispose();
@@ -37,10 +38,14 @@ class _AddInternshipScreenState extends State<AddInternshipScreen> {
     super.dispose();
   }
 
+  Future<int?> getNationalId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getInt('national_id');
+  }
+
   void _submitForm() async {
-    //int? nationalId = await getNationalId();
-    int national_id = 1234566304;
-    if (national_id == null) {
+    int? nationalId = await getNationalId();
+    if (nationalId == null) {
       // Handle error: National ID not found
       showDialog(
         context: context,
@@ -62,7 +67,7 @@ class _AddInternshipScreenState extends State<AddInternshipScreen> {
 
     // Create the request body
     final requestBody = {
-      'InternID': internId,
+      'InternID': int.tryParse(_internIdController.text) ?? 0,
       'InternTitle': _titleController.text,
       'CompanyName': _companyController.text,
       'InternReqNo': 'INT-2024-SD',
@@ -74,13 +79,16 @@ class _AddInternshipScreenState extends State<AddInternshipScreen> {
       'Requirements': _requirementsController.text,
       'City': _cityController.text,
       'Country': 'Egypt',
-      'National_ID': national_id,
+      'National_ID': nationalId,
     };
 
     // Call the API service
     final success = await AddInternshipApiService.createInternship(requestBody);
 
     if (success) {
+      // Create the Internship object to return
+      final newInternship = Internship.fromJson(requestBody);
+
       // Internship created successfully
       // Example: Show a success message
       showDialog(
@@ -91,8 +99,8 @@ class _AddInternshipScreenState extends State<AddInternshipScreen> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.pop(context);
-                Navigator.pop(context); // Go back to the previous screen
+                Navigator.pop(context); // Close the dialog
+                Navigator.pop(context, newInternship); // Go back to the previous screen with the new internship
               },
               child: Text('OK'),
             ),
@@ -151,6 +159,7 @@ class _AddInternshipScreenState extends State<AddInternshipScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             TextFormField(
+              controller: _internIdController,
               decoration: InputDecoration(
                 labelText: 'Intern ID',
                 border: OutlineInputBorder(),

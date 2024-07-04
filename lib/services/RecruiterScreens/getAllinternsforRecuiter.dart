@@ -1,23 +1,33 @@
 import 'dart:convert';
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class InternshipService {
-  static const String apiUrl =
-      'http://192.168.1.105:5000/recruiter/1234566304/internships';
+  static const String baseUrl = 'http://192.168.1.105:5000/recruiter/';
 
-  Future<List<Internship>> fetchInternships() async {
+  Future<List<Internship>> fetchInternships(int nationalId) async {
+    final apiUrl = '$baseUrl$nationalId/internships';
     final response = await http.get(Uri.parse(apiUrl));
-    //print('API Response: ${response.body}');
 
     if (response.statusCode == 200 || response.statusCode == 201) {
       List<dynamic> jsonList = json.decode(response.body);
-      print('Parsed JSON: $jsonList');
-      List<Internship> internships =
-      jsonList.map((json) => Internship.fromJson(json)).toList();
+      List<Internship> internships = jsonList.map((json) => Internship.fromJson(json)).toList();
       return internships;
     } else {
       throw Exception('Failed to fetch internships');
+    }
+  }
+
+  Future<bool> deleteInternship(int internId, int nationalId) async {
+    final url = 'http://192.168.1.105:5000/internships/recruiter/$internId';
+    final headers = {'Content-Type': 'application/json'};
+    final body = json.encode({"nationalId": nationalId});
+
+    final response = await http.delete(Uri.parse(url), headers: headers, body: body);
+
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
     }
   }
 }
@@ -51,7 +61,6 @@ class Internship {
     required this.description,
     required this.nationalId,
     this.link,
-
   });
 
   factory Internship.fromJson(Map<String, dynamic> json) {
@@ -67,8 +76,7 @@ class Internship {
       date: json['Date'] ?? '',
       duration: json['Duration'] ?? '',
       description: json['Description'] ?? '',
-      nationalId:
-      json['National_ID'] ?? 0, // Provide a default value or handle null
+      nationalId: json['National_ID'] ?? 0, // Provide a default value or handle null
       link: json['Link'],
     );
   }

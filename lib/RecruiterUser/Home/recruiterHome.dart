@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:techmate/Notification/notification.dart';
 import 'package:techmate/RecruiterUser/BottomNavigationBar/navbar.dart';
 import 'package:techmate/RecruiterUser/Home/AddInternshipScreen.dart';
@@ -11,7 +12,7 @@ class RecruiterInternshipsScreen extends StatefulWidget {
   const RecruiterInternshipsScreen({super.key});
 
   @override
-  _RecruiterInternshipsScreenState  createState() =>
+  _RecruiterInternshipsScreenState createState() =>
       _RecruiterInternshipsScreenState();
 }
 
@@ -22,8 +23,7 @@ class _RecruiterInternshipsScreenState
   List<Internship> _filteredInternships = [];
   bool _isLoading = true;
   final InternshipService _internshipService = InternshipService();
-  final SearchInternApiService _searchInternApiService =
-  SearchInternApiService();
+  final SearchInternApiService _searchInternApiService = SearchInternApiService();
 
   @override
   void initState() {
@@ -32,15 +32,24 @@ class _RecruiterInternshipsScreenState
     _searchController.addListener(_filterInternships);
   }
 
+  Future<int?> getNationalId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getInt('national_id');
+  }
+
   void _fetchInternships() async {
     setState(() {
       _isLoading = true;
     });
 
     try {
+      final nationalId = await getNationalId();
+      if (nationalId == null) {
+        throw Exception('National ID not found');
+      }
+
       print('Fetching internships...');
-      List<Internship> internships =
-      await _internshipService.fetchInternships();
+      List<Internship> internships = await _internshipService.fetchInternships(nationalId);
       print('Fetched internships: $internships');
       setState(() {
         _internships = internships;
@@ -103,14 +112,40 @@ class _RecruiterInternshipsScreenState
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => AddInternshipScreen()),
-    ).then((value) {
-      if (value != null && value is Internship) {
+    ).then((newInternship) {
+      if (newInternship != null && newInternship is Internship) {
         setState(() {
-          _internships.add(value);
-          _filterInternships();
+          _internships.add(newInternship);
+          _filteredInternships = _internships; // Update the filtered list as well
         });
       }
     });
+  }
+
+  void _deleteInternship(int internId) async {
+    final nationalId = await getNationalId();
+    if (nationalId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('National ID not found. Please login again.')),
+      );
+      return;
+    }
+
+    bool success = await _internshipService.deleteInternship(internId, nationalId);
+
+    if (success) {
+      setState(() {
+        _internships.removeWhere((internship) => internship.internId == internId);
+        _filteredInternships = _internships; // Update the filtered list as well
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Internship deleted successfully')),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to delete internship')),
+      );
+    }
   }
 
   @override
@@ -125,17 +160,6 @@ class _RecruiterInternshipsScreenState
             Navigator.pop(context);
           },
         ),
-        // actions: [
-        //   IconButton(
-        //     icon: Icon(Icons.notifications, color: Colors.white),
-        //     onPressed: () {
-        //       Navigator.push(
-        //         context,
-        //         MaterialPageRoute(builder: (context) => NotificationScreen()),
-        //       );
-        //     },
-        //   ),
-        // ],
       ),
       body: Column(
         children: [
@@ -163,6 +187,7 @@ class _RecruiterInternshipsScreenState
                   internship: internship,
                   onTap: () =>
                       _showInternshipDetails(context, internship),
+                  onDelete: () => _deleteInternship(internship.internId),
                 );
               },
             ),
@@ -187,8 +212,13 @@ class _RecruiterInternshipsScreenState
 class InternshipCard extends StatelessWidget {
   final Internship internship;
   final VoidCallback onTap;
+  final VoidCallback onDelete;
 
-  const InternshipCard({required this.internship, required this.onTap});
+  const InternshipCard({
+    required this.internship,
+    required this.onTap,
+    required this.onDelete,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -208,12 +238,6 @@ class InternshipCard extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    // CircleAvatar(
-                    //   radius: 25,
-                    //   backgroundImage: NetworkImage(
-                    //     internship.link ?? 'images/cs.jpeg',
-                    //   ),
-                    // ),
                     SizedBox(width: 16.0),
                     Expanded(
                       child: Column(
@@ -240,10 +264,8 @@ class InternshipCard extends StatelessWidget {
                       ),
                     ),
                     IconButton(
-                      icon: Icon(Icons.more_vert),
-                      onPressed: () {
-                        // Handle menu button press
-                      },
+                      icon: Icon(Icons.delete_forever, color: Colors.red),
+                      onPressed: onDelete,
                     ),
                   ],
                 ),

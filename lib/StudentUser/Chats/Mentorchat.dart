@@ -1,32 +1,75 @@
-
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:techmate/providers/message_provider.dart';
+import 'package:techmate/services/chats/message.dart';
 
 class MentorChatScreen extends StatefulWidget {
-  static const routeName = 'mentorchat';
+  static const routeName = 'mentor_chat';
+
+  final String currentUserId;
+  final String mentorId;
+
+  MentorChatScreen({
+    required this.currentUserId,
+    required this.mentorId,
+  });
 
   @override
-  _MentorChatScreenState  createState() => _MentorChatScreenState();
+  _MentorChatScreenState createState() => _MentorChatScreenState();
 }
 
 class _MentorChatScreenState extends State<MentorChatScreen> {
-  final List<ChatMessage> _messages = [
-    ChatMessage(
-        isUser: false,
-        text: "Hi there! I'm your mentor. How can I assist you today?"),
-    ChatMessage(isUser: true, text: 'Hello! I need help with my project.'),
-    ChatMessage(isUser: false, text: 'Sure, what specifically do you need help with?'),
-    ChatMessage(
-        isUser: true, text: 'I am struggling with the data analysis part.'),
-  ];
+  late TextEditingController _messageController;
+  late IO.Socket socket;
 
-  final TextEditingController _controller = TextEditingController();
+  @override
+  void initState() {
+    super.initState();
+    _messageController = TextEditingController();
 
-  void _sendMessage() {
-    if (_controller.text.isNotEmpty) {
-      setState(() {
-        _messages.add(ChatMessage(isUser: true, text: _controller.text));
-        _controller.clear();
-      });
+    // Initialize Socket.io connection
+    socket = IO.io('http://192.168.1.105:5000', <String, dynamic>{
+      'transports': ['websocket'],
+      'autoConnect': true,
+    });
+
+    // Listen for incoming messages
+    socket.on('message', (data) {
+      Provider.of<MessageProvider>(context, listen: false).receiveMessage(data);
+    });
+
+    // Fetch messages for the current mentor
+    Provider.of<MessageProvider>(context, listen: false)
+        .fetchMessages(widget.currentUserId, widget.mentorId);
+  }
+
+  @override
+  void dispose() {
+    _messageController.dispose();
+    socket.disconnect();
+    super.dispose();
+  }
+
+  void _sendMessage(String content) {
+    if (content.isNotEmpty) {
+      // Create a new message object
+      Message newMessage = Message(
+        senderId: int.parse(widget.currentUserId),
+        receiverId: int.parse(widget.mentorId),
+        content: content,
+        timestamp: DateTime.now(),
+      );
+
+      // Emit the message to the server
+      socket.emit('message', newMessage.toJson());
+
+      // Clear the message input field
+      _messageController.clear();
+
+      // Add the message locally for immediate UI update
+      Provider.of<MessageProvider>(context, listen: false)
+          .sendMessage(newMessage);
     }
   }
 
@@ -34,122 +77,58 @@ class _MentorChatScreenState extends State<MentorChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Chat with Mentor',
-          style: TextStyle(color: Colors.white),
-        ),
-        backgroundColor: Colors.blue[800],
-        actions: [
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: PopupMenuButton<String>(
-              icon: Icon(Icons.more_vert, color: Colors.white), // Set the icon color to white
-              onSelected: (value) {
-                // Handle menu item selection (e.g., delete chat, clear chat, block)
-                if (value == 'delete') {
-                  // Delete chat logic
-                } else if (value == 'clear') {
-                  // Clear chat logic
-                } else if (value == 'block') {
-                  // Block user logic
-                }
-              },
-              itemBuilder: (context) => [
-                PopupMenuItem<String>(
-                  value: 'delete',
-                  child: Row(
-                    children: [
-                      Icon(Icons.delete, color: Colors.black), // Set the icon color
-                      SizedBox(width: 10),
-                      Text('Delete Chat'),
-                    ],
-                  ),
-                ),
-                PopupMenuItem<String>(
-                  value: 'clear',
-                  child: Row(
-                    children: [
-                      Icon(Icons.clear, color: Colors.black), // Set the icon color
-                      SizedBox(width: 10),
-                      Text('Clear Chat'),
-                    ],
-                  ),
-                ),
-                PopupMenuItem<String>(
-                  value: 'block',
-                  child: Row(
-                    children: [
-                      Icon(Icons.block, color: Colors.black), // Set the icon color
-                      SizedBox(width: 10),
-                      Text('Block User'),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
+        title: Text('Chat with Mentor'),
       ),
       body: Column(
-        children: [
-          SizedBox(height: 30),
+        children: <Widget>[
+          // Messages list view
           Expanded(
-            child: ListView.builder(
-              itemCount: _messages.length,
-              itemBuilder: (context, index) {
-                return _messages[index];
+            child: Consumer<MessageProvider>(
+              builder: (context, messageProvider, _) {
+                List<Message> messages =
+                messageProvider.getMessagesForMentor(widget.mentorId);
+                return ListView.builder(
+                  reverse: true,
+                  itemCount: messages.length,
+                  itemBuilder: (context, index) {
+                    Message message = messages[index];
+                    // Determine if the message is sent by current user
+                    bool isMe =
+                        message.senderId.toString() == widget.currentUserId;
+                    return ListTile(
+                      title: Text(message.content),
+                      subtitle: Text(
+                        '${isMe ? 'You' : 'Mentor'} • ${message.timestamp}',
+                      ),
+                      trailing: isMe ? null : Icon(Icons.account_circle),
+                      leading: isMe ? Icon(Icons.account_circle) : null,
+                    );
+                  },
+                );
               },
             ),
           ),
+          // Message input field and send button
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: EdgeInsets.all(8.0),
             child: Row(
-              children: [
+              children: <Widget>[
                 Expanded(
                   child: TextField(
-                    controller: _controller,
+                    controller: _messageController,
                     decoration: InputDecoration(
-                      hintText: 'Type a message...',
-                      border: OutlineInputBorder(), // Default border
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Color.fromRGBO(21, 101, 192, 1), // Set the desired border color
-                        ),
-                      ),
+                      hintText: 'Type your message...',
                     ),
-                    onSubmitted: (text) => _sendMessage(),
                   ),
                 ),
                 IconButton(
                   icon: Icon(Icons.send),
-                  color: Color.fromRGBO(21, 101, 192, 1),
-                  onPressed: _sendMessage,
+                  onPressed: () => _sendMessage(_messageController.text),
                 ),
               ],
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class ChatMessage extends StatelessWidget {
-  final bool isUser;
-  final String text;
-
-  ChatMessage({required this.isUser, required this.text});
-
-  @override
-  Widget build(BuildContext context) {
-    return Align(
-      alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
-      child: Card(
-        color: isUser ? Colors.blue[200] : Colors.grey[300],
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(text),
-        ),
       ),
     );
   }

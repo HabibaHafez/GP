@@ -255,6 +255,7 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:techmate/StudentUser/Chats/Track_Chat.dart';
 import 'package:techmate/StudentUser/HomeScreens/home.dart';
 import 'package:techmate/StudentUser/IntershipsScreen/intershipScreen.dart';
@@ -291,12 +292,22 @@ import 'package:techmate/StudentUser/courses/MainCourseScreen.dart';
 import 'package:techmate/StudentUser/courses/CategoryDetailsScreen.dart';
 import 'package:techmate/services/courses/CourseCategoryApiService.dart';
 import 'package:techmate/welcom/welcome_screen.dart';
+import 'package:techmate/providers/BookingProvider.dart';
+import 'package:techmate/providers/message_provider.dart';
 
 
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => MessageProvider()),
+        ChangeNotifierProvider(create: (context) => BookingProvider()),
+      ],
+      child:  MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

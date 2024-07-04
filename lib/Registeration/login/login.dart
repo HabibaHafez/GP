@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:techmate/RecruiterUser/Home/recruiterHome.dart';
 import 'package:techmate/StudentUser/HomeScreens/home.dart';
 import 'package:techmate/Registeration/signup/Registeration/Registeration.dart';
 import 'package:techmate/commponent/button.dart';
@@ -76,7 +77,9 @@ class _login_screenState extends State<login_screen> {
 
                     if (response['success']) {
                       int nationalId = response['National_ID'];
+                      String role = response['role'];
                       print('National ID: $nationalId');
+                      print('role: $role');
 
                       setState(() {
                         loggedIn = true;
@@ -86,8 +89,13 @@ class _login_screenState extends State<login_screen> {
                       SharedPreferences prefs =
                       await SharedPreferences.getInstance();
                       await prefs.setInt('national_id', nationalId);
-
-                      Navigator.pushNamed(context, HomeScreen.routeName);
+                      await prefs.setString('role', role);
+                      if (role == 'student') {
+                        Navigator.pushNamed(context, HomeScreen.routeName);
+                      } else if (role == 'recruiter') {
+                        Navigator.pushNamed(
+                            context, RecruiterInternshipsScreen.routeName);
+                      }
                     } else {
                       print('Login failed');
                       showDialog(

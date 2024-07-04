@@ -1,31 +1,31 @@
+import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 Future<bool> registerRecruiter(
-
     String firstName,
     String lastName,
     String email,
     String nationalId,
     String gender,
-    String companyName,
     String password,
+    String companyName,
     String jobTitle) async {
-  var url = Uri.parse('http://192.168.1.105:5000/auth/register');
-
+  var url = Uri.parse('http://192.168.1.105:5000/auth/register/recruiter');
 
   try {
     var response = await http.post(
       url,
-      body: {
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'National_ID': nationalId,
+        'Email': email,
+        'Password': password,
         'first_name': firstName,
         'last_name': lastName,
-        'Email': email,
-        'National_ID': nationalId,
         'Gender': gender,
         'Company_Name': companyName,
         'JobTitle': jobTitle,
-        'Password': password,
-      },
+      }),
     );
 
     if (response.statusCode == 200 || response.statusCode == 201) {
