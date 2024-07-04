@@ -69,9 +69,18 @@ class _RecruiterInternshipsScreenState
 
   void _filterInternships() async {
     final query = _searchController.text;
+    final nationalId = await getNationalId();
+    if (nationalId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('National ID not found. Please login again.')),
+      );
+      return;
+    }
+
     if (query.isEmpty) {
       setState(() {
         _filteredInternships = _internships;
+        _isLoading = false;
       });
       return;
     }
@@ -81,8 +90,7 @@ class _RecruiterInternshipsScreenState
     });
 
     try {
-      List<Internship> internships =
-      await _searchInternApiService.searchInternships(query);
+      List<Internship> internships = await _searchInternApiService.searchInternships(query, nationalId);
       setState(() {
         _filteredInternships = internships;
         _isLoading = false;
