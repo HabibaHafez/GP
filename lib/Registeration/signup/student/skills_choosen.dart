@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:techmate/HomeScreens/home.dart';
+import 'package:techmate/StudentUser/HomeScreens/home.dart';
 import 'package:techmate/commponent/button.dart';
 import 'package:techmate/services/registeration/signup/Student/studentApi.dart';
 
@@ -144,7 +144,7 @@ class ChooseAreaOfInterstState extends State<ChooseAreaOfInterest> {
         widget.level!, // Assuming you handle this correctly
         widget.password!,
         areaOfInterest,
-        role
+       // role
         
         // Assuming you handle this correctly
       );

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:techmate/IntershipsScreen/application.dart';
+import 'package:techmate/StudentUser/IntershipsScreen/application.dart';
 
 class InternshipDetails extends StatelessWidget {
   final Map<String, dynamic> internship;

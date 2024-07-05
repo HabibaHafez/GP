@@ -26,8 +26,8 @@ class Validator {
     if (value.isEmpty) {
       return 'This field cannot be empty';
     }
-    if (value.length != 10) {
-      return 'National ID must be 10 digits';
+    if (value.length != 9) {
+      return 'National ID must be 9 digits';
     }
     final idExp = RegExp(r'^[0-9]+$');
     if (!idExp.hasMatch(value)) {

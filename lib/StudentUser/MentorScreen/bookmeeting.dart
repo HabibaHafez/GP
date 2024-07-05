@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:techmate/BottonNavigationBar/navbar.dart';
+import 'package:techmate/StudentUser/BottonNavigationBar/navbar.dart';
 import 'mentors.dart';
 
 class SelectDateTimeScreen extends StatefulWidget {

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class MentorService {
-  final String baseUrl = "http://192.168.1.2:5000/auth";
+  final String baseUrl = "http://192.168.1.105:5000/auth";
 
   Future<List<Mentor>> getMentors() async {
     final response = await http.get(Uri.parse('$baseUrl/mentors'));
