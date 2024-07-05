@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:techmate/services/MentorScreens/MentorApis.dart';
-import 'mentorprofile.dart';// s in the same directory or update the path accordingly
+import 'package:techmate/services/MentorScreens/MentorApis.dart'; // Ensure this path is correct
+import 'mentorprofile.dart'; // Ensure this path is correct
 
 class MentorHome extends StatefulWidget {
   static const routeName = '/Mentorhome';
+
   @override
   _MentorHomeState createState() => _MentorHomeState();
 }
@@ -29,6 +30,8 @@ class _MentorHomeState extends State<MentorHome> {
         fetchStudentCount(id);
         fetchStudents(id);
         fetchMeetings(id);
+      } else {
+        print('National ID not found');
       }
     });
   }
@@ -45,90 +48,131 @@ class _MentorHomeState extends State<MentorHome> {
         studentCount = count;
       });
     } catch (e) {
-      print(e);
+      print('Error fetching student count: $e');
     }
   }
 
   Future<void> fetchStudents(int mentorId) async {
     try {
-      List studentsList = await apiService.fetchStudents(mentorId);
+      List<Map<String, dynamic>> studentsList = await apiService.fetchStudents(mentorId);
       setState(() {
-        students = List<Map<String, dynamic>>.from(studentsList);
+        students = studentsList;
       });
     } catch (e) {
-      print(e);
+      print('Error fetching students: $e');
     }
   }
 
   Future<void> fetchMeetings(int mentorId) async {
     try {
-      List meetingsList = await apiService.fetchMeetings(mentorId);
+      List<Map<String, dynamic>> meetingsList = await apiService.fetchMeetings(mentorId);
       setState(() {
-        meetings = List<Map<String, dynamic>>.from(meetingsList);
+        meetings = meetingsList;
       });
     } catch (e) {
-      print(e);
+      print('Error fetching meetings: $e');
     }
+  }
+
+  void showStudentDetails(BuildContext context, Map<String, dynamic> student) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('Name: ${student['first_name']} ${student['last_name']}',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              SizedBox(height: 10),
+              Text('Email: ${student['Email'] ?? 'N/A'}', style: TextStyle(fontSize: 16)),
+              SizedBox(height: 10),
+              Text('Skills: ${student['Skills'] ?? 'N/A'}', style: TextStyle(fontSize: 16)),
+              SizedBox(height: 10),
+              Text('Level: ${student['Level'] ?? 'N/A'}', style: TextStyle(fontSize: 16)),
+              SizedBox(height: 10),
+              Text('University: ${student['University'] ?? 'N/A'}', style: TextStyle(fontSize: 16)),
+              SizedBox(height: 10),
+              Text('Faculty: ${student['Faculty'] ?? 'N/A'}', style: TextStyle(fontSize: 16)),
+              SizedBox(height: 10),
+              Text('Location: ${student['Country'] ?? 'N/A'}, ${student['City'] ?? 'N/A'}', style: TextStyle(fontSize: 16)),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Mentor Home'),
+        backgroundColor: Colors.blue[800],
+        title: Align(
+          alignment: Alignment.center,
+          child: Text('Home', style: TextStyle(color: Colors.white)),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Student Count: $studentCount', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            Text('Students Count: $studentCount',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             SizedBox(height: 20),
-            Text('Students:', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            Text('Students:',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
             Expanded(
               child: ListView.builder(
                 itemCount: students.length,
                 itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(students[index]['Student_Name']),
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        IconButton(
-                          icon: Icon(Icons.chat),
-                          onPressed: () {
-                            // Navigate to chat screen
-                          },
-                        ),
-                        IconButton(
-                          icon: Icon(Icons.more_vert),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => StudentDetail(
-                                  student: students[index],
-                                  meetings: meetings,
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      ],
+                  return Card(
+                    margin: EdgeInsets.symmetric(vertical: 8.0),
+                    child: ListTile(
+                      title: Text(
+                        '${students[index]['first_name']} ${students[index]['last_name']}' ?? 'No Name',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      subtitle: Text(
+                        students[index]['Email'] ?? 'No Email',
+                        style: TextStyle(color: Colors.grey[600]),
+                      ),
+                      trailing: IconButton(
+                        icon: Icon(Icons.more_vert),
+                        onPressed: () {
+                          showStudentDetails(context, students[index]);
+                        },
+                      ),
+                      onTap: () {
+                        showStudentDetails(context, students[index]);
+                      },
                     ),
                   );
                 },
               ),
             ),
             SizedBox(height: 20),
-            Text('Upcoming Meetings:', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            Text('Upcoming Meetings:',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
             Expanded(
               child: ListView.builder(
                 itemCount: meetings.length,
                 itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text('Student: ${meetings[index]['Student_Name']}'),
-                    subtitle: Text('Date: ${meetings[index]['Date']} - Time: ${meetings[index]['Time']}'),
+                  return Card(
+                    margin: EdgeInsets.symmetric(vertical: 8.0),
+                    child: ListTile(
+                      title: Text(
+                        'Student: ${meetings[index]['Student_Name'] ?? 'No Name'}',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      subtitle: Text(
+                        'Date: ${meetings[index]['Date']} - Time: ${meetings[index]['Time']}',
+                        style: TextStyle(color: Colors.grey[600]),
+                      ),
+                    ),
                   );
                 },
               ),
@@ -160,48 +204,6 @@ class _MentorHomeState extends State<MentorHome> {
   }
 }
 
-class StudentDetail extends StatelessWidget {
-  final Map<String, dynamic> student;
-  final List<Map<String, dynamic>> meetings;
-
-  StudentDetail({required this.student, required this.meetings});
-
-  @override
-  Widget build(BuildContext context) {
-    List<Map<String, dynamic>> studentMeetings = meetings
-        .where((meeting) => meeting['Student_Name'] == student['Student_Name'])
-        .toList();
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Student Details'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Name: ${student['Student_Name']}', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            SizedBox(height: 20),
-            Text('Meetings:', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-            Expanded(
-              child: ListView.builder(
-                itemCount: studentMeetings.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(
-                        'Date: ${studentMeetings[index]['Date']} - Time: ${studentMeetings[index]['Time']}'),
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
 class ChatScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -215,5 +217,3 @@ class ChatScreen extends StatelessWidget {
     );
   }
 }
-
-

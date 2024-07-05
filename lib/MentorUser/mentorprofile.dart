@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:techmate/Mentoruser/editmentorprofile.dart';
 import 'package:techmate/services/profile/profileApiService.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
-import 'package:techmate/MentorUser/mentorexperience.dart';
+import 'package:techmate/MentorUser/mentorexperience.dart'; // Import ExperienceScreen
+import 'package:techmate/MentorUser/mentorareaofinterest.dart'; // Import AreaOfInterestScreen
 import 'package:techmate/Registeration/login/login.dart';
+import 'package:techmate/MentorUser/editmentorprofile.dart'; // Import MentorEditProfileScreen
+import 'package:techmate/MentorUser/mentorhome.dart'; // Import MentorHome
 
 Future<int?> getNationalId() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -13,7 +15,7 @@ Future<int?> getNationalId() async {
 }
 
 class MentorProfileScreen extends StatefulWidget {
-  static const String routeName = 'Mentor profile screen';
+  static const String routeName = 'mentor profile screen';
 
   @override
   _MentorProfileScreenState createState() => _MentorProfileScreenState();
@@ -35,13 +37,16 @@ class _MentorProfileScreenState extends State<MentorProfileScreen> {
 
   void _loadNationalId() async {
     int? nationalId = await getNationalId();
-    setState(() {
-      _nationalId = nationalId;
-      if (_nationalId != null) {
+    if (nationalId != null) {
+      setState(() {
+        _nationalId = nationalId;
         _userProfile = _profileApiService.getUserProfile(_nationalId!);
         _loadUserImage();
-      }
-    });
+      });
+    } else {
+      print("National ID is null");
+      // Handle the case when the national ID is null, for example, show a message or redirect to login
+    }
   }
 
   void _loadUserImage() async {
@@ -63,53 +68,79 @@ class _MentorProfileScreenState extends State<MentorProfileScreen> {
         setState(() {
           _image = imageFile;
         });
-        if (_nationalId != null) {
-          await _profileApiService.uploadUserImage(_nationalId!, imageFile);
-          _loadUserImage();
-        }
+        _uploadImage(imageFile);
       }
     } catch (e) {
-      print(e);
+      print("Error picking image: $e");
     }
   }
 
-  void _logout() async {
+  Future<void> _uploadImage(File image) async {
+    if (_image != null && _nationalId != null) {
+      bool success = await _profileApiService.uploadUserImage(_nationalId!, image);
+      if (success) {
+        _loadUserImage();
+        print('Image uploaded successfully');
+      } else {
+        print('Image upload failed');
+      }
+    }
+  }
+
+  Future<void> _logout() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.remove('national_id');
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => login_screen()),
+    await prefs.clear(); // Clear all saved data
+
+    // Navigate to the login screen
+    Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => login_screen()),
+            (Route<dynamic> route) => false
     );
+  }
+
+  void _updateUserProfile() {
+    setState(() {
+      _userProfile = _profileApiService.getUserProfile(_nationalId!);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Align(
-          alignment: Alignment.centerLeft,
-          child: Text('Profile'),
+        title: Text('Mentor Profile', style: TextStyle(color: Colors.white)),
+        backgroundColor: Colors.blue[800],
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
       ),
-      body: FutureBuilder<Map<String, dynamic>?>(
+      body: _nationalId == null
+          ? Center(child: Text('National ID is null. Please log in again.'))
+          : FutureBuilder<Map<String, dynamic>?>(
         future: _userProfile,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (!snapshot.hasData) {
-            return Center(child: Text('No data available'));
+          } else if (!snapshot.hasData || snapshot.data == null) {
+            return Center(child: Text('No user data found'));
           } else {
-            final user = snapshot.data!;
+            final userProfile = snapshot.data!;
+            final user = userProfile['user'];
+            final mentor = userProfile['mentor'];
             return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ListView(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Stack(
                     children: [
                       CircleAvatar(
-                        radius: 60,
+                        radius: 50,
                         backgroundImage: NetworkImage(_imageUrl),
                       ),
                       Positioned(
@@ -118,8 +149,8 @@ class _MentorProfileScreenState extends State<MentorProfileScreen> {
                         child: GestureDetector(
                           onTap: _pickImage,
                           child: CircleAvatar(
-                            backgroundColor: Colors.blue[800],
                             radius: 20,
+                            backgroundColor: Colors.blue[800],
                             child: Icon(
                               Icons.camera_alt,
                               color: Colors.white,
@@ -136,26 +167,51 @@ class _MentorProfileScreenState extends State<MentorProfileScreen> {
                   ),
                   SizedBox(height: 24),
                   ListTile(
-                    leading: Icon(Icons.edit_note_outlined, color: Colors.blue[800]),
-                    title: Text('Edit Profile'),
-                    trailing: Icon(Icons.arrow_forward_ios, color: Colors.blue[800]),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => MentorEditProfileScreen()),
-                      );
-                    },
-                  ),
-                  Divider(),
-                  ListTile(
-                    leading: Icon(Icons.work_outline, color: Colors.blue[800]),
+                    leading: Icon(Icons.work, color: Colors.blue[800]), // Updated icon for Experience
                     title: Text('Experience'),
                     trailing: Icon(Icons.arrow_forward_ios, color: Colors.blue[800]),
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => MentorExperienceScreen()),
+                        MaterialPageRoute(builder: (context) => MentorExperienceScreen()), // Updated screen
                       );
+                    },
+                  ),
+                  Divider(),
+                  ListTile(
+                    leading: Icon(Icons.interests, color: Colors.blue[800]),
+                    title: Text('Area of Interest'),
+                    trailing: Icon(Icons.arrow_forward_ios, color: Colors.blue[800]),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => AreaOfInterestScreen()), // Updated screen
+                      );
+                    },
+                  ),
+                  Divider(),
+                  ListTile(
+                    leading: Icon(Icons.edit_note_outlined, color: Colors.blue[800]),
+                    title: Text('Edit Profile'),
+                    trailing: Icon(Icons.arrow_forward_ios, color: Colors.blue[800]),
+                    onTap: () async {
+                      bool? result = await Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => MentorEditProfileScreen(
+                          firstName: user['first_name'],
+                          lastName: user['last_name'],
+                          email: user['Email'],
+                          phoneNumber: user['PhoneNumber'],
+                          jobTitle: mentor['JobTitle'] ?? '',
+                          company: mentor['Company'] ?? '',
+                          price: mentor['Price']?.toString() ?? '0',
+                          numberOfStudents: mentor['No_of_Students']?.toString() ?? '0',
+                          password: user['Password'], // Added password field
+                        )), // Reference MentorEditProfileScreen with data
+                      );
+                      if (result == true) {
+                        _updateUserProfile(); // Update the profile after returning from edit screen
+                      }
                     },
                   ),
                   Divider(),
@@ -170,6 +226,56 @@ class _MentorProfileScreenState extends State<MentorProfileScreen> {
             );
           }
         },
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: 2, // Set the current index to 2 for highlighting Profile tab
+        items: [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.chat), label: 'Chat'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+        ],
+        onTap: (index) {
+          if (index != 2) { // Disable press on Profile tab
+            switch (index) {
+              case 0:
+              // Navigate to Home screen
+                Navigator.push(context, MaterialPageRoute(builder: (context) => MentorHome())); // Updated Home screen
+                break;
+              case 1:
+              // Navigate to Chat screen
+                Navigator.push(context, MaterialPageRoute(builder: (context) => ChatScreen()));
+                break;
+            }
+          }
+        },
+      ),
+    );
+  }
+}
+
+class ChatScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Chat'),
+      ),
+      body: Center(
+        child: Text('Chat Screen'),
+      ),
+    );
+  }
+}
+
+class MentorHomeScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Home'),
+      ),
+      body: Center(
+        child: Text('Home Screen'),
       ),
     );
   }

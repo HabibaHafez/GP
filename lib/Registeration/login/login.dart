@@ -159,8 +159,8 @@ import 'package:techmate/Registeration/signup/Registeration/Registeration.dart';
 import 'package:techmate/commponent/button.dart';
 import 'package:techmate/commponent/textField.dart';
 import 'package:techmate/services/registeration/login/loginApi.dart';
-import 'package:techmate/MentorUser'
-    '/mentorHome.dart'; // Import mentor home screen
+import 'package:techmate/MentorUser''/mentorHome.dart'; // Import mentor home screen
+import 'package:techmate/AdminUser/AdminHome.dart';
 
 class login_screen extends StatefulWidget {
   static const routeName = 'sign in';
@@ -259,6 +259,9 @@ class _login_screenState extends State<login_screen> {
                       } else if (role == 'mentor') {
                         print('Navigating to Mentor Home Screen');
                         Navigator.pushNamed(context, MentorHome.routeName); // Ensure this route is defined
+                      } else if (role == 'admin'){
+                        print('Navigating to Admin Home Screen');
+                        Navigator.pushNamed(context, AdminHomeScreen.routeName);
                       }
                     } else {
                       print('Login failed');

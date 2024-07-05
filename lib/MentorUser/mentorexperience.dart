@@ -28,7 +28,7 @@ class MentorExperienceScreen extends StatefulWidget {
 
 class _MentorExperienceScreenState extends State<MentorExperienceScreen> {
   final ApiService apiService = ApiService();
-  List experiences = [];
+  List<Map<String, dynamic>> experiences = [];
   int? mentorId;
 
   @override
@@ -53,9 +53,45 @@ class _MentorExperienceScreenState extends State<MentorExperienceScreen> {
       if (mentorId != null) {
         List fetchedExperiences = await apiService.fetchMentorExperience(mentorId!);
         setState(() {
-          experiences = fetchedExperiences;
+          experiences = List<Map<String, dynamic>>.from(fetchedExperiences);
         });
       }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void _confirmDeleteExperience(BuildContext context, int index) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Confirm Deletion'),
+          content: Text('Are you sure you want to delete this experience?'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                _deleteExperience(index);
+                Navigator.of(context).pop();
+              },
+              child: Text('Delete'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _deleteExperience(int index) async {
+    try {
+      await apiService.deleteMentorExperience(mentorId!, experiences[index]['Experience']);
+      setState(() {
+        experiences.removeAt(index);
+      });
     } catch (e) {
       print(e);
     }
@@ -65,9 +101,13 @@ class _MentorExperienceScreenState extends State<MentorExperienceScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Align(
-          alignment: Alignment.centerLeft,
-          child: Text('Mentor Experience'),
+        title: Text('Mentor Experience', style: TextStyle(color: Colors.white)),
+        backgroundColor: Colors.blue[800],
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
       ),
       body: Padding(
@@ -77,40 +117,45 @@ class _MentorExperienceScreenState extends State<MentorExperienceScreen> {
           children: [
             Text(
               'Experiences',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.blue[800]),
             ),
             SizedBox(height: 10),
             Expanded(
               child: ListView.builder(
                 itemCount: experiences.length,
                 itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(experiences[index] ?? 'No experience provided'),
+                  return Card(
+                    child: ListTile(
+                      title: Text(experiences[index]['Experience'] ?? 'No experience provided'),
+                      trailing: IconButton(
+                        icon: Icon(Icons.delete, color: Colors.black),
+                        onPressed: () {
+                          _confirmDeleteExperience(context, index);
+                        },
+                      ),
+                    ),
                   );
                 },
               ),
             ),
-            SizedBox(height: 20),
-            Align(
-              alignment: Alignment.centerRight,
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => AddExperienceScreen(),
-                    ),
-                  ).then((value) {
-                    if (value == true) {
-                      fetchExperiences();
-                    }
-                  });
-                },
-                child: Text('Add Experience'),
-              ),
-            ),
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AddExperienceScreen(),
+            ),
+          ).then((value) {
+            if (value == true) {
+              fetchExperiences();
+            }
+          });
+        },
+        child: Icon(Icons.add, color: Colors.white),
+        backgroundColor: Colors.blue[800],
       ),
     );
   }

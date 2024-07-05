@@ -433,6 +433,9 @@ import 'package:techmate/welcom/welcome_screen.dart';
 import 'package:techmate/providers/BookingProvider.dart';
 import 'package:techmate/providers/message_provider.dart';
 import 'package:techmate/MentorUser/MentorHome.dart';
+import 'package:techmate/AdminUser/AdminHome.dart';
+import 'package:techmate/MentorUser/mentorprofile.dart';
+import 'package:techmate/MentorUser/editmentorprofile.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -474,6 +477,8 @@ class MyApp extends StatelessWidget {
         ProfileScreen.routeName: (context) => ProfileScreen(),
         InternshipsScreen.routeName: (context) => InternshipsScreen(),
         MentorsScreen.routeName: (context) => MentorsScreen(),
+        MentorProfileScreen.routeName: (context) => MentorProfileScreen(),
+        AdminHomeScreen.routeName: (context) => AdminHomeScreen(),
         CoursesScreen.routeName: (context) => CoursesScreen(),
         RecruiterInternshipsScreen.routeName: (context) =>
             RecruiterInternshipsScreen(),

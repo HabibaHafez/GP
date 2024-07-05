@@ -1,27 +1,47 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:techmate/services/MentorScreens/MentorApis.dart';
+import 'package:techmate/services/MentorScreens/mentor_api_service.dart'; // Import the new service
 
 class MentorEditProfileScreen extends StatefulWidget {
+  final String firstName;
+  final String lastName;
+  final String email;
+  final String? phoneNumber;
+  final String jobTitle;
+  final String company;
+  final String price;
+  final String numberOfStudents;
+  final String password;
+
+  MentorEditProfileScreen({
+    required this.firstName,
+    required this.lastName,
+    required this.email,
+    required this.phoneNumber,
+    required this.jobTitle,
+    required this.company,
+    required this.price,
+    required this.numberOfStudents,
+    required this.password,
+  });
+
   @override
   _MentorEditProfileScreenState createState() => _MentorEditProfileScreenState();
 }
 
 class _MentorEditProfileScreenState extends State<MentorEditProfileScreen> {
   final _formKey = GlobalKey<FormState>();
-  final ApiService apiService = ApiService();
+  final MentorApiService apiService = MentorApiService();
 
-  String firstName = '';
-  String lastName = '';
-  String email = '';
-  String password = '';
-  String? phoneNumber = '';
-  String country = 'Country';
-  String city = 'City';
-  String jobTitle = '';
-  String company = '';
-  String price = '';
-  String numberOfStudents = '';
+  late String firstName;
+  late String lastName;
+  late String email;
+  late String password;
+  late String? phoneNumber;
+  late String jobTitle;
+  late String company;
+  late String price;
+  late String numberOfStudents;
 
   int? mentorId;
 
@@ -29,6 +49,15 @@ class _MentorEditProfileScreenState extends State<MentorEditProfileScreen> {
   void initState() {
     super.initState();
     getMentorId();
+    firstName = widget.firstName;
+    lastName = widget.lastName;
+    email = widget.email;
+    phoneNumber = widget.phoneNumber;
+    jobTitle = widget.jobTitle;
+    company = widget.company;
+    price = widget.price;
+    numberOfStudents = widget.numberOfStudents;
+    password = widget.password;
   }
 
   Future<void> getMentorId() async {
@@ -37,33 +66,6 @@ class _MentorEditProfileScreenState extends State<MentorEditProfileScreen> {
     setState(() {
       mentorId = id;
     });
-    if (mentorId != null) {
-      _fetchProfileData();
-    }
-  }
-
-  void _fetchProfileData() async {
-    if (mentorId != null) {
-      final profileData = await apiService.getMentorProfile(mentorId!);
-      if (profileData != null) {
-        setState(() {
-          firstName = profileData['first_name'];
-          lastName = profileData['last_name'];
-          email = profileData['Email'];
-          phoneNumber = profileData['PhoneNumber'];
-          country = profileData['Country'] ?? 'Country';
-          city = profileData['City'] ?? 'City';
-          jobTitle = profileData['JobTitle'] ?? '';
-          company = profileData['Company'] ?? '';
-          price = profileData['Price'].toString() ?? '';
-          numberOfStudents = profileData['No_of_Students'].toString() ?? '';
-        });
-      } else {
-        print('Failed to load user profile data.');
-      }
-    } else {
-      print('Failed to get national ID.');
-    }
   }
 
   void _saveProfile() async {
@@ -72,21 +74,29 @@ class _MentorEditProfileScreenState extends State<MentorEditProfileScreen> {
 
       if (mentorId != null) {
         final updatedProfileData = {
+          'National_ID': mentorId,
           'first_name': firstName,
           'last_name': lastName,
           'Email': email,
+          'Password': password,
           'PhoneNumber': phoneNumber,
-          'Country': country,
-          'City': city,
           'JobTitle': jobTitle,
           'Company': company,
           'Price': int.parse(price),
           'No_of_Students': int.parse(numberOfStudents),
         };
 
-        // Assuming you have an API to save the profile data
-        await apiService.updateMentorProfile(mentorId!, updatedProfileData);
-        Navigator.pop(context, true);
+        // Save the profile data
+        bool success = await apiService.updateMentorProfile(mentorId!, updatedProfileData);
+
+        if (success) {
+          Navigator.pop(context, true);
+        } else {
+          // Handle failure to update profile
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Failed to update profile')),
+          );
+        }
       }
     }
   }
@@ -105,6 +115,7 @@ class _MentorEditProfileScreenState extends State<MentorEditProfileScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                SizedBox(height: 16), // Add some space before the first label
                 buildTextFormField('First Name', firstName, (value) {
                   setState(() {
                     firstName = value;
@@ -120,37 +131,32 @@ class _MentorEditProfileScreenState extends State<MentorEditProfileScreen> {
                     email = value;
                   });
                 }, keyboardType: TextInputType.emailAddress),
+                buildTextFormField('Password', password, (value) {
+                  setState(() {
+                    password = value;
+                  });
+                }, obscureText: true),
                 buildTextFormField('Phone Number', phoneNumber ?? '', (value) {
                   setState(() {
                     phoneNumber = value;
                   });
                 }, keyboardType: TextInputType.phone),
-                buildTextFormField('Country', country, (value) {
-                  setState(() {
-                    country = value;
-                  });
-                }),
-                buildTextFormField('City', city, (value) {
-                  setState(() {
-                    city = value;
-                  });
-                }),
-                buildTextFormField('Job Title', jobTitle, (value) {
+                buildTextFormField('Job Title', jobTitle != 'null' ? jobTitle : '', (value) {
                   setState(() {
                     jobTitle = value;
                   });
                 }),
-                buildTextFormField('Company', company, (value) {
+                buildTextFormField('Company', company != 'null' ? company : '', (value) {
                   setState(() {
                     company = value;
                   });
                 }),
-                buildTextFormField('Price', price, (value) {
+                buildTextFormField('Price', price != 'null' ? price : '0', (value) {
                   setState(() {
                     price = value;
                   });
                 }, keyboardType: TextInputType.number),
-                buildTextFormField('Number of Students', numberOfStudents, (value) {
+                buildTextFormField('Number of Students', numberOfStudents != 'null' ? numberOfStudents : '0', (value) {
                   setState(() {
                     numberOfStudents = value;
                   });

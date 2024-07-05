@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:techmate/RecruiterUser/BottomNavigationBar/navbar.dart';
-import 'package:techmate/StudentUser/BottonNavigationBar/navbar.dart';
 import 'package:techmate/Notification/notification.dart';
 import 'package:techmate/services/RecruiterScreens/profileUpdateApi.dart';
 import 'package:techmate/services/profile/profileApiService.dart';
@@ -24,7 +23,7 @@ class _EditProfileScreenState extends State<RecruiterProfileScreen> {
   TextEditingController passwordController = TextEditingController();
   TextEditingController phoneNumberController = TextEditingController();
   TextEditingController jobtitleController = TextEditingController();
-  TextEditingController CompanyNameController = TextEditingController();
+  TextEditingController companyNameController = TextEditingController();
 
   @override
   void initState() {
@@ -50,7 +49,7 @@ class _EditProfileScreenState extends State<RecruiterProfileScreen> {
           passwordController.text = profileData['Password'] ?? '';
           phoneNumberController.text = profileData['PhoneNumber'] ?? '';
           jobtitleController.text = profileData['JobTitle'] ?? 'JobTitle';
-          CompanyNameController.text = profileData['Comapany_Name'] ?? 'Company_Name';
+          companyNameController.text = profileData['Company_Name'] ?? 'Company_Name';
         });
       } else {
         print('Failed to load user profile data.');
@@ -73,7 +72,7 @@ class _EditProfileScreenState extends State<RecruiterProfileScreen> {
           'Password': passwordController.text,
           'PhoneNumber': phoneNumberController.text,
           'JobTitle': jobtitleController.text,
-          'Company_Name': CompanyNameController.text,
+          'Company_Name': companyNameController.text,
           'National_ID': nationalId,
         };
 
@@ -123,13 +122,14 @@ class _EditProfileScreenState extends State<RecruiterProfileScreen> {
           key: _formKey,
           child: ListView(
             children: [
+              SizedBox(height: 16), // Add some space before the first label
               buildTextFormField('First Name', firstNameController),
               buildTextFormField('Last Name', lastNameController),
               buildTextFormField('Email', emailController, keyboardType: TextInputType.emailAddress),
               buildTextFormField('Password', passwordController, obscureText: true),
               buildTextFormField('Phone Number', phoneNumberController, keyboardType: TextInputType.phone),
               buildTextFormField('JobTitle', jobtitleController),
-              buildTextFormField('Company_Name', CompanyNameController),
+              buildTextFormField('Company_Name', companyNameController),
               SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _saveProfile,
@@ -160,6 +160,7 @@ class _EditProfileScreenState extends State<RecruiterProfileScreen> {
         controller: controller,
         decoration: InputDecoration(
           labelText: labelText,
+          labelStyle: TextStyle(height: 0.5), // Adjust the height to shift the label down
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
           ),

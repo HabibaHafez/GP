@@ -1,0 +1,23 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:techmate/services/AdminScreens/getAllIinternsforadmin.dart'; // Import the shared Internship class
+
+class SearchInternshipsService {
+  Future<List<Internship>> searchInternships(String title) async {
+    try {
+      final response = await http.get(
+        Uri.parse('http://192.168.1.105:5000/internships/search?InternTitle=$title'),
+      );
+
+      if (response.statusCode == 200) {
+        List<dynamic> data = jsonDecode(response.body);
+        List<Internship> internships = data.map((json) => Internship.fromJson(json)).toList();
+        return internships;
+      } else {
+        throw Exception('Failed to search internships: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Failed to search internships: $e');
+    }
+  }
+}

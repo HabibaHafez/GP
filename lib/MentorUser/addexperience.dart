@@ -56,7 +56,7 @@ class _AddExperienceScreenState extends State<AddExperienceScreen> {
                       await apiService.addMentorExperience(mentorId!, experienceController.text);
                       Navigator.pop(context, true);
                     } catch (e) {
-                      print(e);
+                      print('Error adding experience: $e');
                     }
                   }
                 },
