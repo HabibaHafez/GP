@@ -239,7 +239,6 @@
 //   }
 // }
 
-
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:techmate/StudentUser/BottonNavigationBar/navbar.dart';
@@ -248,12 +247,28 @@ import 'profile.dart';
 
 class SkillsScreen extends StatefulWidget {
   @override
-  _SkillsScreenState createState() => _SkillsScreenState();
+  _SkillsScreenState  createState() => _SkillsScreenState();
 }
 
 class _SkillsScreenState extends State<SkillsScreen> {
   List<String> skills = [];
   final ProfileUpdateApiService _apiService = ProfileUpdateApiService();
+  final List<String> availableSkills = [
+    'Python',
+    'Java',
+    'C++',
+    'C#',
+    'JavaScript',
+    'SQL',
+    'Front-End',
+    'Back-End',
+    'Flutter',
+    'Web Development',
+    'Machine Learning',
+    'Data Analysis',
+    'Cloud Computing',
+    'Cybersecurity'
+  ];
 
   @override
   void initState() {
@@ -277,19 +292,17 @@ class _SkillsScreenState extends State<SkillsScreen> {
     }
   }
 
-  void _openAddSkillForm(BuildContext context, {String? skillToEdit, int? index}) {
+  void _openAddSkillForm(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AddSkillDialog(
-          skill: skillToEdit,
+          availableSkills: availableSkills
+              .where((skill) => !skills.contains(skill))
+              .toList(),
           onSave: (newSkill) {
             setState(() {
-              if (index != null) {
-                skills[index] = newSkill;
-              } else {
-                skills.add(newSkill);
-              }
+              skills.add(newSkill);
             });
             _updateSkills('update');
             Navigator.of(context).pop();
@@ -305,7 +318,6 @@ class _SkillsScreenState extends State<SkillsScreen> {
     });
     _updateSkills('delete');
   }
-
 
   void _confirmDeleteSkill(BuildContext context, int index) {
     showDialog(
@@ -345,7 +357,6 @@ class _SkillsScreenState extends State<SkillsScreen> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -384,7 +395,7 @@ class _SkillsScreenState extends State<SkillsScreen> {
             child: SkillTile(
               skill: skills[index],
               onEdit: () {
-                _openAddSkillForm(context, skillToEdit: skills[index], index: index);
+                _openAddSkillForm(context);
               },
               onDelete: () {
                 _confirmDeleteSkill(context, index);
@@ -408,60 +419,83 @@ class _SkillsScreenState extends State<SkillsScreen> {
 }
 
 class AddSkillDialog extends StatefulWidget {
-  final String? skill;
+  final List<String> availableSkills;
   final void Function(String) onSave;
 
-  AddSkillDialog({this.skill, required this.onSave});
+  AddSkillDialog({required this.availableSkills, required this.onSave});
 
   @override
-  _AddSkillDialogState createState() => _AddSkillDialogState();
+  _AddSkillDialogState  createState() => _AddSkillDialogState();
 }
 
 class _AddSkillDialogState extends State<AddSkillDialog> {
-  final _formKey = GlobalKey<FormState>();
-  final _skillController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    if (widget.skill != null) {
-      _skillController.text = widget.skill!;
-    }
-  }
+  String? selectedSkill;
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(widget.skill == null ? 'Add New Skill' : 'Edit Skill'),
-      content: SingleChildScrollView(
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextFormField(
-                controller: _skillController,
-                decoration: InputDecoration(labelText: 'Skill'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a skill';
-                  }
-                  return null;
+      title: Text('Add New Skill'),
+      content: Container(
+        width: MediaQuery.of(context).size.width * 0.8,
+        height: MediaQuery.of(context).size.height * 0.6,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Select a skill',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).textTheme.titleLarge!.color,
+              ),
+            ),
+            SizedBox(height: 8),
+            Expanded(
+              child: ListView.separated(
+                itemCount: widget.availableSkills.length,
+                separatorBuilder: (context, index) =>
+                    Divider(), // Add a Divider between each skill
+                itemBuilder: (context, index) {
+                  final skill = widget.availableSkills[index];
+                  final isSelected = skill == selectedSkill;
+
+                  return ListTile(
+                    tileColor:
+                    isSelected ? Theme.of(context).highlightColor : null,
+                    title: Text(
+                      skill,
+                      style: TextStyle(
+                        color: isSelected ? Colors.white : null,
+                      ),
+                    ),
+                    onTap: () {
+                      setState(() {
+                        selectedSkill = skill;
+                      });
+                    },
+                  );
                 },
               ),
-              SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    widget.onSave(_skillController.text);
-                  }
-                },
-                child: Text('Save'),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: Text('Cancel'),
+        ),
+        ElevatedButton(
+          onPressed: () {
+            if (selectedSkill != null) {
+              widget.onSave(selectedSkill!);
+            }
+          },
+          child: Text('Save'),
+        ),
+      ],
     );
   }
 }
@@ -471,20 +505,22 @@ class SkillTile extends StatelessWidget {
   final VoidCallback onEdit;
   final VoidCallback onDelete;
 
-  SkillTile({required this.skill, required this.onEdit, required this.onDelete});
+  SkillTile(
+      {required this.skill, required this.onEdit, required this.onDelete});
 
   @override
   Widget build(BuildContext context) {
     return Card(
       child: ListTile(
-        title: Text(skill, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+        title: Text(skill,
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            IconButton(
-              icon: Icon(Icons.edit),
-              onPressed: onEdit,
-            ),
+            // IconButton(
+            //   icon: Icon(Icons.edit),
+            //   onPressed: onEdit,
+            // ),
             IconButton(
               icon: Icon(Icons.delete),
               onPressed: onDelete,

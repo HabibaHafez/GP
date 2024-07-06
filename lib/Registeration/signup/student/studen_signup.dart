@@ -4,6 +4,7 @@ import 'package:techmate/Registeration/signup/user/ContinuedSignup.dart';
 import 'package:techmate/Registeration/signup/user/user_signup.dart';
 import 'package:techmate/Registeration/validations/validator.dart';
 import 'package:techmate/shared%20attributes/shared.dart'; // Import ContinuedSignup screen
+import 'package:techmate/Registeration/signup/student/AreaOfInterestScreen.dart';
 
 class StudentSignup extends StatefulWidget {
   static const routeName = 'student_signup';
@@ -88,7 +89,7 @@ class _StudentSignupState extends State<StudentSignup> {
                               nationalId:
                               _userSignupKey.currentState!.nationalId,
                               gender: _userSignupKey.currentState!.gender!,
-                              address: _countryController.text.trim(),
+                              country: _countryController.text.trim(),
                               level: _selectedLevel!,
                               //role: role,
                             ),

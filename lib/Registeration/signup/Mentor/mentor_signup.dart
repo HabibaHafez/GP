@@ -5,6 +5,7 @@ import 'package:techmate/Registeration/signup/user/user_signup.dart';
 import 'package:techmate/commponent/button.dart';
 import 'package:techmate/commponent/textField.dart';
 import 'package:techmate/shared%20attributes/shared.dart'; // Make sure this import is correct
+import 'package:techmate/Registeration/signup/student/AreaOfInterestScreen.dart';
 
 class mentor_signup extends StatelessWidget {
   final _userSignupKey = GlobalKey<UserSignupState>();

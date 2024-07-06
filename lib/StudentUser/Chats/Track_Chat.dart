@@ -2191,7 +2191,7 @@ class _WritingMessageScreenState extends State<WritingMessageScreen> {
   void _connectSocket() {
     socket = IO.io('http://192.168.1.105:5000', IO.OptionBuilder()
         .setTransports(['websocket']) // for Flutter or Dart VM
-        .disableAutoConnect()  // disable auto-connection
+        .disableAutoConnect() // disable auto-connection
         .build());
 
     socket.connect();
@@ -2312,56 +2312,6 @@ class _WritingMessageScreenState extends State<WritingMessageScreen> {
       appBar: AppBar(
         title: Text(widget.trackName, style: TextStyle(color: Colors.white)),
         backgroundColor: Colors.blue[800],
-        actions: [
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: PopupMenuButton<String>(
-              icon: Icon(Icons.more_vert, color: Colors.white),
-              onSelected: (value) {
-                // Handle menu item selection (e.g., delete chat, clear chat, block)
-                if (value == 'delete') {
-                  // Delete chat logic
-                } else if (value == 'clear') {
-                  // Clear chat logic
-                } else if (value == 'block') {
-                  // Block user logic
-                }
-              },
-              itemBuilder: (context) => [
-                PopupMenuItem<String>(
-                  value: 'delete',
-                  child: Row(
-                    children: [
-                      Icon(Icons.delete, color: Colors.black),
-                      SizedBox(width: 10),
-                      Text('Delete Chat'),
-                    ],
-                  ),
-                ),
-                PopupMenuItem<String>(
-                  value: 'clear',
-                  child: Row(
-                    children: [
-                      Icon(Icons.clear, color: Colors.black),
-                      SizedBox(width: 10),
-                      Text('Clear Chat'),
-                    ],
-                  ),
-                ),
-                PopupMenuItem<String>(
-                  value: 'block',
-                  child: Row(
-                    children: [
-                      Icon(Icons.block, color: Colors.black),
-                      SizedBox(width: 10),
-                      Text('Block User'),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
       ),
       body: Column(
         children: [
@@ -2455,32 +2405,31 @@ class ChatMessage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-        crossAxisAlignment: isUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-        children: [
+      crossAxisAlignment: isUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+      children: [
         if (!isUser) // Only show name for other users
-    Padding(
-        padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 4.0
-        ),
-      child: Text(
-        '$firstName $lastName',
-        style: TextStyle(fontWeight: FontWeight.bold),
-      ),
-    ),
-          for (var message in messages)
-            Align(
-              alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
-              child: Container(
-                constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.8),
-                child: Card(
-                  color: isUser ? Colors.lightBlue[300] : Colors.grey[350],
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(message),
-                  ),
+          Padding(
+            padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 4.0),
+            child: Text(
+              '$firstName $lastName',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
+        for (var message in messages)
+          Align(
+            alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
+            child: Container(
+              constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.8),
+              child: Card(
+                color: isUser ? Colors.lightBlue[300] : Colors.grey[350],
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(message),
                 ),
               ),
             ),
-        ],
+          ),
+      ],
     );
   }
 }

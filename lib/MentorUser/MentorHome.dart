@@ -4,6 +4,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:techmate/services/MentorScreens/MentorApis.dart'; // Ensure this path is correct
 import 'mentorprofile.dart'; // Ensure this path is correct
+import 'package:techmate/MentorUser/NavBar.dart';
+import 'package:techmate/MentorUser/ChatScreen.dart';
 
 class MentorHome extends StatefulWidget {
   static const routeName = '/Mentorhome';
@@ -18,6 +20,7 @@ class _MentorHomeState extends State<MentorHome> {
   List<Map<String, dynamic>> students = [];
   List<Map<String, dynamic>> meetings = [];
   int? mentorId;
+  int _selectedIndex = 0;
 
   @override
   void initState() {
@@ -111,9 +114,16 @@ class _MentorHomeState extends State<MentorHome> {
       appBar: AppBar(
         backgroundColor: Colors.blue[800],
         title: Align(
-          alignment: Alignment.center,
-          child: Text('Home', style: TextStyle(color: Colors.white)),
+          alignment: Alignment.centerLeft,
+          child: Text(
+            'Home',
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
         ),
+        iconTheme: IconThemeData(color: Colors.white),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -125,6 +135,7 @@ class _MentorHomeState extends State<MentorHome> {
             SizedBox(height: 20),
             Text('Students:',
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            SizedBox(height: 10), // Add some space before the students list
             Expanded(
               child: ListView.builder(
                 itemCount: students.length,
@@ -157,6 +168,7 @@ class _MentorHomeState extends State<MentorHome> {
             SizedBox(height: 20),
             Text('Upcoming Meetings:',
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            SizedBox(height: 10), // Add some space before the meetings list
             Expanded(
               child: ListView.builder(
                 itemCount: meetings.length,
@@ -180,40 +192,10 @@ class _MentorHomeState extends State<MentorHome> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.chat), label: 'Chat'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
-        ],
-        onTap: (index) {
-          switch (index) {
-            case 0:
-            // Already on home screen
-              break;
-            case 1:
-              Navigator.push(context, MaterialPageRoute(builder: (context) => ChatScreen()));
-              break;
-            case 2:
-              Navigator.push(context, MaterialPageRoute(builder: (context) => MentorProfileScreen()));
-              break;
-          }
-        },
-      ),
+      bottomNavigationBar: BottomNavBar(
+          currentIndex:0,
+          ),
     );
   }
 }
 
-class ChatScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Chat'),
-      ),
-      body: Center(
-        child: Text('Chat Screen'),
-      ),
-    );
-  }
-}

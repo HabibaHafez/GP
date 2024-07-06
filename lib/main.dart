@@ -392,6 +392,8 @@
 
 
 
+
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:techmate/StudentUser/Chats/Track_Chat.dart';
@@ -402,7 +404,7 @@ import 'package:techmate/ProfileScreen/profile.dart';
 import 'package:techmate/Registeration/login/login.dart';
 import 'package:techmate/Registeration/signup/HR/hr_signup.dart';
 import 'package:techmate/Registeration/signup/Mentor/mentor_signup.dart';
-import 'package:techmate/Registeration/signup/student/skills_choosen.dart';
+
 import 'package:techmate/Registeration/signup/student/studen_signup.dart';
 import 'package:techmate/Registeration/signup/user/ContinuedSignup.dart';
 import 'package:techmate/StudentUser/courses/CourseDetalisScreen.dart';
@@ -422,7 +424,6 @@ import 'package:techmate/ProfileScreen/profile.dart';
 import 'package:techmate/Registeration/login/login.dart';
 import 'package:techmate/Registeration/signup/HR/hr_signup.dart';
 import 'package:techmate/Registeration/signup/Mentor/mentor_signup.dart';
-import 'package:techmate/Registeration/signup/student/skills_choosen.dart';
 import 'package:techmate/Registeration/signup/student/studen_signup.dart';
 import 'package:techmate/Registeration/signup/user/ContinuedSignup.dart';
 import 'package:techmate/StudentUser/courses/CourseDetalisScreen.dart';
@@ -436,6 +437,8 @@ import 'package:techmate/MentorUser/MentorHome.dart';
 import 'package:techmate/AdminUser/AdminHome.dart';
 import 'package:techmate/MentorUser/mentorprofile.dart';
 import 'package:techmate/MentorUser/editmentorprofile.dart';
+import 'package:techmate/Registeration/signup/student/AreaOfInterestScreen.dart';
+import 'package:techmate/MentorUser/ChatScreen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();

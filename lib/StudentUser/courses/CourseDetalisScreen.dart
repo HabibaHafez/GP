@@ -411,7 +411,6 @@
 //   }
 // }
 
-
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:techmate/services/courses/save_unsave_course_service.dart';
@@ -441,7 +440,7 @@ class CourseDetailsScreen extends StatefulWidget {
   });
 
   @override
-  _CourseDetailsScreenState createState() => _CourseDetailsScreenState();
+  _CourseDetailsScreenState createState()=> _CourseDetailsScreenState();
 }
 
 class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
@@ -455,9 +454,10 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
 
   void _checkIfCourseIsSaved() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? nationalId = prefs.getString('national_id');
+    int? nationalId = prefs.getInt('national_id');
     if (nationalId != null) {
-      bool saved = await SaveUnsaveCourseService.isCourseSaved(nationalId, widget.courseId);
+      bool saved = await SaveUnsaveCourseService.isCourseSaved(
+          nationalId as String, widget.courseId);
       setState(() {
         isSaved = saved;
       });
@@ -498,51 +498,57 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(height: 16),
-            Text(
-              'Course Details',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            Padding(
+              padding: const EdgeInsets.only(left: 7),
+              child: Text(
+                'Course Details',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
             ),
-            SizedBox(height: 8),
-            Text(
-              'Provider: ${widget.provider}',
-              style: TextStyle(fontSize: 16),
-            ),
-            SizedBox(height: 8),
-            Text(
-              'Level: ${widget.level}',
-              style: TextStyle(fontSize: 16),
-            ),
-            SizedBox(height: 8),
-            Text(
-              'Duration: ${widget.duration}',
-              style: TextStyle(fontSize: 16),
-            ),
-            SizedBox(height: 16),
-            Text(
-              'Description:',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            Text(
-              widget.courseDescription,
-              style: TextStyle(fontSize: 16),
-            ),
-            SizedBox(height: 16),
-            Text(
-              'Price: ${widget.price}',
-              style: TextStyle(fontSize: 16, color: Colors.red),
-            ),
-            SizedBox(height: 16),
-            Center(
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue[800],
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
+            SizedBox(height: 14),
+            Card(
+              elevation: 4,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 20),
+                    _buildDetailRow(Icons.school, 'Provider:', widget.provider),
+                    SizedBox(height: 30),
+                    _buildDetailRow(Icons.bar_chart, 'Level:', widget.level),
+                    SizedBox(height: 30),
+                    _buildDetailRow(Icons.timer, 'Duration:', widget.duration),
+                    SizedBox(height: 30),
+                    _buildDetailRow(Icons.description, 'Description:',
+                        widget.courseDescription),
+                    SizedBox(height: 30),
+                    _buildDetailRow(Icons.attach_money, 'Price:', widget.price,
+                        textColor: Colors.red),
+                    SizedBox(height: 20),
+                  ],
                 ),
-                onPressed: () => _launchURL(widget.playUrl),
-                child: Text('Start'),
+              ),
+            ),
+            SizedBox(height: 20),
+            Center(
+              child: SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue[800],
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    padding: EdgeInsets.symmetric(vertical: 16.0),
+                  ),
+                  onPressed: () => _launchURL(widget.playUrl),
+                  child: Text('Start', style: TextStyle(fontSize: 18)),
+                ),
               ),
             ),
           ],
@@ -551,6 +557,26 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
       bottomNavigationBar: BottomNavBar(
         currentIndex: 0,
       ),
+    );
+  }
+
+  Widget _buildDetailRow(IconData icon, String title, String detail,
+      {Color? textColor}) {
+    return Row(
+      children: [
+        Icon(icon, color: Colors.blue[800]),
+        SizedBox(width: 8),
+        Text(
+          '$title ',
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        ),
+        Expanded(
+          child: Text(
+            detail,
+            style: TextStyle(fontSize: 16, color: textColor ?? Colors.black),
+          ),
+        ),
+      ],
     );
   }
 }

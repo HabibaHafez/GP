@@ -7,7 +7,9 @@ import 'package:techmate/MentorUser/mentorexperience.dart'; // Import Experience
 import 'package:techmate/MentorUser/mentorareaofinterest.dart'; // Import AreaOfInterestScreen
 import 'package:techmate/Registeration/login/login.dart';
 import 'package:techmate/MentorUser/editmentorprofile.dart'; // Import MentorEditProfileScreen
-import 'package:techmate/MentorUser/mentorhome.dart'; // Import MentorHome
+import 'package:techmate/MentorUser/MentorHome.dart'; // Import MentorHome
+import 'package:techmate/MentorUser/NavBar.dart';
+import 'package:techmate/MentorUser/ChatScreen.dart';
 
 Future<int?> getNationalId() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -227,45 +229,12 @@ class _MentorProfileScreenState extends State<MentorProfileScreen> {
           }
         },
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 2, // Set the current index to 2 for highlighting Profile tab
-        items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.chat), label: 'Chat'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
-        ],
-        onTap: (index) {
-          if (index != 2) { // Disable press on Profile tab
-            switch (index) {
-              case 0:
-              // Navigate to Home screen
-                Navigator.push(context, MaterialPageRoute(builder: (context) => MentorHome())); // Updated Home screen
-                break;
-              case 1:
-              // Navigate to Chat screen
-                Navigator.push(context, MaterialPageRoute(builder: (context) => ChatScreen()));
-                break;
-            }
-          }
-        },
-      ),
+      bottomNavigationBar: BottomNavBar(
+        currentIndex:2),
     );
   }
 }
 
-class ChatScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Chat'),
-      ),
-      body: Center(
-        child: Text('Chat Screen'),
-      ),
-    );
-  }
-}
 
 class MentorHomeScreen extends StatelessWidget {
   @override

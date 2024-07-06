@@ -75,6 +75,8 @@ flutter:
   assets:
     - images/cs.jpeg
     - images/data_analysis.jpg
+    - images/download.jpg
+    - images/coursera_solo.jpg
 
 
   # An image asset can refer to one or more resolution-specific "variants", see
