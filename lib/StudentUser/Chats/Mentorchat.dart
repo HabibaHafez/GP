@@ -270,6 +270,8 @@
 //     );
 //   }
 // }
+
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
@@ -307,13 +309,13 @@ class _MentorChatScreenState extends State<MentorChatScreen> {
     });
 
     // Listen for incoming messages
-    socket.on('message', (data) {
-      Provider.of<MessageProvider>(context, listen: false).receiveMessage(data);
+    socket.on('userMentorMessage', (data) {
+      Provider.of<MessageProvider>(context, listen: false).receiveMessage(Message.fromJson(json.decode(data)));
     });
 
     // Fetch messages for the current mentor
-    Provider.of<MessageProvider>(context, listen: false)
-        .fetchMessages(widget.currentUserId, widget.mentorId);
+    print('MentorChatScreen initState - currentUserId: ${widget.currentUserId}, mentorId: ${widget.mentorId}');
+    Provider.of<MessageProvider>(context, listen: false).fetchMessages(widget.currentUserId, widget.mentorId);
   }
 
   @override
@@ -334,14 +336,13 @@ class _MentorChatScreenState extends State<MentorChatScreen> {
       );
 
       // Emit the message to the server
-      socket.emit('message', newMessage.toJson());
+      socket.emit('userMentorMessage', json.encode(newMessage.toJson()));
 
       // Clear the message input field
       _messageController.clear();
 
       // Add the message locally for immediate UI update
-      Provider.of<MessageProvider>(context, listen: false)
-          .sendMessage(newMessage);
+      Provider.of<MessageProvider>(context, listen: false).sendMessage(newMessage);
     }
   }
 
@@ -358,8 +359,7 @@ class _MentorChatScreenState extends State<MentorChatScreen> {
           Expanded(
             child: Consumer<MessageProvider>(
               builder: (context, messageProvider, _) {
-                List<Message> messages =
-                messageProvider.getMessagesForMentor(widget.mentorId);
+                List<Message> messages = messageProvider.getMessagesForMentor(widget.mentorId);
 
                 List<List<Message>> groupedMessages = [];
                 List<Message> currentGroup = [];
@@ -453,3 +453,4 @@ class _MentorChatScreenState extends State<MentorChatScreen> {
     );
   }
 }
+

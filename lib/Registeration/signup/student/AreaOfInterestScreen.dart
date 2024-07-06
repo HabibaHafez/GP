@@ -41,6 +41,7 @@ class ChooseAreaOfInterestState extends State<ChooseAreaOfInterest> {
   String _errorMessage = '';
   List<String> _interests = [];
   String? _role;
+
   @override
   void initState() {
     super.initState();
@@ -180,7 +181,11 @@ class ChooseAreaOfInterestState extends State<ChooseAreaOfInterest> {
       bool isRegistered = false;
       String interestsString = _interests.join(',');
 
+      print('Role: $_role');
+      print('Interests: $interestsString');
+
       if (_role == 'student') {
+        print('Registering student...');
         isRegistered = await registerStudent(
           widget.firstName,
           widget.lastName,
@@ -193,6 +198,7 @@ class ChooseAreaOfInterestState extends State<ChooseAreaOfInterest> {
           interestsString, // Pass the comma-separated string
         );
       } else if (_role == 'mentor') {
+        print('Registering mentor...');
         isRegistered = await registerMentor(
           widget.firstName,
           widget.lastName,

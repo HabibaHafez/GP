@@ -150,7 +150,6 @@
 //     );
 //   }
 // }
-
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:techmate/RecruiterUser/Home/recruiterHome.dart';
@@ -159,7 +158,7 @@ import 'package:techmate/Registeration/signup/Registeration/Registeration.dart';
 import 'package:techmate/commponent/button.dart';
 import 'package:techmate/commponent/textField.dart';
 import 'package:techmate/services/registeration/login/loginApi.dart';
-import 'package:techmate/MentorUser''/mentorHome.dart'; // Import mentor home screen
+import 'package:techmate/MentorUser/mentorHome.dart'; // Import mentor home screen
 import 'package:techmate/AdminUser/AdminHome.dart';
 
 class login_screen extends StatefulWidget {
@@ -185,7 +184,7 @@ class _login_screenState extends State<login_screen> {
           child: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: () {
-              Navigator.of(context).pop();
+              // Do nothing when back button is pressed
             },
           ),
         ),

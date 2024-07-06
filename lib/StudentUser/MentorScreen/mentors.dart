@@ -12,7 +12,7 @@ import 'mentorprofile.dart';
 class MentorsScreen extends StatefulWidget {
   static const String routeName = 'mentor screen';
 
-  const MentorsScreen({Key? key}) : super(key: key);
+  const MentorsScreen({super.key});
 
   @override
   _MentorsScreenState createState() => _MentorsScreenState();
@@ -21,6 +21,8 @@ class MentorsScreen extends StatefulWidget {
 class _MentorsScreenState extends State<MentorsScreen> {
   late Future<List<Mentor>> _futureMentors;
   int? currentUserId;
+  final TextEditingController _searchController = TextEditingController();
+  String _searchText = "";
 
   @override
   void initState() {
@@ -30,7 +32,6 @@ class _MentorsScreenState extends State<MentorsScreen> {
   }
 
   Future<void> _getCurrentUserId() async {
-    // Retrieve the current user ID from SharedPreferences
     SharedPreferences prefs = await SharedPreferences.getInstance();
     int? userId = prefs.getInt('national_id');
     setState(() {
@@ -67,13 +68,46 @@ class _MentorsScreenState extends State<MentorsScreen> {
             },
           ),
         ],
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(60.0),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: TextField(
+              controller: _searchController,
+              onChanged: (value) {
+                setState(() {
+                  _searchText = value;
+                });
+              },
+              decoration: InputDecoration(
+                hintText: 'Search by area of interest...',
+                hintStyle: const TextStyle(color: Colors.white54),
+                prefixIcon: const Icon(Icons.search, color: Colors.white),
+                suffixIcon: IconButton(
+                  icon: const Icon(Icons.clear, color: Colors.white),
+                  onPressed: () {
+                    setState(() {
+                      _searchController.clear();
+                      _searchText = '';
+                      _futureMentors =
+                          MentorService().getMentors(); // Reset to all mentors
+                    });
+                  },
+                ),
+                border: InputBorder.none,
+              ),
+              style: const TextStyle(color: Colors.white),
+            ),
+          ),
+        ),
       ),
       body: Column(
         children: [
-          // Your filter and search UI here
           Expanded(
             child: FutureBuilder<List<Mentor>>(
-              future: _futureMentors,
+              future: _searchText.isEmpty
+                  ? _futureMentors
+                  : MentorService().searchMentorsByAreaOfInterest(_searchText),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
@@ -82,11 +116,12 @@ class _MentorsScreenState extends State<MentorsScreen> {
                 } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                   return const Center(child: Text('No mentors found'));
                 } else {
-                  final mentors = snapshot.data!;
+                  List<Mentor> filteredMentors = snapshot.data!;
+
                   return ListView.builder(
-                    itemCount: mentors.length,
+                    itemCount: filteredMentors.length,
                     itemBuilder: (context, index) {
-                      final mentor = mentors[index];
+                      final mentor = filteredMentors[index];
                       return ListTile(
                         leading: CircleAvatar(
                           backgroundImage: mentor.imageUrl != null
@@ -94,13 +129,7 @@ class _MentorsScreenState extends State<MentorsScreen> {
                               : null,
                         ),
                         title: Text('${mentor.firstname} ${mentor.lastname}'),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(mentor.jobtitle),
-                            Text('${mentor.price} price'),
-                          ],
-                        ),
+                        subtitle: Text(mentor.jobtitle),
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -132,13 +161,6 @@ class _MentorsScreenState extends State<MentorsScreen> {
                                     ),
                                   ),
                                 );
-                              },
-                            ),
-                            IconButton(
-                              icon: const Icon(Icons.star),
-                              onPressed: () {
-                                // Navigate to a screen where users can rate the mentor
-                                // You can implement this functionality as per your requirements
                               },
                             ),
                           ],

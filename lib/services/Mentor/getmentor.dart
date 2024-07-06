@@ -69,26 +69,18 @@ class MentorService {
     }
   }
 
-  Future<void> rateMentor(
-      String studentId, String mentorId, double rating) async {
-    final url = Uri.parse('http://192.168.1.105/enrollments/rate');
-    final headers = {'Content-Type': 'application/json'};
-    final body = json.encode({
-      'Student_ID': studentId,
-      'Mentor_ID': mentorId,
-      'Ratings': rating.toString(),
-    });
+  Future<List<Mentor>> searchMentorsByAreaOfInterest(
+      String areaOfInterest) async {
+    final response = await http.get(
+      Uri.parse('$mentorUrl/search?AreaOfInterest=$areaOfInterest'),
+    );
 
-    try {
-      final response = await http.put(url, headers: headers, body: body);
-      if (response.statusCode == 200) {
-        print('Mentor rated successfully');
-      } else {
-        print('Failed to rate mentor - HTTP ${response.statusCode}');
-        print(response.body); // Print response body for debugging
-      }
-    } catch (error) {
-      print('Error rating mentor: $error');
+    if (response.statusCode == 200) {
+      List<dynamic> data = jsonDecode(response.body);
+      List<Mentor> mentors = data.map((json) => Mentor.fromJson(json)).toList();
+      return mentors;
+    } else {
+      throw Exception('Failed to load mentors');
     }
   }
 }
