@@ -662,6 +662,188 @@
 //   });
 // }
 
+//
+//
+// import 'package:flutter/material.dart';
+// import 'package:shared_preferences/shared_preferences.dart';
+// import 'package:techmate/services/chats/MentorChatAPI.dart';
+// import 'package:techmate/MentorUser/NavBar.dart';
+//
+// class ChatScreen extends StatefulWidget {
+//   final int mentorId; // Mentor ID
+//   final String studentId; // Student ID (string)
+//   final ChatScreenMessage message; // ChatScreenMessage object
+//
+//   ChatScreen({
+//     required this.mentorId,
+//     required this.studentId,
+//     required this.message,
+//   });
+//
+//   @override
+//   _ChatScreenState createState() => _ChatScreenState();
+// }
+//
+// class _ChatScreenState extends State<ChatScreen> {
+//   final List<ChatMessage> _messages = [];
+//   final TextEditingController _controller = TextEditingController();
+//   final ScrollController _scrollController = ScrollController();
+//   late MentorMessageService _messageService;
+//   int? _currentUserId;
+//
+//   @override
+//   void initState() {
+//     super.initState();
+//     _messageService = MentorMessageService();
+//     _fetchCurrentUserId();
+//   }
+//
+//   Future<void> _fetchCurrentUserId() async {
+//     SharedPreferences prefs = await SharedPreferences.getInstance();
+//     final int? userId = prefs.getInt('national_id');
+//     if (userId != null) {
+//       setState(() {
+//         _currentUserId = userId;
+//         _initializeMessages();
+//       });
+//     }
+//   }
+//
+//   void _initializeMessages() async {
+//     try {
+//       List<ChatScreenMessage> messages = await _messageService.getConversation(
+//         senderId: widget.mentorId,
+//         receiverId: int.parse(widget.studentId),
+//       );
+//
+//       setState(() {
+//         _messages.clear();
+//         _messages.addAll(messages.map((msg) => ChatMessage(
+//           isUser: msg.senderId == _currentUserId,
+//           message: msg.content,
+//         )));
+//         _scrollToBottom();
+//       });
+//     } catch (e) {
+//       print('Failed to fetch messages: $e');
+//     }
+//   }
+//
+//   void _sendMessage(String messageContent) async {
+//     if (messageContent.isNotEmpty && _currentUserId != null) {
+//       try {
+//         int receiverId = int.parse(widget.studentId);
+//
+//         await _messageService.sendMessage(
+//           senderId: _currentUserId!,
+//           receiverId: receiverId,
+//           content: messageContent,
+//         );
+//
+//         setState(() {
+//           _messages.add(ChatMessage(
+//             isUser: true,
+//             message: messageContent,
+//           ));
+//           _controller.clear();
+//           _scrollToBottom();
+//         });
+//
+//         // Avoid refetching all messages to prevent duplication
+//       } catch (e) {
+//         print('Failed to send message: $e');
+//       }
+//     }
+//   }
+//
+//   void _scrollToBottom() {
+//     if (_scrollController.hasClients) {
+//       _scrollController.animateTo(
+//         _scrollController.position.maxScrollExtent,
+//         duration: Duration(milliseconds: 300),
+//         curve: Curves.easeOut,
+//       );
+//     }
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text('${widget.message.firstName} ${widget.message.lastName}'),
+//       ),
+//       body: Column(
+//         children: [
+//           Expanded(
+//             child: ListView.builder(
+//               controller: _scrollController,
+//               itemCount: _messages.length,
+//               itemBuilder: (context, index) {
+//                 final message = _messages[index];
+//                 return Align(
+//                   alignment: message.isUser
+//                       ? Alignment.centerRight
+//                       : Alignment.centerLeft,
+//                   child: Padding(
+//                     padding: const EdgeInsets.symmetric(
+//                         vertical: 4.0, horizontal: 8.0),
+//                     child: Container(
+//                       constraints: BoxConstraints(
+//                           maxWidth: MediaQuery.of(context).size.width * 0.8),
+//                       child: Card(
+//                         color: message.isUser
+//                             ? Colors.lightBlue[300]
+//                             : Colors.grey[350],
+//                         child: Padding(
+//                           padding: const EdgeInsets.all(8.0),
+//                           child: Text(message.message),
+//                         ),
+//                       ),
+//                     ),
+//                   ),
+//                 );
+//               },
+//             ),
+//           ),
+//           Padding(
+//             padding: const EdgeInsets.all(8.0),
+//             child: Row(
+//               children: [
+//                 Expanded(
+//                   child: TextField(
+//                     controller: _controller,
+//                     decoration: InputDecoration(
+//                       hintText: 'Type a message...',
+//                       border: OutlineInputBorder(),
+//                     ),
+//                     onSubmitted: (text) => _sendMessage(text),
+//                   ),
+//                 ),
+//                 IconButton(
+//                   icon: Icon(Icons.send),
+//                   onPressed: () => _sendMessage(_controller.text),
+//                 ),
+//               ],
+//             ),
+//           ),
+//         ],
+//       ),
+//       bottomNavigationBar: BottomNavBar(
+//         currentIndex: 1,
+//       ),
+//     );
+//   }
+// }
+//
+// class ChatMessage {
+//   final bool isUser;
+//   final String message;
+//
+//   ChatMessage({
+//     required this.isUser,
+//     required this.message,
+//   });
+// }
 
 
 import 'package:flutter/material.dart';
@@ -681,7 +863,7 @@ class ChatScreen extends StatefulWidget {
   });
 
   @override
-  _ChatScreenState createState() => _ChatScreenState();
+  _ChatScreenState  createState() => _ChatScreenState();
 }
 
 class _ChatScreenState extends State<ChatScreen> {
@@ -769,40 +951,78 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('${widget.message.firstName} ${widget.message.lastName}'),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(80),
+        child: AppBar(
+          backgroundColor: Colors.blue[800],
+          leading: Padding(
+            padding: const EdgeInsets.only(left: 8.0, top: 20.0),
+            child: IconButton(
+              icon: Icon(Icons.arrow_back, color: Colors.white),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ),
+          title: Padding(
+            padding: const EdgeInsets.only(left: 0.0, top: 20.0),
+            child: Text(
+              '${widget.message.firstName} ${widget.message.lastName}',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 25,
+              ),
+            ),
+          ),
+          automaticallyImplyLeading: false,
+          iconTheme: IconThemeData(color: Colors.white),
+        ),
       ),
       body: Column(
         children: [
           Expanded(
-            child: ListView.builder(
-              controller: _scrollController,
-              itemCount: _messages.length,
-              itemBuilder: (context, index) {
-                final message = _messages[index];
-                return Align(
-                  alignment: message.isUser
-                      ? Alignment.centerRight
-                      : Alignment.centerLeft,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 4.0, horizontal: 8.0),
-                    child: Container(
-                      constraints: BoxConstraints(
-                          maxWidth: MediaQuery.of(context).size.width * 0.8),
-                      child: Card(
-                        color: message.isUser
-                            ? Colors.lightBlue[300]
-                            : Colors.grey[350],
+            child: Padding(
+              padding: const EdgeInsets.only(left: 8.0, top: 20, right: 8.0),
+              child: ListView.builder(
+                controller: _scrollController,
+                itemCount: _messages.length,
+                itemBuilder: (context, index) {
+                  final message = _messages[index];
+                  return Align(
+                    alignment: message.isUser
+                        ? Alignment.centerRight
+                        : Alignment.centerLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 5.0, horizontal: 8.0),
+                      child: Container(
+                        constraints: BoxConstraints(
+                            maxWidth: MediaQuery.of(context).size.width * 0.8),
+                        decoration: BoxDecoration(
+                          color: message.isUser
+                              ? Colors.lightBlue[800]
+                              : Color.fromARGB(255, 131, 124, 124),
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                            color: Colors.blue[800]!,
+                            width: 1.0,
+                          ),
+                        ),
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Text(message.message),
+                          child: Text(
+                            message.message,
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.white,
+                            ),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
           ),
           Padding(
@@ -820,16 +1040,13 @@ class _ChatScreenState extends State<ChatScreen> {
                   ),
                 ),
                 IconButton(
-                  icon: Icon(Icons.send),
+                  icon: Icon(Icons.send, color: Colors.blue[800]),
                   onPressed: () => _sendMessage(_controller.text),
                 ),
               ],
             ),
           ),
         ],
-      ),
-      bottomNavigationBar: BottomNavBar(
-        currentIndex: 1,
       ),
     );
   }
@@ -844,4 +1061,3 @@ class ChatMessage {
     required this.message,
   });
 }
-
