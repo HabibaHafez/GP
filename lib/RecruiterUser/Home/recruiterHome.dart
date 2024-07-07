@@ -6,6 +6,7 @@ import 'package:techmate/RecruiterUser/Home/AddInternshipScreen.dart';
 import 'package:techmate/RecruiterUser/Home/internshipdetails.dart';
 import 'package:techmate/services/RecruiterScreens/SearchInternshipApi.dart';
 import 'package:techmate/services/RecruiterScreens/getAllinternsforRecuiter.dart';
+import 'package:techmate/services/RecruiterScreens/deleteInternshipService.dart';
 
 class RecruiterInternshipsScreen extends StatefulWidget {
   static const String routeName = 'recruiter internship screen';
@@ -24,6 +25,7 @@ class _RecruiterInternshipsScreenState
   bool _isLoading = true;
   final InternshipService _internshipService = InternshipService();
   final SearchInternApiService _searchInternApiService = SearchInternApiService();
+  final DeleteInternshipService _deleteInternshipService = DeleteInternshipService();
 
   @override
   void initState() {
@@ -106,28 +108,34 @@ class _RecruiterInternshipsScreenState
     }
   }
 
-  void _showInternshipDetails(BuildContext context, Internship internship) {
-    Navigator.push(
+  void _showInternshipDetails(BuildContext context, Internship internship) async {
+    final updatedInternship = await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) =>
-            RecruiterInternshipDetails(internship: internship),
+        builder: (context) => RecruiterInternshipDetails(internship: internship),
       ),
     );
+
+    if (updatedInternship != null) {
+      setState(() {
+        int index = _internships.indexWhere((i) => i.internId == updatedInternship.internId);
+        if (index != -1) {
+          _internships[index] = updatedInternship;
+          _filteredInternships = _internships;
+        }
+      });
+    }
   }
 
-  void _navigateToAddInternshipScreen(BuildContext context) {
-    Navigator.push(
+  void _navigateToAddInternshipScreen(BuildContext context) async {
+    final newInternship = await Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => AddInternshipScreen()),
-    ).then((newInternship) {
-      if (newInternship != null && newInternship is Internship) {
-        setState(() {
-          _internships.add(newInternship);
-          _filteredInternships = _internships; // Update the filtered list as well
-        });
-      }
-    });
+    );
+
+    if (newInternship != null && newInternship is Internship) {
+      _fetchInternships(); // Refresh the internship list to include the new one
+    }
   }
 
   void _deleteInternship(int internId) async {
@@ -139,7 +147,7 @@ class _RecruiterInternshipsScreenState
       return;
     }
 
-    bool success = await _internshipService.deleteInternship(internId, nationalId);
+    bool success = await _deleteInternshipService.deleteInternship(internId, nationalId);
 
     if (success) {
       setState(() {

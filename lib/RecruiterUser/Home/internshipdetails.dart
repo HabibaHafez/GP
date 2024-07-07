@@ -10,7 +10,7 @@ class RecruiterInternshipDetails extends StatefulWidget {
       : super(key: key);
 
   @override
-  _RecruiterInternshipDetailsState  createState() =>
+  _RecruiterInternshipDetailsState createState() =>
       _RecruiterInternshipDetailsState();
 }
 
@@ -67,6 +67,8 @@ class _RecruiterInternshipDetailsState
     final locationParts = _locationController.text.split(', ');
     if (locationParts.length < 2) {
       // Handle invalid location input
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Invalid location format. Please use "City, Country" format.')));
       return;
     }
 
@@ -78,7 +80,7 @@ class _RecruiterInternshipDetailsState
       country: locationParts[1],
       date: _dateController.text,
       duration: _durationController.text,
-      paid: _paidController.text,
+      paid: _paidController.text.toLowerCase() == 'true', // Convert to boolean
       description: _descriptionController.text,
       requirements: _requirementsController.text,
       link: _linkController.text,
@@ -86,15 +88,20 @@ class _RecruiterInternshipDetailsState
       nationalId: widget.internship.nationalId,
     );
 
-    final success =
-    await UpdateInternshipApiService().updateInternship(updatedInternship);
-    if (success) {
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Internship updated successfully')));
-      Navigator.pop(context, updatedInternship);
-    } else {
+    try {
+      final success =
+      await UpdateInternshipApiService().updateInternship(updatedInternship);
+      if (success) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Internship updated successfully')));
+        Navigator.pop(context, updatedInternship);
+      } else {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('Failed to update internship')));
+      }
+    } catch (e) {
       ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('Failed to update internship')));
+          .showSnackBar(SnackBar(content: Text('Error: $e')));
     }
   }
 
@@ -102,8 +109,7 @@ class _RecruiterInternshipDetailsState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title:
-        Text('Internship Details', style: TextStyle(color: Colors.white)),
+        title: Text('Internship Details', style: TextStyle(color: Colors.white)),
         backgroundColor: Colors.blue[800],
         actions: [
           TextButton(
@@ -129,10 +135,6 @@ class _RecruiterInternshipDetailsState
               decoration: InputDecoration(labelText: 'Location'),
             ),
             TextField(
-              controller: _linkController,
-              decoration: InputDecoration(labelText: 'Link'),
-            ),
-            TextField(
               controller: _dateController,
               decoration: InputDecoration(labelText: 'Date'),
             ),
@@ -142,7 +144,7 @@ class _RecruiterInternshipDetailsState
             ),
             TextField(
               controller: _paidController,
-              decoration: InputDecoration(labelText: 'Paid'),
+              decoration: InputDecoration(labelText: 'Paid (true/false)'),
             ),
             TextField(
               controller: _descriptionController,
@@ -151,6 +153,10 @@ class _RecruiterInternshipDetailsState
             TextField(
               controller: _requirementsController,
               decoration: InputDecoration(labelText: 'Requirements'),
+            ),
+            TextField(
+              controller: _linkController,
+              decoration: InputDecoration(labelText: 'Link'),
             ),
           ],
         ),

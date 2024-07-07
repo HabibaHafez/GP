@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class DeleteInternshipService {
-  static const String baseUrl = 'http://192.168.1.105:5000//internships/recruiter/';
+  static const String baseUrl = 'http://192.168.1.105:5000/internships/recruiter/';
 
   Future<bool> deleteInternship(int internId, int nationalId) async {
     final url = '$baseUrl$internId';
