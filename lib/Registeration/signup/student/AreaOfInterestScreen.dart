@@ -3,19 +3,21 @@ import 'package:techmate/Registeration/login/login.dart';
 import 'package:techmate/StudentUser/HomeScreens/home.dart';
 import 'package:techmate/services/registeration/signup/Student/studentApi.dart';
 import 'package:techmate/services/registeration/signup/Mentor/MentorApi.dart';
-import 'package:techmate/shared%20attributes/shared.dart';
+import 'package:techmate/shared attributes/shared.dart';
 
 class ChooseAreaOfInterest extends StatefulWidget {
-  static const routeName = 'choose_AreaOfInterst';
+  static const routeName = 'choose_AreaOfInterest';
   final String firstName;
   final String lastName;
   final String email;
-  final String nationalId; // Nullable type for optional parameters
-  final String? gender; // Nullable type for optional parameters
-  final String? level; // Nullable type for optional parameters
-  final String? jobtitle; // Nullable type for optional parameters
+  final String nationalId;
+  final String? gender;
+  final String? level;
+  final String? jobtitle;
   final String? password;
   final String? country;
+  final String? faculty;
+  final String? university;
   final List<String>? interests;
 
   ChooseAreaOfInterest({
@@ -29,14 +31,15 @@ class ChooseAreaOfInterest extends StatefulWidget {
     this.jobtitle,
     this.interests,
     this.password,
+    this.university,
+    this.faculty,
   });
 
   @override
-  ChooseAreaOfInterestState  createState() => ChooseAreaOfInterestState();
+  ChooseAreaOfInterestState createState() => ChooseAreaOfInterestState();
 }
 
 class ChooseAreaOfInterestState extends State<ChooseAreaOfInterest> {
-  String areaOfInterest = ''; // Initialize areaOfInterest
   bool _isLoading = false;
   String _errorMessage = '';
   List<String> _interests = [];
@@ -52,183 +55,196 @@ class ChooseAreaOfInterestState extends State<ChooseAreaOfInterest> {
     final role = await getRole();
     setState(() {
       _role = role;
-      print('role==$_role');
     });
+  }
+
+  Widget buildChoiceChip(String interest) {
+    final bool isSelected = _interests.contains(interest);
+    return ChoiceChip(
+      label: Text(
+        interest,
+        style: TextStyle(
+          color: isSelected ? Colors.white : Colors.black,
+        ),
+      ),
+      selected: isSelected,
+      selectedColor: Colors.blue[800],
+      backgroundColor: Colors.white,
+      onSelected: (selected) {
+        setState(() {
+          if (selected) {
+            _interests.add(interest);
+          } else {
+            _interests.remove(interest);
+          }
+        });
+      },
+      shape: RoundedRectangleBorder(
+        side: BorderSide(color: Colors.blue[800]!),
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        toolbarHeight: 80,
-        leading: Padding(
-          padding: const EdgeInsets.only(top: 40, left: 15),
-          child: IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-        ),
-        title: Padding(
-          padding: const EdgeInsets.only(top: 40, left: 0),
-          child: Text(
-            'Choose your Tracks',
-            style: TextStyle(
-              color: Color.fromARGB(255, 61, 60, 60),
-              fontSize: 25,
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(80),
+        child: AppBar(
+          backgroundColor: Colors.blue[800],
+          leading: Padding(
+            padding: const EdgeInsets.only(left: 8.0, top: 20.0),
+            child: IconButton(
+              icon: Icon(Icons.arrow_back, color: Colors.white),
+              onPressed: () => Navigator.of(context).pop(),
             ),
           ),
+          title: Center(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 8.0, top: 20.0),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Discover your preferred tech fields',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 25,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          automaticallyImplyLeading: false,
+          iconTheme: IconThemeData(color: Colors.white),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 35),
-        child: Center(
-          child: SingleChildScrollView(
-            child: Column(
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.only(bottom: 20, left: 10, right: 10, top: 10),
+        child: Column(
+          children: [
+            Wrap(
+              alignment: WrapAlignment.center,
+              spacing: 8.0,
+              runSpacing: 10.0,
               children: [
-                Wrap(
-                  spacing: 8.0,
-                  runSpacing: 8.0,
-                  children: [
-                    buildChoiceChip(' Data Analysis'),
-                    buildChoiceChip(' Software Engineer'),
-                    buildChoiceChip(' Dev Ops'),
-                    buildChoiceChip(' Data Science'),
-                    buildChoiceChip(' Data Engineer'),
-                    buildChoiceChip(' Web Developer'),
-                    buildChoiceChip(' Flutter Developer'),
-                    buildChoiceChip(' FrontEnd Developer'),
-                    buildChoiceChip(' BackEnd Developer'),
-                    buildChoiceChip(' Cloud Computing'),
-                  ],
-                ),
-                SizedBox(
-                  height: 45,
-                ),
-                _isLoading
-                    ? CircularProgressIndicator()
-                    : ElevatedButton(
-                  onPressed: _registerUser,
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: Size(400, 55),
-                    backgroundColor: Color.fromARGB(255, 48, 134, 232),
-                  ),
-                  child: Text(
-                    'Done',
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-                if (_errorMessage.isNotEmpty)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    child: Text(
-                      _errorMessage,
-                      style: TextStyle(
-                        color: Colors.red,
-                        fontSize: 16,
-                      ),
-                    ),
-                  ),
+                buildChoiceChip(' Web Development '),
+                buildChoiceChip(' Software Engineering '),
+                buildChoiceChip(' Data Science '),
+                buildChoiceChip(' Data Analysis '),
+                buildChoiceChip(' UI/UX Design '),
+                buildChoiceChip(' Mobile App Development '),
+                buildChoiceChip(' Blockchain '),
+                buildChoiceChip(' Machine Learning '),
+                buildChoiceChip(' Cybersecurity '),
+                buildChoiceChip(' Internet of Things '),
+                buildChoiceChip(' Networking '),
+                buildChoiceChip(' Game Development '),
+                buildChoiceChip(' Cloud Computing '),
+                buildChoiceChip(' Database Management '),
+                buildChoiceChip(' Robotics '),
+                buildChoiceChip(' Artificial Intelligence '),
               ],
             ),
-          ),
+            SizedBox(height: 15),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue[800],
+                  padding: EdgeInsets.symmetric(vertical: 15),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                ),
+                onPressed: _isLoading
+                    ? null
+                    : () async {
+                  setState(() {
+                    _isLoading = true;
+                    _errorMessage = '';
+                  });
+                  try {
+                    bool isRegistered = false;
+                    String interestsString = _interests.join(',');
+
+                    if (_role == 'student') {
+                      isRegistered = await registerStudent(
+                        widget.firstName,
+                        widget.lastName,
+                        widget.email,
+                        widget.nationalId,
+                        widget.country!,
+                        widget.gender!,
+                        widget.level!,
+                        widget.password!,
+                        widget.faculty!,
+                        widget.university!,
+                        interestsString,
+                      );
+                    } else if (_role == 'mentor') {
+                      isRegistered = await registerMentor(
+                        widget.firstName,
+                        widget.lastName,
+                        widget.email,
+                        widget.nationalId,
+                        widget.gender!,
+                        widget.jobtitle!,
+                        widget.password!,
+                        interestsString,
+                      );
+                    }
+
+                    if (isRegistered) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => login_screen()),
+                      );
+                    } else {
+                      setState(() {
+                        _errorMessage =
+                        'Registration failed. Please try again.';
+                      });
+                    }
+                  } catch (error) {
+                    setState(() {
+                      _errorMessage = 'Error: $error';
+                    });
+                  } finally {
+                    setState(() {
+                      _isLoading = false;
+                    });
+                  }
+                },
+                child: _isLoading
+                    ? CircularProgressIndicator(
+                  color: Colors.white,
+                )
+                    : Text(
+                  'Done',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                  ),
+                ),
+              ),
+            ),
+            if (_errorMessage.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.only(top: 10.0),
+                child: Text(
+                  _errorMessage,
+                  style: TextStyle(
+                    color: Colors.red,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+          ],
         ),
       ),
     );
-  }
-
-  Widget buildChoiceChip(String label) {
-    final isSelected = _interests.contains(label); // Check if label is selected
-    print('role is$_role');
-
-    return ChoiceChip(
-      label: Text(
-        label,
-        style: TextStyle(
-          fontSize: isSelected ? 18.0 : 16.0,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-      selected: isSelected,
-      onSelected: (bool selected) {
-        setState(() {
-          if (selected) {
-            _interests.add(label); // Add to interests list
-          } else {
-            _interests.remove(label); // Remove from interests list
-          }
-        });
-      },
-      selectedColor: Colors.blue[800],
-      labelStyle: TextStyle(color: Colors.white),
-      backgroundColor: Color.fromARGB(255, 61, 60, 60),
-      elevation: isSelected ? 4.0 : 2.0,
-      padding: EdgeInsets.symmetric(horizontal: 16.0),
-    );
-  }
-
-  Future<void> _registerUser() async {
-    setState(() {
-      _isLoading = true;
-      _errorMessage = '';
-    });
-
-    try {
-      bool isRegistered = false;
-      String interestsString = _interests.join(',');
-
-      print('Role: $_role');
-      print('Interests: $interestsString');
-
-      if (_role == 'student') {
-        print('Registering student...');
-        isRegistered = await registerStudent(
-          widget.firstName,
-          widget.lastName,
-          widget.email,
-          widget.nationalId,
-          widget.country!,
-          widget.gender!,
-          widget.level!,
-          widget.password!,
-          interestsString, // Pass the comma-separated string
-        );
-      } else if (_role == 'mentor') {
-        print('Registering mentor...');
-        isRegistered = await registerMentor(
-          widget.firstName,
-          widget.lastName,
-          widget.email,
-          widget.nationalId,
-          widget.gender!,
-          widget.jobtitle!,
-          widget.password!,
-          interestsString, // Pass the comma-separated string
-        );
-      }
-
-      if (isRegistered) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => login_screen()),
-        );
-      } else {
-        setState(() {
-          _errorMessage = 'Registration failed. Please try again.';
-        });
-      }
-    } catch (error) {
-      setState(() {
-        _errorMessage = 'Error: $error';
-      });
-    } finally {
-      setState(() {
-        _isLoading = false;
-      });
-    }
   }
 }

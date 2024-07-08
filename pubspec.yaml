@@ -45,9 +45,10 @@ dependencies:
   url_launcher: ^6.3.0
   shared_preferences: ^2.2.3
   image_picker: ^1.1.2
-  
-  
-  
+  flutter_rating_bar: ^4.0.0
+
+
+
 
 dev_dependencies:
   flutter_test:
@@ -75,8 +76,22 @@ flutter:
   assets:
     - images/cs.jpeg
     - images/data_analysis.jpg
-    - images/download.jpg
     - images/coursera_solo.jpg
+    - images/44.png
+    - images/adv2.jpg
+    - images/tools.png
+    - images/points.png
+    - images/do.png
+    - images/Contact.png
+    - images/web-search-8942.png
+    - images/online-education-7538.png
+    - images/skills.png
+    - images/project.png
+    - images/machine-learning-education-22210.png
+    - images/build.png
+    - images/logo - Copy.png
+    - images/5471397.png
+
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

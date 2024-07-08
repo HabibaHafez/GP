@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:techmate/StudentUser/BottonNavigationBar/navbar.dart';
 import 'package:techmate/StudentUser/Chats/Mentorchat.dart';
 import 'package:techmate/services/Mentor/enrollment.dart';
 import 'package:techmate/services/Mentor/getmentor.dart';
+import 'package:techmate/services/MentorScreens/rating.dart';
 import 'package:techmate/services/profile/profileUpdateApiService.dart';
 
 import 'bookmeeting.dart';
@@ -13,6 +15,8 @@ class MentorProfileScreen extends StatelessWidget {
   final int currentUserId;
   final EnrollService enrollService =
   EnrollService(); // Initialize EnrollService
+  final RatingService ratingService =
+  RatingService(); // Initialize RatingService
 
   MentorProfileScreen({
     Key? key,
@@ -94,9 +98,8 @@ class MentorProfileScreen extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => SelectDateTimeScreen(
-                              mentor: mentor,
-                            ),
+                            builder: (context) =>
+                                SelectDateTimeScreen(mentor: mentor),
                           ),
                         );
                       },
@@ -135,13 +138,33 @@ class MentorProfileScreen extends StatelessWidget {
                         }
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green,
+                        backgroundColor: Colors.blue[800],
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8.0),
                         ),
                       ),
                       child: const Text(
                         'Enroll with Mentor',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: () {
+                        _showRatingDialog(context);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue[800],
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                      ),
+                      child: const Text(
+                        'Rate Mentor',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
@@ -156,7 +179,7 @@ class MentorProfileScreen extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar:  BottomNavBar(currentIndex: 3),
+      bottomNavigationBar: BottomNavBar(currentIndex: 3),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(
@@ -192,6 +215,74 @@ class MentorProfileScreen extends StatelessWidget {
     } catch (e) {
       print('Error fetching mentor experiences: $e');
       return []; // Handle error as needed
-      }
     }
+  }
+
+  void _showRatingDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        double rating = 1.0;
+        TextEditingController commentController = TextEditingController();
+
+        return AlertDialog(
+          title: const Text('Rate Mentor'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  RatingBar.builder(
+                    initialRating: rating,
+                    minRating: 1,
+                    direction: Axis.horizontal,
+                    allowHalfRating: true,
+                    itemCount: 5,
+                    itemPadding: EdgeInsets.symmetric(horizontal: 2.0),
+                    itemBuilder: (context, _) => Icon(
+                      Icons.star,
+                      color: Colors.amber,
+                    ),
+                    onRatingUpdate: (ratingValue) {
+                      rating = ratingValue;
+                    },
+                  ),
+                ],
+              ),
+              SizedBox(height: 16),
+              TextField(
+                controller: commentController,
+                decoration: InputDecoration(labelText: 'Comment'),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              child: const Text('Submit'),
+              onPressed: () async {
+                try {
+                  await ratingService.rateMentor(
+                    currentUserId,
+                    mentor.id,
+                    rating.toInt(),
+                    commentController.text,
+                  );
+                  Navigator.of(context).pop();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Rating submitted successfully!')),
+                  );
+                } catch (e) {
+                  Navigator.of(context).pop();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Failed to submit rating: $e')),
+                  );
+                }
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 }

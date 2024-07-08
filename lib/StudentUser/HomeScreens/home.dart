@@ -1622,6 +1622,346 @@
 //   }
 // }
 
+//
+// import 'package:flutter/material.dart';
+// import 'package:shared_preferences/shared_preferences.dart';
+// import 'package:techmate/StudentUser/BottonNavigationBar/navbar.dart';
+// import 'package:techmate/ProfileScreen/profile.dart';
+// import 'package:techmate/Notification/notification.dart';
+// import 'package:techmate/services/Home/intern_recommendations_service.dart';
+// import 'package:techmate/StudentUser/IntershipsScreen/internship_details.dart';
+// import 'package:techmate/services/courses/recommended_course_service.dart';
+// import 'package:techmate/StudentUser/courses/CourseDetalisScreen.dart'; // Import the CourseDetailsScreen
+//
+// class HomeScreen extends StatefulWidget {
+//   static const routeName = 'home screen';
+//
+//   @override
+//   _HomeScreenState  createState() => _HomeScreenState();
+// }
+//
+// class _HomeScreenState extends State<HomeScreen> {
+//   final InternRecommendationsService _internService =
+//   InternRecommendationsService();
+//   List<Map<String, dynamic>> _recommendedInternships = [];
+//   List<RecommendedCourse> _recommendedCourses = [];
+//   bool _isLoadingInternships = true;
+//   bool _isLoadingCourses = true;
+//   bool _showAllCourses = false; // State variable to track course visibility
+//
+//   @override
+//   void initState() {
+//     super.initState();
+//     _fetchRecommendations();
+//     _fetchRecommendedCourses();
+//   }
+//
+//   Future<int?> getNationalId() async {
+//     SharedPreferences prefs = await SharedPreferences.getInstance();
+//     return prefs.getInt('national_id');
+//   }
+//
+//   Future<void> _fetchRecommendations() async {
+//     setState(() {
+//       _isLoadingInternships = true;
+//     });
+//
+//     try {
+//       final nationalId = await getNationalId();
+//       if (nationalId != null) {
+//         List<Map<String, dynamic>> recommendations =
+//         await _internService.fetchRecommendations(nationalId.toString());
+//         setState(() {
+//           _recommendedInternships = recommendations;
+//         });
+//       } else {
+//         ScaffoldMessenger.of(context).showSnackBar(
+//           SnackBar(content: Text('No national ID found')),
+//         );
+//       }
+//     } catch (e) {
+//       ScaffoldMessenger.of(context).showSnackBar(
+//         SnackBar(content: Text('Failed to load recommendations: $e')),
+//       );
+//     } finally {
+//       setState(() {
+//         _isLoadingInternships = false;
+//       });
+//     }
+//   }
+//
+//   Future<void> _fetchRecommendedCourses() async {
+//     setState(() {
+//       _isLoadingCourses = true;
+//     });
+//
+//     try {
+//       final nationalId = await getNationalId();
+//       if (nationalId != null) {
+//         List<RecommendedCourse> courses =
+//         await RecommendedCourseService.fetchRecommendedCourses(
+//             nationalId.toString());
+//         setState(() {
+//           _recommendedCourses = courses;
+//         });
+//       } else {
+//         ScaffoldMessenger.of(context).showSnackBar(
+//           SnackBar(content: Text('No national ID found')),
+//         );
+//       }
+//     } catch (e) {
+//       ScaffoldMessenger.of(context).showSnackBar(
+//         SnackBar(content: Text('Failed to load recommended courses: $e')),
+//       );
+//     } finally {
+//       setState(() {
+//         _isLoadingCourses = false;
+//       });
+//     }
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         centerTitle: true,
+//         title: Text('Welcome', style: TextStyle(color: Colors.white)),
+//         backgroundColor: Colors.blue[800],
+//         leading: IconButton(
+//           icon: Icon(Icons.arrow_back, color: Colors.white),
+//           onPressed: () {
+//             Navigator.pop(context);
+//           },
+//         ),
+//         // actions: [
+//         //   IconButton(
+//         //     icon: Icon(Icons.notifications, color: Colors.white),
+//         //     onPressed: () {
+//         //       Navigator.push(
+//         //         context,
+//         //         MaterialPageRoute(
+//         //           builder: (context) => NotificationScreen(),
+//         //         ),
+//         //       );
+//         //     },
+//         //   ),
+//         // ],
+//       ),
+//       body: SingleChildScrollView(
+//         child: Column(
+//           crossAxisAlignment: CrossAxisAlignment.start,
+//           children: [
+//             SizedBox(height: 10.0),
+//
+//             // First Section: Horizontal Scroll for Advertisements
+//             Padding(
+//               padding:
+//               const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+//               child: Text(
+//                 'Advertisements',
+//                 style: TextStyle(
+//                   fontSize: 22,
+//                   fontWeight: FontWeight.bold,
+//                   color: Colors.black,
+//                 ),
+//               ),
+//             ),
+//             Container(
+//               height: 240,
+//               child: ListView.builder(
+//                 scrollDirection: Axis.horizontal,
+//                 itemCount: 2,
+//                 itemBuilder: (context, index) {
+//                   return Container(
+//                     margin:
+//                     EdgeInsets.symmetric(horizontal: 8.0, vertical: 1.0),
+//                     width: MediaQuery.of(context).size.width * 0.95,
+//                     height: MediaQuery.of(context).size.height * 0.0,
+//                     decoration: BoxDecoration(
+//                       borderRadius: BorderRadius.circular(8.0),
+//                       color: Colors.grey[300],
+//                       image: DecorationImage(
+//                         image: AssetImage('images/coursera_solo.jpg'),
+//                         fit: BoxFit.cover,
+//                       ),
+//                     ),
+//                   );
+//                 },
+//               ),
+//             ),
+//             SizedBox(height: 8.0),
+//
+//             // Third Section: Recommended Internships
+//             Padding(
+//               padding: const EdgeInsets.fromLTRB(16.0, 20.0, 16.0, 12.0),
+//               child: Text(
+//                 'Recommended Internships ',
+//                 style: TextStyle(
+//                   fontSize: 18,
+//                   fontWeight: FontWeight.bold,
+//                   color: Colors.black,
+//                 ),
+//               ),
+//             ),
+//             Container(
+//               height: 150,
+//               child: _isLoadingInternships
+//                   ? Center(child: CircularProgressIndicator())
+//                   : PageView.builder(
+//                 itemCount: _recommendedInternships.length,
+//                 itemBuilder: (context, index) {
+//                   final internship = _recommendedInternships[index];
+//                   return GestureDetector(
+//                     onTap: () {
+//                       Navigator.push(
+//                         context,
+//                         MaterialPageRoute(
+//                           builder: (context) =>
+//                               InternshipDetails(internship: internship),
+//                         ),
+//                       );
+//                     },
+//                     child: Container(
+//                       width: 250,
+//                       margin: EdgeInsets.symmetric(
+//                           horizontal: 8.0, vertical: 12.0),
+//                       child: Card(
+//                         shape: RoundedRectangleBorder(
+//                           borderRadius: BorderRadius.circular(8.0),
+//                         ),
+//                         child: Column(
+//                           mainAxisAlignment: MainAxisAlignment.center,
+//                           children: [
+//                             SizedBox(height: 4),
+//                             Text(
+//                               internship['InternTitle'] ?? 'No title',
+//                               style: TextStyle(color: Colors.black),
+//                               overflow: TextOverflow.ellipsis,
+//                               textAlign: TextAlign.center,
+//                             ),
+//                             SizedBox(height: 4),
+//                             Text(
+//                               internship['CompanyName'] ?? 'No company',
+//                               style: TextStyle(color: Colors.grey),
+//                               overflow: TextOverflow.ellipsis,
+//                               textAlign: TextAlign.center,
+//                             ),
+//                             SizedBox(height: 5),
+//                           ],
+//                         ),
+//                       ),
+//                     ),
+//                   );
+//                 },
+//               ),
+//             ),
+//             SizedBox(height: 12.0),
+//
+//             // Fourth Section: Recommended Courses
+//             Padding(
+//               padding: const EdgeInsets.fromLTRB(13.0, 18.0, 13.0, 10.0),
+//               child: Row(
+//                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                 children: [
+//                   Text(
+//                     'Recommended Courses',
+//                     style: TextStyle(
+//                       fontSize: 18,
+//                       fontWeight: FontWeight.bold,
+//                       color: Colors.black,
+//                     ),
+//                   ),
+//                   TextButton(
+//                     onPressed: () {
+//                       setState(() {
+//                         _showAllCourses = !_showAllCourses;
+//                       });
+//                     },
+//                     child: Text(
+//                       _showAllCourses ? 'Show Less' : 'Show More',
+//                       style: TextStyle(
+//                         color: Colors.blue,
+//                       ),
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//             ),
+//             _isLoadingCourses
+//                 ? Center(child: CircularProgressIndicator())
+//                 : ListView.builder(
+//               shrinkWrap: true,
+//               physics: NeverScrollableScrollPhysics(),
+//               itemCount: _showAllCourses
+//                   ? _recommendedCourses.length
+//                   : (_recommendedCourses.length > 3
+//                   ? 3
+//                   : _recommendedCourses.length),
+//               itemBuilder: (context, index) {
+//                 final course = _recommendedCourses[index];
+//                 return GestureDetector(
+//                   onTap: () {
+//                     Navigator.push(
+//                       context,
+//                       MaterialPageRoute(
+//                         builder: (context) => CourseDetailsScreen(
+//                           courseTitle: course.courseName,
+//                           provider: course.provider,
+//                           level: course.level,
+//                           duration: course.duration,
+//                           courseDescription: course.roadMap,
+//                           price: course.paid,
+//                           playUrl: course.link,
+//                           courseId: course.courseId,
+//                         ),
+//                       ),
+//                     );
+//                   },
+//                   child: Container(
+//                     height: 140,
+//                     margin: EdgeInsets.symmetric(
+//                         horizontal: 16.0, vertical: 8.0),
+//                     child: Card(
+//                       shape: RoundedRectangleBorder(
+//                         borderRadius: BorderRadius.circular(8.0),
+//                       ),
+//                       child: Column(
+//                         mainAxisAlignment: MainAxisAlignment.center,
+//                         children: [
+//                           SizedBox(height: 4),
+//                           Text(
+//                             course.courseName,
+//                             style: TextStyle(color: Colors.black),
+//                             overflow: TextOverflow.ellipsis,
+//                             textAlign: TextAlign.center,
+//                           ),
+//                           SizedBox(height: 4),
+//                           Text(
+//                             course.provider,
+//                             style: TextStyle(color: Colors.grey),
+//                             overflow: TextOverflow.ellipsis,
+//                             textAlign: TextAlign.center,
+//                           ),
+//                           SizedBox(height: 4),
+//                         ],
+//                       ),
+//                     ),
+//                   ),
+//                 );
+//               },
+//             ),
+//           ],
+//         ),
+//       ),
+//       bottomNavigationBar: BottomNavBar(
+//         currentIndex: 2,
+//       ),
+//     );
+//   }
+// }
+
+
+
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -1733,19 +2073,6 @@ class _HomeScreenState extends State<HomeScreen> {
             Navigator.pop(context);
           },
         ),
-        // actions: [
-        //   IconButton(
-        //     icon: Icon(Icons.notifications, color: Colors.white),
-        //     onPressed: () {
-        //       Navigator.push(
-        //         context,
-        //         MaterialPageRoute(
-        //           builder: (context) => NotificationScreen(),
-        //         ),
-        //       );
-        //     },
-        //   ),
-        // ],
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -1767,21 +2094,23 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             Container(
-              height: 240,
+              height: 180, // Reduced height
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: 2,
                 itemBuilder: (context, index) {
+                  String imagePath = index == 0
+                      ? 'images/coursera_solo.jpg'
+                      : 'images/adv2.jpg';
                   return Container(
                     margin:
                     EdgeInsets.symmetric(horizontal: 8.0, vertical: 1.0),
                     width: MediaQuery.of(context).size.width * 0.95,
-                    height: MediaQuery.of(context).size.height * 0.0,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(8.0),
                       color: Colors.grey[300],
                       image: DecorationImage(
-                        image: AssetImage('images/coursera_solo.jpg'),
+                        image: AssetImage(imagePath),
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -1791,7 +2120,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             SizedBox(height: 8.0),
 
-            // Third Section: Recommended Internships
             Padding(
               padding: const EdgeInsets.fromLTRB(16.0, 20.0, 16.0, 12.0),
               child: Text(
@@ -1857,7 +2185,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             SizedBox(height: 12.0),
 
-            // Fourth Section: Recommended Courses
             Padding(
               padding: const EdgeInsets.fromLTRB(13.0, 18.0, 13.0, 10.0),
               child: Row(

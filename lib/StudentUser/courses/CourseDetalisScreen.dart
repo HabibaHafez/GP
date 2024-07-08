@@ -493,13 +493,13 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
         ),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(3.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(height: 16),
             Padding(
-              padding: const EdgeInsets.only(left: 7),
+              padding: const EdgeInsets.only(left: 2),
               child: Text(
                 'Course Details',
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
@@ -512,7 +512,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: const EdgeInsets.all(6.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
